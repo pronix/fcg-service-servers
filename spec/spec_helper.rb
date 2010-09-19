@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'servers'
+require 'fcg-service-servers'
 require 'spec'
 require 'spec/autorun'
 

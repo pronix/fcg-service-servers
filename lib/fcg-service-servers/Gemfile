@@ -1,0 +1,14 @@
+source :rubygems
+gem "SystemTimer"
+gem "fcg-core-ext", :git => "git@github.com:joemocha/fcg-core-ext.git"
+gem "fcg-service-ext", ">= 0.0.11"
+# gem "redisk"
+
+group :development do
+  gem 'thin'
+end
+
+group :test do
+  gem "rspec", :require => "spec"
+  gem "rack-test", :require => "rack/test"
+end

@@ -1,17 +1,29 @@
 require 'rubygems'
 require 'rake'
+require 'lib/fcg-service-servers/version.rb'
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "servers"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.name = "fcg-service-servers"
+    gem.summary = %Q{FCG Service Servers}
+    gem.description = %Q{Servers for the different services offered by FCG}
     gem.email = "sam@fcgmedia.com"
-    gem.homepage = "http://github.com/joemocha/servers"
+    gem.homepage = "http://github.com/joemocha/fcg-service-servers"
     gem.authors = ["Samuel O. Obukwelu"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.add_development_dependency "rack-test", ">= 1.2.9"
+    gem.add_dependency "SystemTimer"
+    gem.add_dependency "fcg-core-ext"
+    gem.add_dependency "fcg-service-ext", ">= 0.0.11"
+    # gem.add_dependency 'guid'
+    # gem.add_dependency 'bson', ">= 1.0.7"
+    # gem.add_dependency 'bson_ext', ">= 1.0.7"
+    # gem.add_dependency 'mongo_mapper', ">= 0.8.4"
+    # gem.add_dependency 'sinatra'
+    # gem.add_dependency 'activemodel', ">= 3.0.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.version = FCG::Server::VERSION
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -39,7 +51,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "servers #{version}"
+  rdoc.title = "fcg-service-servers #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
