@@ -14,7 +14,7 @@ class UserValidator < ActiveModel::Validator
   end
   
   def check_for_bad_username(record)
-    record.errors.add :username, 'is a bad nickname... Please choose another' if BAD_USERNAMES.include?(record.username)
+    record.errors.add :username, 'is a bad nickname... Please choose another' if FCG::Validation::BAD_USERNAMES.include?(record.username)
   end
   
   def exists?(record, column) # return true if record is unique and doesn't belong to current record

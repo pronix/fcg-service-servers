@@ -22,6 +22,20 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.rdoc",
      "Rakefile",
+     "fcg-service-servers.gemspec",
+     "lib/fcg-service-servers.rb",
+     "lib/fcg-service-servers/Gemfile",
+     "lib/fcg-service-servers/Rakefile",
+     "lib/fcg-service-servers/config.ru",
+     "lib/fcg-service-servers/config/boot.rb",
+     "lib/fcg-service-servers/config/settings/app.yml",
+     "lib/fcg-service-servers/config/settings/app.yml.temp",
+     "lib/fcg-service-servers/models/activity.rb",
+     "lib/fcg-service-servers/models/user.rb",
+     "lib/fcg-service-servers/validators/user_validator.rb",
+     "lib/fcg-service-servers/version.rb",
+     "spec/fcg_activity_service_spec.rb",
+     "spec/fcg_user_service_spec.rb",
      "spec/servers_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
@@ -44,11 +58,23 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_development_dependency(%q<rack-test>, [">= 1.2.9"])
+      s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
+      s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0"])
+      s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
     else
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_dependency(%q<rack-test>, [">= 1.2.9"])
+      s.add_dependency(%q<SystemTimer>, [">= 0"])
+      s.add_dependency(%q<fcg-core-ext>, [">= 0"])
+      s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
+    s.add_dependency(%q<rack-test>, [">= 1.2.9"])
+    s.add_dependency(%q<SystemTimer>, [">= 0"])
+    s.add_dependency(%q<fcg-core-ext>, [">= 0"])
+    s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
   end
 end
 

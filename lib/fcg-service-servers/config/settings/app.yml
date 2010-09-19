@@ -1,0 +1,19 @@
+common_attr: &common_attr
+  name: FCG User Service
+  per_page: 10
+  
+development:
+  <<: *common_attr
+  version: v1
+  
+test:
+  <<: *common_attr
+  version: v0
+
+production:
+  <<: *common_attr
+  version: v1
+    
+staging:
+  <<: *common_attr
+  version: v1

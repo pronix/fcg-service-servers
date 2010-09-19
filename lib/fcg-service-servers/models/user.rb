@@ -33,8 +33,8 @@ class User
   validates_with UserValidator
   validates_length_of :username, :within => 3..16
   validates_length_of :email, :within => 6..100
-  validates_format_of :email, :with => REGEX[:email]
-  validates_format_of :username, :with => REGEX[:username]
+  validates_format_of :email, :with => FCG::Validation::REGEX[:email]
+  validates_format_of :username, :with => FCG::Validation::REGEX[:username]
   
   before_save   :encrypt_password, :set_city_state_using_us_zipcode
   before_create :setup
@@ -46,7 +46,7 @@ class User
     
     def authenticate(email_or_username, password, encrypted=true)
       case email_or_username
-      when REGEX[:email]
+      when FCG::Validation::REGEX[:email]
         user = where(:email => email_or_username).first
       else
         user = where(:username => email_or_username).first
