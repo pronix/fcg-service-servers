@@ -1,7 +1,7 @@
 module FCG
   class UserService < Service::Base
     # get a user by email
-    get "/users/find_by_:field/:value" do
+    get "/api/#{API_VERSION}/users/find_by_:field/:value" do
       user = User.send("find_by_#{params[:field]}", params[:value])
       if user and !user.deleted?
         user.to_json
@@ -11,7 +11,7 @@ module FCG
     end
       
     # get a user by id
-    get "/users/:id" do
+    get "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id]) rescue nil
       if user and !user.deleted?
         user.to_json
@@ -21,7 +21,7 @@ module FCG
     end
 
     # create a new user
-    post "/users" do
+    post "/api/#{API_VERSION}/users" do
       begin
         params = JSON.parse(request.body.read)
         user = User.new(params)
@@ -36,7 +36,7 @@ module FCG
     end
 
     # update an existing user
-    put "/users/:id" do
+    put "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id])
       if user and !user.deleted?
         begin
@@ -55,7 +55,7 @@ module FCG
     end
 
     # destroy an existing user
-    delete "/users/:id" do
+    delete "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id])
       if user and !user.deleted?
         user.destroy
@@ -66,7 +66,7 @@ module FCG
     end
 
     # verify a user name and password
-    post "/users/:id/sessions" do
+    post "/api/#{API_VERSION}/users/:id/sessions" do
       begin
         attributes = JSON.parse(request.body.read)
         user = User.find(params[:id])

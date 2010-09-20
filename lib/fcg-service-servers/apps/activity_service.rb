@@ -1,7 +1,7 @@
 module FCG
   class ActivityService < Service::Base
     # get an activity stream by id
-    get "/activities/:id" do
+    get "/api/#{API_VERSION}/activities/:id" do
       activity = Activity.find(params[:id]) rescue nil
       if activity
         activity.to_json
@@ -11,7 +11,7 @@ module FCG
     end
 
     # create a new activity
-    post "/activities" do
+    post "/api/#{API_VERSION}/activities" do
       begin
         params = JSON.parse(request.body.read)
         activity = Activity.new(params)
@@ -26,7 +26,7 @@ module FCG
     end
 
     # destroy an existing activity
-    delete "/activities/:id" do
+    delete "/api/#{API_VERSION}/activities/:id" do
       activity = Activity.find(params[:id])
       if activity
         activity.destroy

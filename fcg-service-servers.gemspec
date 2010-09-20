@@ -26,6 +26,9 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers.rb",
      "lib/fcg-service-servers/Gemfile",
      "lib/fcg-service-servers/Rakefile",
+     "lib/fcg-service-servers/app_service.rb",
+     "lib/fcg-service-servers/apps/activity_service.rb",
+     "lib/fcg-service-servers/apps/user_service.rb",
      "lib/fcg-service-servers/config.ru",
      "lib/fcg-service-servers/config/boot.rb",
      "lib/fcg-service-servers/config/settings/app.yml",
@@ -62,12 +65,14 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_runtime_dependency(%q<http_router>, [">= 0.3.15"])
     else
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 1.2.9"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_dependency(%q<http_router>, [">= 0.3.15"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
@@ -75,6 +80,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+    s.add_dependency(%q<http_router>, [">= 0.3.15"])
   end
 end
 

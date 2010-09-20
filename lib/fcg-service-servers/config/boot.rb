@@ -15,11 +15,4 @@ configure do
 
   MongoMapper.connection = Mongo::Connection.new('localhost', nil, :logger => nil)
   MongoMapper.database = "fcg_#{FCG_ENV}"
-
-  Dir[
-    File.expand_path("../../validators/*.rb", __FILE__),
-    File.expand_path("../../models/*.rb", __FILE__)
-  ].each do |file|
-    require file
-  end
 end

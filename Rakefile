@@ -16,13 +16,6 @@ begin
     gem.add_dependency "SystemTimer"
     gem.add_dependency "fcg-core-ext"
     gem.add_dependency "fcg-service-ext", ">= 0.0.11"
-    gem.add_dependency "http_router", ">= 0.3.15"
-    # gem.add_dependency 'guid'
-    # gem.add_dependency 'bson', ">= 1.0.7"
-    # gem.add_dependency 'bson_ext', ">= 1.0.7"
-    # gem.add_dependency 'mongo_mapper', ">= 0.8.4"
-    # gem.add_dependency 'sinatra'
-    # gem.add_dependency 'activemodel', ">= 3.0.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
     gem.version = FCG::Server::VERSION
   end
