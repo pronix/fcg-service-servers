@@ -1,10 +1,4 @@
-ENV["SINATRA_ENV"] = "test"
-require File.dirname(__FILE__) + "/../lib/fcg-service-servers/apps"
-require "rack/test"
-require "spec/interop/test"
-
-set :environment, :test
-Test::Unit::TestCase.send :include, Rack::Test::Methods
+require File.dirname(__FILE__) + '/test_helper'
 
 def app
   FCG::Service::UserApp

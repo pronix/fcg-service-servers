@@ -1,4 +1,22 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/fcg-service-servers/apps")
-require 'vegas'
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
+begin
+  require 'vegas'
+rescue LoadError
+  require 'rubygems'
+  require 'vegas'
+end
 
-Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server')
+require 'fcg-service-servers/apps'
+
+Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server', {
+  :before_run => lambda {|v|
+    path = (ENV['FCG_CONFIG'] || v.args.first)
+    load path.to_s.strip if path
+  }
+}) do |runner, opts, app|
+  opts.on('-N NAMESPACE', "--namespace NAMESPACE", "set the namespace") do |namespace|
+    runner.logger.info "Using Redis namespace '#{namespace}'"
+    # Resque.redis.namespace = namespace
+  end
+end

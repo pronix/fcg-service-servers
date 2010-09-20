@@ -1,9 +1,10 @@
-require "fcg-service-ext"
-require "sinatra"
-require "thin"
-require "mongo_mapper"
+require "bundler"
+
 env_arg = ARGV.index("-e")
-FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym # unless const_defined? :FCG_ENV
+FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym 
+
+Bundler.setup
+Bundler.require(:default, FCG_ENV)
 
 # Redisk.redis = 'myhost:myport'
 # logger = Logger.new(Redisk::IO.new("#{FCG_ENV}.log"))
