@@ -1,0 +1,4 @@
+require File.expand_path(File.dirname(__FILE__) + "/../lib/fcg-service-servers/apps")
+require 'vegas'
+
+Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server')
