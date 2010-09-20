@@ -25,12 +25,16 @@ Gem::Specification.new do |s|
      "fcg-service-servers.gemspec",
      "lib/fcg-service-servers.rb",
      "lib/fcg-service-servers/Gemfile",
-     "lib/fcg-service-servers/apps/activity_service.rb",
-     "lib/fcg-service-servers/apps/user_service.rb",
+     "lib/fcg-service-servers/apps.rb",
+     "lib/fcg-service-servers/apps/activity_app.rb",
+     "lib/fcg-service-servers/apps/user_app.rb",
+     "lib/fcg-service-servers/bin/fcg-service-server",
      "lib/fcg-service-servers/config.ru",
      "lib/fcg-service-servers/config/boot.rb",
      "lib/fcg-service-servers/config/settings/app.yml",
      "lib/fcg-service-servers/config/settings/app.yml.temp",
+     "lib/fcg-service-servers/lib/cattr_inheritable_attrs.rb",
+     "lib/fcg-service-servers/lib/service.rb",
      "lib/fcg-service-servers/models/activity.rb",
      "lib/fcg-service-servers/models/user.rb",
      "lib/fcg-service-servers/validators/user_validator.rb",
@@ -63,12 +67,16 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_runtime_dependency(%q<thin>, [">= 0"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 0"])
     else
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<rack-test>, [">= 1.2.9"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_dependency(%q<thin>, [">= 0"])
+      s.add_dependency(%q<sinatra>, [">= 0"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
@@ -76,6 +84,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+    s.add_dependency(%q<thin>, [">= 0"])
+    s.add_dependency(%q<sinatra>, [">= 0"])
   end
 end
 

@@ -1,5 +1,6 @@
 require "fcg-service-ext"
 require "sinatra"
+require "thin"
 require "mongo_mapper"
 env_arg = ARGV.index("-e")
 FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym # unless const_defined? :FCG_ENV
