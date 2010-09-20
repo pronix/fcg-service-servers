@@ -1,5 +1,5 @@
-module FCG
-  class ActivityService < Service::Base
+module FCG::Service
+  class ActivityApp < FCG::Service::Base
     # get an activity stream by id
     get "/api/#{API_VERSION}/activities/:id" do
       activity = Activity.find(params[:id]) rescue nil

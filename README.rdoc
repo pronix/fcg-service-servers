@@ -1,4 +1,4 @@
-= servers
+= FCG Service Servers
 
 Description goes here.
 

@@ -1,5 +1,5 @@
-module FCG
-  class UserService < Service::Base
+module FCG::Service
+  class UserApp < FCG::Service::Base
     # get a user by email
     get "/api/#{API_VERSION}/users/find_by_:field/:value" do
       user = User.send("find_by_#{params[:field]}", params[:value])
