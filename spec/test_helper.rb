@@ -2,8 +2,8 @@ dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib/fcg-service-servers'
 $TESTING = true
 ENV["SINATRA_ENV"] = "test"
-require 'rubygems'
-require 'test/unit'
+# require 'rubygems'
+# require 'test/unit'
 require "spec/interop/test"
 require 'config/boot.rb'
 
@@ -11,10 +11,9 @@ begin
   require 'leftright'
 rescue LoadError
 end
+
 set :environment, :test
 Test::Unit::TestCase.send :include, Rack::Test::Methods
-
-
 
 # #
 # # make sure we can run mongoDB

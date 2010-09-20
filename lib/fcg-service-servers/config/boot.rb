@@ -18,7 +18,7 @@ configure do
 
   API_VERSION = FCG_CONFIG[:app]["version"]# unless const_defined? :API_VERSION
 
-  MongoMapper.connection = Mongo::Connection.new('localhost', nil, :logger => nil)
+  MongoMapper.connection = Mongo::Connection.new(FCG_CONFIG[:app]["mongodb_host"], nil, :logger => nil)
   MongoMapper.database = "fcg_#{FCG_ENV}"
   
   # Load all necessary files

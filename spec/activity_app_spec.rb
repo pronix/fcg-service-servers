@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 def app
-  FCG::ActivityService
+  FCG::Service::ActivityApp
 end
 
 describe "activity_app" do
@@ -17,19 +17,28 @@ describe "activity_app" do
           :url => "http://www.fcgid.com/person/paulDiddy", 
           :photo => nil
         },
-        :object => {
-          
+        :target => {
+          :title => "in the photo album (Mon, Jul 19: Salladin at Marquee (Solid))",
+          :thumbnail => "http://destroy_later_blah_blah_blah.s3.amazonaws.com/alltheparties.com//cd772554-d709-988a-2472-cdd9b5a7a96d/00-thumb.jpg",
+          :album_page_url => "/album/Event/4c442ae8ff808daa0f000002/photos",
+          :id => "event:4c442ae8ff808daa0f000002" 
         },
-        :verb => FCG::ACTIVITY::VERBS::VIEW,
+        :object => {
+          :title => "a photo",
+          :image_page_url => "/album/Event/4c442ae8ff808daa0f000002/photos/4c4e81c7ff808d20c9000005",
+          :id => "image:4c4e81c7ff808d20c9000005",
+          :description => "Standing on the stage Club Space WMC 2001",
+          :larger_image => "http://destroy_later_blah_blah_blah.s3.amazonaws.com/alltheparties.com//df39e4f8-6944-5d8f-d91f-843620c762f5/P3266699-medium.jpg"
+        },
+        :verb => "view",
         :title => "Paul Dix viewed a photo in Rip's Photo Album",
-        :site => "ATP",
+        :site => "alltheparties.com",
         :visible => false
       )
-      
-      @id = act.id.to_s
+      @id = Activity.first.id.to_s if Activity.first.respond_to? :id
     end
     
-    it "should return a activity by id: #{@id}" do
+    it "should return an activity by id: #{@id}" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
@@ -40,14 +49,14 @@ describe "activity_app" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      attributes["verb"].should == FCG::ACTIVITY::VERBS::VIEW.to_s
+      attributes["verb"].should == "view"
     end
 
     it "should return site" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      attributes["site"].should == "ATP"
+      attributes["site"].should == "alltheparties.com"
     end
 
     it "should return a 404 for a activity that doesn't exist" do
@@ -64,7 +73,7 @@ describe "activity_app" do
             :url => "http://www.fcgid.com/person/tcash"
           },
           :object => {},
-          :verb => FCG::ACTIVITY::VERBS::MARK_AS_FAVORITE,
+          :verb => "mark_as_favorite",
           :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
           :site => "ATP"}.to_json
       last_response.should be_ok
@@ -84,7 +93,7 @@ describe "activity_app" do
           :url => "http://www.fcgid.com/person/paulDiddy"
         },
         :object => {},
-        :verb => FCG::ACTIVITY::VERBS::MARK_AS_FAVORITE,
+        :verb => 'mark_as_favorite',
         :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
         :site => "ATP",
         :visible => false
