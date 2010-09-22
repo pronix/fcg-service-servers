@@ -18,6 +18,7 @@ begin
     gem.add_dependency "fcg-service-ext", ">= 0.0.11"
     gem.add_dependency "thin"
     gem.add_dependency "sinatra"
+    gem.executables = ["fcg-service-server"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
     gem.version = FCG::Server::VERSION
   end

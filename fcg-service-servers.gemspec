@@ -9,9 +9,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Samuel O. Obukwelu"]
-  s.date = %q{2010-09-20}
+  s.date = %q{2010-09-22}
+  s.default_executable = %q{fcg-service-server}
   s.description = %q{Servers for the different services offered by FCG}
   s.email = %q{sam@fcgmedia.com}
+  s.executables = ["fcg-service-server"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -19,17 +21,18 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     "Gemfile",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
+     "bin/fcg-service-console",
+     "bin/fcg-service-server",
+     "config.ru",
      "fcg-service-servers.gemspec",
      "lib/fcg-service-servers.rb",
-     "lib/fcg-service-servers/Gemfile",
      "lib/fcg-service-servers/apps.rb",
      "lib/fcg-service-servers/apps/activity_app.rb",
      "lib/fcg-service-servers/apps/user_app.rb",
-     "lib/fcg-service-servers/bin/fcg-service-server",
-     "lib/fcg-service-servers/config.ru",
      "lib/fcg-service-servers/config/boot.rb",
      "lib/fcg-service-servers/config/settings/app.yml",
      "lib/fcg-service-servers/config/settings/app.yml.temp",
@@ -39,11 +42,12 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/models/user.rb",
      "lib/fcg-service-servers/validators/user_validator.rb",
      "lib/fcg-service-servers/version.rb",
-     "spec/fcg_activity_service_spec.rb",
-     "spec/fcg_user_service_spec.rb",
+     "spec/activity_app_spec.rb",
      "spec/servers_spec.rb",
      "spec/spec.opts",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/test_helper.rb",
+     "spec/user_app_spec.rb"
   ]
   s.homepage = %q{http://github.com/joemocha/fcg-service-servers}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -51,10 +55,11 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{FCG Service Servers}
   s.test_files = [
-    "spec/fcg_activity_service_spec.rb",
-     "spec/fcg_user_service_spec.rb",
+    "spec/activity_app_spec.rb",
      "spec/servers_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "spec/test_helper.rb",
+     "spec/user_app_spec.rb"
   ]
 
   if s.respond_to? :specification_version then

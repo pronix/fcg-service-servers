@@ -59,6 +59,13 @@ describe "activity_app" do
       attributes["site"].should == "alltheparties.com"
     end
 
+    it "should return proper id" do
+      get "/api/#{API_VERSION}/activities/#{@id}"
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      attributes["id"].should == @id
+    end
+    
     it "should return a 404 for a activity that doesn't exist" do
       get "/api/#{API_VERSION}/activities/foo"
       last_response.status.should == 404
