@@ -1,0 +1,13 @@
+common_attr: &common_attr
+  db: fcg
+  port: 6379
+  
+development:
+  <<: *common_attr
+  host: 3m.local
+  
+test:
+  <<: *common_attr
+
+production:
+  <<: *common_attr

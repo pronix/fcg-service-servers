@@ -9,6 +9,9 @@ FCG::Service::Server = Rack::Mount::RouteSet.new do |set|
   #
   # See Rack::Mount::RouteSet#add_route for more options.
   # set.add_route FooApp, { :request_method => 'GET', :path_info => %r{^/foo$} }, {}, :foo
-  set.add_route FCG::Service::ActivityApp
-  set.add_route FCG::Service::UserApp
+  
+  # Find all FCG::Service constants that end in App and add them to routes
+  FCG::Service.constants.select{|f| f[-3..-1] == "App" }.each do |app|
+    set.add_route FCG::Service.const_get(app)
+  end
 end

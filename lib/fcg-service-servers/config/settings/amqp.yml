@@ -1,0 +1,34 @@
+# AMQP client configuration file
+
+# These values will be used to configure the ampq gem, any values
+# omitted will let the gem use it's own defaults.
+
+# The configuration specifies the following keys:
+# * user - Username for the broker
+# * pass - Password for the broker
+# * host     - Hostname where the broker is running
+# * vhost    - Vhost to connect to
+# * port     - Port where the broker is running
+# * ssl      - Use ssl or not
+# * timeout  - Timeout
+
+defaults: &defaults
+  host: localhost
+  port: 5672
+  user: guest
+  pass: guest
+  vhost: /
+  logging: false
+  ssl: false
+
+development:
+  <<: *defaults
+  # user: dev
+  # pass: dev
+  host: 3m.local
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
