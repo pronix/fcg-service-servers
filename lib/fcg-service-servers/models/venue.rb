@@ -22,7 +22,7 @@ class Venue
   validates_length_of :address, :within => 3..75
   validates_length_of :city, :within => 2..45,  :if => :not_in_us?
   validates_length_of :state, :within => 2..45, :if => :not_in_us?
-  before_create :set_lat_and_lng, :set_citycode
+  before_create :set_lat_and_lng#, :set_citycode
   before_save :update_city_state_by_zipcode
   
   def full_address
@@ -45,6 +45,7 @@ class Venue
   
   protected
   def set_lat_and_lng
+    return true
     if in_us?
       res = Geokit::Geocoders::GoogleGeocoder.geocode(self.full_address) rescue [nil,nil]
       self.lat, self.lng = res.lat, res.lng

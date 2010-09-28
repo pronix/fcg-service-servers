@@ -30,7 +30,6 @@ configure do
   
   # Load all necessary files
   Dir[
-    File.expand_path("../../lib/cattr_inheritable_attrs.rb", __FILE__),
     File.expand_path("../../lib/service.rb", __FILE__),
     File.expand_path("../../validators/*.rb", __FILE__),
     File.expand_path("../../models/*.rb", __FILE__),

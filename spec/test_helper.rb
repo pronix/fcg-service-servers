@@ -2,10 +2,11 @@ dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib/fcg-service-servers'
 $TESTING = true
 ENV["SINATRA_ENV"] = "test"
-# require 'rubygems'
-# require 'test/unit'
+
+require "fcg-service-servers"
+require "spec"
 require "spec/interop/test"
-require 'config/boot.rb'
+require "rack/test"
 
 begin
   require 'leftright'

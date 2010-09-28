@@ -29,6 +29,8 @@ development:
 
 test:
   <<: *defaults
+  host: 3m.local
+  vhost: /test
 
 production:
   <<: *defaults

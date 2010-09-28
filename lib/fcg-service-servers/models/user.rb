@@ -1,12 +1,12 @@
 class User
   include ActiveModel::Validations
   include MongoMapper::Document
-  include_root_in_json = false
+
+  plugin MongoMapper::Plugins::Paranoid
   plugin UserHashPlugin
   plugin TokenPlugin
   plugin SocialPlugin
   plugin ImagePlugin
-  plugin MongoMapper::Plugins::Paranoid
   
   scope :existing, where(:deleted_at => nil )
   scope :by_email, lambda{|email| where(:email => email.downcase) }
