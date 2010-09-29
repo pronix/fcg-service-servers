@@ -17,7 +17,7 @@ configure do
   end
   
   # Redis Client
-  REDIS = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port
+  REDIS = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port, :timeout => 2
   
   # Bunny Client
   ASYNC_CLIENT = Bunny.new(:host => FCG_CONFIG.amqp.host, :user => FCG_CONFIG.amqp.user, :pass => FCG_CONFIG.amqp.pass)
@@ -33,7 +33,8 @@ configure do
     File.expand_path("../../lib/service.rb", __FILE__),
     File.expand_path("../../validators/*.rb", __FILE__),
     File.expand_path("../../models/*.rb", __FILE__),
-    File.expand_path("../../apps/*.rb", __FILE__)
+    File.expand_path("../../apps/*.rb", __FILE__),
+    File.expand_path("../../db/*.rb", __FILE__)
   ].each do |file|
     require file
   end

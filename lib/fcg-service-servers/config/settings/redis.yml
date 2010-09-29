@@ -8,6 +8,7 @@ development:
   
 test:
   <<: *common_attr
+  host: 3m.local
 
 production:
   <<: *common_attr

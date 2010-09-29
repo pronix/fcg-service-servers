@@ -1,6 +1,9 @@
 require 'rubygems'
 require 'rake'
-require 'lib/fcg-service-servers/version.rb'
+
+dir = File.dirname(File.expand_path(__FILE__))
+$LOAD_PATH.unshift dir + 'lib/fcg-service-servers'
+require 'fcg-service-servers/version'
 
 begin
   require 'jeweler'
@@ -23,10 +26,13 @@ begin
     gem.add_dependency "mongo_mapper", ">= 0.8.4"
     gem.add_dependency "hashie"
     gem.add_dependency "bunny"
-    gem.add_dependency "redis"
+    gem.add_dependency "redis", ">= 2.0.10"
+    gem.add_dependency "redis-namespace", ">= 0.10.0"
     gem.add_dependency "yajl-ruby", ">= 0.7.7"
     gem.add_dependency "rack-mount", ">= 0.6.13"
     gem.add_dependency "vegas", ">= 0.1.7"
+    gem.add_dependency "em-redis", ">= 0.2.3"
+    gem.add_dependency "fastercsv", ">= 1.5.3"
     
     gem.executables = ["fcg-service-server"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -61,4 +67,18 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "fcg-service-servers #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+namespace :seed do
+  desc "Seed redis with site data"
+  task :sites do
+    require "lib/fcg-service-servers"
+    Seed::create_sites
+  end
+
+  desc "Populate Redis with US geographic data"
+  task :us_geodata do
+    require "lib/fcg-service-servers"
+    Seed::create_geodata
+  end
 end

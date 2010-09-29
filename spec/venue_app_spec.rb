@@ -16,8 +16,9 @@ describe "venue_app" do
       Venue.create(
         :name => "Aperitivo",
         :address => "279 Fifth Avenue",
-        :city => "Brooklyn",
-        :state => "NY",
+        # :city => "Brooklyn",
+        # :state => "NY",
+        :country => "US", 
         :zipcode => "11215",
         :user_id => "4c43475fff808d982a00001a"
       )
@@ -33,6 +34,7 @@ describe "venue_app" do
       attributes["city"].should == "Brooklyn"
       attributes["state"].should == "NY"
       attributes["zipcode"].should == "11215"
+      attributes["country"].should == "US"
       attributes["citycode"].should_not == "nyc"
     end
     
@@ -50,6 +52,7 @@ describe "venue_app" do
         :city => "Brooklyn",
         :state => "NY",
         :zipcode => "11215",
+        :country => "US",
         :user_id => "4c43475fff808d982a00001a"
       }.to_json
       last_response.should be_ok
@@ -69,6 +72,7 @@ describe "venue_app" do
         :city => "Brooklyn",
         :state => "NY",
         :zipcode => "11215",
+        :country => "US",
         :user_id => "4c43475fff808d982a00001a"
       )
       @id = obj.id.to_s
