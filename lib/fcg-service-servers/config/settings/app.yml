@@ -1,11 +1,11 @@
 common_attr: &common_attr
+  app: fcg_server
   name: FCG Service Server
   per_page: 10
   
 development:
   <<: *common_attr
   version: v1
-  mongodb_host: localhost
   
 test:
   <<: *common_attr

@@ -2,8 +2,8 @@ module FCG::Service
   class UserApp < FCG::Service::Base
     # get a user by email
     get "/api/#{API_VERSION}/users/find_by_:field/:value" do
-      user = User.send("find_by_#{params[:field]}", params[:value])
-      if user and !user.deleted?
+      user = User.first(:conditions => { params[:field].to_sym => params[:value] })
+      if user and !user.destroyed?
         user.to_json
       else
         error 404, "user not found".to_json
@@ -13,7 +13,7 @@ module FCG::Service
     # get a user by id
     get "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id]) rescue nil
-      if user and !user.deleted?
+      if user and !user.destroyed?
         user.to_json
       else
         error 404, "user not found".to_json
@@ -38,7 +38,7 @@ module FCG::Service
     # update an existing user
     put "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id])
-      if user and !user.deleted?
+      if user and !user.destroyed?
         begin
           user.update_attributes(JSON.parse(request.body.read))
           if user.valid?
@@ -57,7 +57,7 @@ module FCG::Service
     # destroy an existing user
     delete "/api/#{API_VERSION}/users/:id" do
       user = User.find(params[:id])
-      if user and !user.deleted?
+      if user and !user.destroyed?
         user.destroy
         user.to_json
       else
@@ -70,7 +70,7 @@ module FCG::Service
       begin
         attributes = JSON.parse(request.body.read)
         user = User.find(params[:id])
-        if user and !user.deleted? and user.authenticated?(attributes["password"])
+        if user and !user.destroyed? and user.authenticated?(attributes["password"])
           user.to_json
         else
           error 400, "invalid login credentials".to_json

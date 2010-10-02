@@ -3,6 +3,8 @@ module FCG
   module Service
     class Base < Sinatra::Base
       disable :layout
+      set :logging, :true
+      
       before do
         content_type :json
       end

@@ -1,32 +1,29 @@
 class User
-  include ActiveModel::Validations
-  include MongoMapper::Document
+  include Mongoid::Document
+  include Mongoid::Paranoia
+  include Mongoid::Timestamps
 
-  plugin MongoMapper::Plugins::Paranoid
-  plugin UserHashPlugin
-  plugin TokenPlugin
-  plugin SocialPlugin
-  plugin ImagePlugin
+  include UserHashPlugin
+  include SocialPlugin
+  include ImagePlugin
   
-  scope :existing, where(:deleted_at => nil )
-  scope :by_email, lambda{|email| where(:email => email.downcase) }
-  scope :by_username, lambda{|username| where(:username => username.downcase) }
-  
-  image_keys :photo
-  key :username, String
-  key :email, String
-  key :crypted_password, String
-  key :salt, String
-  key :date_of_birth, Time
-  key :last_visited_at, Time
-  key :posted_party_at, Time
+  # image_keys :photo
+  field :username, :type => String
+  field :email, :type => String
+  field :crypted_password, :type => String
+  field :salt, :type => String
+  field :date_of_birth, :type => Time
+  field :last_visited_at, :type => Time
+  field :posted_party_at, :type => Time
   
   # profiles
-  key :profile_image, String
-  key :sex, String
-  key :web, String
-  key :bio, String
-  timestamps!
+  field :profile_image, :type => String
+  field :sex, :type => String
+  field :web, :type => String
+  field :bio, :type => String
+  
+  scope :by_email, lambda{|email| where(:email => email.downcase) }
+  scope :by_username, lambda{|username| where(:username => username.downcase) }
   
   attr_accessor :password
   
@@ -131,7 +128,6 @@ class User
   protected
   def setup
     self.location[:country] = "US"
-    self.token_id = "#{Time.now.utc.to_i}-#{Guid.new}"
     self.flags = {
       :enabled => true,
       :confirmed => false,
@@ -140,9 +136,8 @@ class User
   end
   
   def set_city_state_using_us_zipcode
-    return true
     # this should be done asynchronously
-    res = JSON.parse(DB[:geo]["#{self.location[:country]}-zipcode:#{self.location[:zipcode]}".downcase]) rescue nil
+    res = JSON.parse(GEOREDIS["#{self.location[:country]}-zipcode:#{self.location[:zipcode]}".downcase]) rescue nil
     self.location[:city], self.location[:state], self.location[:time_zone] = res["CityName"], res["StateAbbr"], res["UTC"] unless res.nil?
   end
 end

@@ -1,19 +1,20 @@
 class Activity
-  include MongoMapper::Document
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
   # [actor] [verb] [object] [target]
-  key :actor, Hash # {:display_name => "Samuel O. Obukwelu", :url => "http://www.fcgid.com/person/joemocha", :photo => nil, :id => "user:4c442ae8ff808daa0f000002"}
-  key :verb, String # FCG::ACTIVITY::VERBS::MARK_AS_FAVORITE
-  key :object, Hash # ie for photo [:title, :thumbnail, :larger_image, :image_page_url, :description]
-  key :target, Hash # :photo_album => [:title, :thumbnail, :album_page_url]
-  key :title, String # Sam viewed a photo in 
-  key :summary, String # Sam viewed a photo in 
-  key :site, String # 
-  key :visible, Boolean
-  key :extra, Hash
-  timestamps!
+  field :actor, :type => Hash # {:display_name => "Samuel O. Obukwelu", :url => "http://www.fcgid.com/person/joemocha", :photo => nil, :id => "user:4c442ae8ff808daa0f000002"}
+  field :verb, :type => String # FCG::ACTIVITY::VERBS::MARK_AS_FAVORITE
+  field :object, :type => Hash # ie for photo [:title, :thumbnail, :larger_image, :image_page_url, :description]
+  field :target, :type => Hash # :photo_album => [:title, :thumbnail, :album_page_url]
+  field :title, :type => String # Sam viewed a photo in 
+  field :summary, :type => String # Sam viewed a photo in 
+  field :site, :type => String # 
+  field :visible, :type => Boolean
+  field :extra, :type => Hash
   
   validates_presence_of :actor, :object, :verb, :title
-  validates_inclusion_of :verb, :within => FCG::ACTIVITY::VERBS::ALL.keys.map(&:to_s)
+  # validates_inclusion_of :verb, :within => FCG::ACTIVITY::VERBS::ALL.keys.map(&:to_s)
   
   class << self
     def visited_page(*args)

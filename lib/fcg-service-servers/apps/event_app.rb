@@ -3,7 +3,7 @@ module FCG::Service
     # get a event by id
     get "/api/#{API_VERSION}/events/:id" do
       event = Event.find(params[:id]) rescue nil
-      if event and !event.deleted?
+      if event and !event.destroyed?
         event.to_json
       else
         error 404, "event not found".to_json
@@ -13,9 +13,9 @@ module FCG::Service
     # create a new event
     post "/api/#{API_VERSION}/events" do
       begin
-        params = JSON.parse(request.body.read)
+        params = Hashie::Mash.new(JSON.parse(request.body.read))
         event = Event.new(params)
-        if event.valid? and event.save
+        if event.save
           event.to_json
         else
           error 400, error_hash(event, "failed validation").to_json
@@ -28,7 +28,7 @@ module FCG::Service
     # update an existing event
     put "/api/#{API_VERSION}/events/:id" do
       event = Event.find(params[:id])
-      if event and !event.deleted?
+      if event and !event.destroyed?
         begin
           event.update_attributes(JSON.parse(request.body.read))
           if event.valid?
@@ -47,7 +47,7 @@ module FCG::Service
     # destroy an existing event
     delete "/api/#{API_VERSION}/events/:id" do
       event = Event.find(params[:id])
-      if event and !event.deleted?
+      if event and !event.destroyed?
         event.destroy
         event.to_json
       else

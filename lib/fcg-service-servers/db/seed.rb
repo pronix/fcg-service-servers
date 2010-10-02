@@ -1,6 +1,5 @@
 module Seed
   def self.create_geodata
-    geo = Redis::Namespace.new(:geo, :redis => REDIS)
     zipcodes = File.read(File.expand_path("../us_zipcodes.csv", __FILE__)) # us_zipcodes
       FasterCSV.parse(zipcodes, :headers => true) do |row|
         begin
@@ -8,18 +7,18 @@ module Seed
           row_packed = row.to_hash.inject({}){|h,(k,v)| h[k] = v.strip; h }.to_json
           # Default City Type
           if row[3] == "D"
-            geo["us-zipcode:#{zipcode}"] = row_packed
-            geo.sadd "msa:#{row[9]}", zipcode
-            geo.sadd "us-state:#{row[7]}".downcase, zipcode
+            GEO_REDIS["us-zipcode:#{zipcode}"] = row_packed
+            GEO_REDIS.sadd "msa:#{row[9]}", zipcode
+            GEO_REDIS.sadd "us-state:#{row[7]}".downcase, zipcode
             row[10].split("/").each do |areacode|
-              geo.sadd "us-areacode:#{areacode}", zipcode
+              GEO_REDIS.sadd "us-areacode:#{areacode}", zipcode
             end
           end
           puts "#{zipcode} done..."
         rescue Errno::EAGAIN => e
-          puts "\nRetrying #{zipcode} in 1/4 sec.... (#{e})\n#{geo.inspect}\n\n"
-          sleep 0.25
-          geo.reconnect
+          puts "\nRetrying #{zipcode} in 1/4 sec.... (#{e})\n#{GEO_REDIS.inspect}\n\n"
+          sleep 0.1
+          # GEO_REDIS.reconnect
           retry
         end
       end
@@ -50,8 +49,8 @@ module Seed
         }
       }
     }.each do |key, val|
-      REDIS["site:#{key}"] = val.to_json
-      REDIS.sadd "sites", key
+      SITE_REDIS["#{key}"] = val.to_json
+      SITE_REDIS.sadd "all", key
       puts "#{key} is done."
     end
 
@@ -171,27 +170,26 @@ module Seed
     cities = {:atl=>"Atlanta", :phl=>"Phillie", :dal=>"Dallas", :nyc=>"New York City", :hou=>"Houston", :chi=>"Chicago", :mia=>"Miami", :lax=>"Los Angeles", :las=>"Las Vegas", :dca=>"Washington, DC", :nwo=>"New Orleans", :aus=>"Austin"}
     cities.each do |key, val|
       values = { :short_name => key.to_s, :full_name => val, :active => 1 }
-      REDIS["site:#{site_url}:city:#{key}"] = values.to_json
+      SITE_REDIS["#{site_url}:city:#{key}"] = values.to_json
       begin
         zips[key].each do |zip|
-          REDIS.sadd "site:#{site_url}:city:#{key}:zipcodes", zip
+          SITE_REDIS.sadd "#{site_url}:city:#{key}:zipcodes", zip
         end
         puts "#{key} is done"
       rescue Errno::EAGAIN
         puts "trying again 1 second #{Time.now}"
-        sleep 0.25
-        REDIS.reconnect
+        sleep 1
         retry
       rescue NoMethodError
         puts "NoMethodError for #{key}"
       end
     end
 
-    site = JSON.parse(REDIS["site:#{site_url}"])
+    site = JSON.parse(SITE_REDIS["#{site_url}"])
     site["extra"] = site["extra"].merge({ 
       "active_cities_sorted" => "nyc,hou,atl,lax,mia,dca,dal,chi,nwo,aus,las,phl"
     })
 
-    REDIS["site:#{site_url}"] = site.to_json
+    SITE_REDIS["#{site_url}"] = site.to_json
   end
 end

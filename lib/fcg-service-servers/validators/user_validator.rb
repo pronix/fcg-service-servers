@@ -21,12 +21,12 @@ class UserValidator < ActiveModel::Validator
     value = record.send(column)
     res = case column
       when :username
-        user = User.find_by_username(value)
+        user = User.by_username(value).first
         if user
           user == record ? false : true
         end
       when :email
-        user = User.find_by_email(value)
+        user = User.by_email(value).first
         if user
           user == record ? false : true
         end 

@@ -1,8 +1,11 @@
 class Event
-  include MongoMapper::Document
+  include Mongoid::Document
+  include Mongoid::Paranoia
+  include Mongoid::Timestamps
+  include Mongoid::Versioning
+  max_versions 5
+  include ImagePlugin
   
-  plugin MongoMapper::Plugins::Paranoid
-  plugin ImagePlugin
   image_keys :photo, :flyer
   
   scope :active, where(:active => true)
@@ -15,34 +18,34 @@ class Event
   # belongs_to :party
   # belongs_to :venue
   
-  key :user_id, ObjectId
-  key :party_id, ObjectId
-  key :venue_id, ObjectId
+  field :user_id, :type => String
+  field :party_id, :type => String
+  field :venue, :type => Hash
   
-  key :title, String
-  key :description, String
-  key :music, String
-  key :host, String
-  key :dj, String
-  key :start_time, String
-  key :end_time, String
+  field :title, :type => String
+  field :description, :type => String
+  field :music, :type => String
+  field :host, :type => String
+  field :dj, :type => String
+  field :start_time, :type => String
+  field :end_time, :type => String
   
-  key :length_in_hours, Integer
-  
-  key :lat, Float
-  key :lng, Float
-  key :citycode, String
+  field :length_in_hours, :type => Integer
+
+  field :venue_name, :type => String
+  field :lat, :type => Float
+  field :lng, :type => Float
+  field :citycode, :type => String
     
-  key :comments_allowed, Boolean, :default => true
-  key :active, Boolean, :default => true
+  field :comments_allowed, :type => Boolean, :default => true
+  field :active, :type => Boolean, :default => true
   
-  key :date, Date
-  key :start_time_utc, Time
-  key :end_time_utc, Time
-  key :posted_to_twitter_at, Date
-  timestamps!
+  field :date, :type => Date
+  field :start_time_utc, :type => Time
+  field :end_time_utc, :type => Time
+  field :posted_to_twitter_at, :type => Date
   
-  validates_presence_of :user_id, :party_id, :venue_id
+  validates_presence_of :user_id, :party_id, :venue, :date
   validates_format_of :start_time, :with => /^(0?[1-9]|1[0-2]):(00|15|30|45)(a|p)m$/i
   validates_format_of :end_time, :with => /^(0?[1-9]|1[0-2]):(00|15|30|45)(a|p)m$/i
   # after_create :handle_after_create
@@ -91,29 +94,18 @@ class Event
     write_attribute(:date, Date.parse(val))
   end
   
-  def venue=(val)
-    write_attribute(:venue_id, val.id)
-    write_attribute(:lat, val.lat)
-    write_attribute(:lng, val.lng)
-    write_attribute(:citycode, val.citycode)
-  end
+  # def venue=(val)
+  #   write_attribute(:venue_id, val.id)
+  #   write_attribute(:venue_name, val.name)
+  #   write_attribute(:lat, val.lat) unless lat.nil?
+  #   write_attribute(:lng, val.lng) unless lng.nil?
+  #   write_attribute(:citycode, val.citycode) unless citycode?
+  # end
   
   def party=(val)
-    @party = val
-    write_attribute(:party_id, val.id)
-    write_attribute(:title, val.title)
-    write_attribute(:user_id, val.user_id)
-    write_attribute(:date, val.next_date)
-    write_attribute(:start_time, val.start_time)
-    write_attribute(:end_time, val.end_time)
-    write_attribute(:length_in_hours, val.length_in_hours)
-    write_attribute(:dj, val.dj)
-    write_attribute(:host, val.host)
-    write_attribute(:music, val.music)
-    write_attribute(:description, val.description)
-    write_attribute(:active, val.active)
-    set_utc(val.next_date, val.start_time, val.length_in_hours)
-    self.venue = val.venue
+    write_attribute(:party, val)
+    # set_utc(val.next_date, val.start_time, val.length_in_hours)
+    # self.venue = val.venue
   end
   
   def full_address
@@ -145,37 +137,5 @@ class Event
   
   def uploadable_by_user?(*args)
     self.party.uploadable_by_user?(*args)
-  end
-  
-  def as_json(*args)
-    {
-      :event => {
-        :id => self.id,
-        :party_id => self.party_id,
-        :created_at => self.created_at,
-        :title => self.title,
-        :citycode => self.citycode,
-        :venue_id => self.venue_id,
-        :venue_name => self.venue_name,
-        :date => self.date.slashed,
-        :length_in_hours => self.length_in_hours,
-        :dj => self.dj,
-        :user_id => self.user_id,
-        :comments_allowed => self.comments_allowed,
-        :music => self.music,
-        :description => self.description,
-        :host => self.host,
-        :end_time => self.end_time ,
-        :end_time_utc => self.end_time_utc,
-        :start_time => self.start_time,
-        :start_time_utc => self.start_time_utc,
-        :photo_album_title => self.photo_album_title,
-        :photo_album => self.photo_album,
-        :flyer_album => self.flyer_album,
-        :lng => self.lng,
-        :lat => self.lat,
-        :active => self.active
-      }
-    }
   end
 end

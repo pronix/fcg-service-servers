@@ -1,25 +1,17 @@
-require File.dirname(__FILE__) + '/test_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 
-def app
-  FCG::Service::UserApp
-end
-
-describe "user_app" do
+describe "User App" do
   before(:each) do
     User.delete_all
   end
 
   describe "GET on /api/#{API_VERSION}/users/:id" do
     before(:each) do
-      u = User.create(
-        :username => "paulD",
-        :email => "paul@pauldix.net",
-        :password => "strongpass"
-      )
-      @id = u.id.to_s
+      @user = Fabricate(:pauld)
+      @id = @user.id.to_s
     end
     
-    it "should return a user by id: #{@id}" do
+    it "should return a user by id" do
       get "/api/#{API_VERSION}/users/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
@@ -30,7 +22,7 @@ describe "user_app" do
       get "/api/#{API_VERSION}/users/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      attributes["email"].should == "paul@pauldix.net"
+      attributes["email"].should == @user.email
     end
 
     it "should not return a user's password" do
@@ -48,15 +40,13 @@ describe "user_app" do
 
   describe "GET on /api/#{API_VERSION}/users/find_by_:field/:email" do
     before(:each) do
-      User.create(
-        :username => "paulyd",
-        :email => "paul@pauldix.net",
-        :password => "strongpass"
-      )
+      @user = Fabricate(:pauld) do
+        username "PaulyD"
+      end
     end
 
     it "should return a user by email" do
-      get "/api/#{API_VERSION}/users/find_by_email/paul@pauldix.net"
+      get "/api/#{API_VERSION}/users/find_by_email/#{@user.email}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       attributes["username"].should == "paulyd"
@@ -68,10 +58,11 @@ describe "user_app" do
       post "/api/#{API_VERSION}/users", {
           :username => "trotter",
           :email    => "trotter@nospam.com",
-          :password => "whatever"}.to_json
+          :password => "whatever" }.to_json
+          
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/users/#{attributes['id']}"
+      get "/api/#{API_VERSION}/users/#{attributes['_id']}"
       attributes = JSON.parse(last_response.body)
       attributes["username"].should  == "trotter"
       attributes["email"].should == "trotter@nospam.com"
@@ -80,12 +71,8 @@ describe "user_app" do
 
   describe "PUT on /api/#{API_VERSION}/users/:id" do
     before(:each) do
-      u = User.create(
-        :username => "bryan",
-        :email => "bigsmyG@aol.com",
-        :password => "whatever",
-        :bio => "Always running 1500 meter dash!")
-      @id = u.id.to_s
+      @user = Fabricate(:bryan)
+      @id = @user.id.to_s
     end
     
     it "should update a user" do
@@ -120,11 +107,8 @@ describe "user_app" do
 
   describe "DELETE on /api/#{API_VERSION}/users/:id" do
     before(:each) do
-      u = User.create(
-        :username     => "francis",
-        :email    => "francis@igetsnospam.org",
-        :password => "whatever")
-      @id = u.id.to_s
+      @user = Fabricate(:bryan)
+      @id = @user.id.to_s
     end
     it "should delete a user" do
       delete "/api/#{API_VERSION}/users/#{@id}"
@@ -136,16 +120,16 @@ describe "user_app" do
 
   describe "POST on /api/#{API_VERSION}/users/:id/sessions" do
     before(:each) do
-      u = User.create(:username => "josh", :password => "nyc.rb rules", :email => "josh@sessions.com")
-      @id = u.id.to_s
+      @user = Fabricate(:bryan)
+      @id = @user.id.to_s
     end
 
     it "should return the user object on valid credentials" do
       post "/api/#{API_VERSION}/users/#{@id}/sessions", {
-        :password => "nyc.rb rules"}.to_json
+        :password => "whatever"}.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      attributes["username"].should == "josh"
+      attributes["username"].should == "bryan"
     end
 
     it "should fail on invalid credentials" do

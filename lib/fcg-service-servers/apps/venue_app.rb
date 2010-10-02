@@ -3,7 +3,7 @@ module FCG::Service
     # get a venue by id
     get "/api/#{API_VERSION}/venues/:id" do
       venue = Venue.find(params[:id]) rescue nil
-      if venue and !venue.deleted?
+      if venue and !venue.destroyed?
         venue.to_json
       else
         error 404, "venue not found".to_json
@@ -28,7 +28,7 @@ module FCG::Service
     # update an existing venue
     put "/api/#{API_VERSION}/venues/:id" do
       venue = Venue.find(params[:id])
-      if venue and !venue.deleted?
+      if venue and !venue.destroyed?
         begin
           venue.update_attributes(JSON.parse(request.body.read))
           if venue.valid?
@@ -47,7 +47,7 @@ module FCG::Service
     # destroy an existing venue
     delete "/api/#{API_VERSION}/venues/:id" do
       venue = Venue.find(params[:id])
-      if venue and !venue.deleted?
+      if venue and !venue.destroyed?
         venue.destroy
         venue.to_json
       else

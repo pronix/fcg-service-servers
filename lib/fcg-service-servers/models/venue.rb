@@ -1,22 +1,20 @@
 class Venue
-  include ActiveModel::Validations
-  include MongoMapper::Document
-  plugin MongoMapper::Plugins::Paranoid
+  include Mongoid::Document
+  include Mongoid::Paranoia
+  include Mongoid::Timestamps
   
-  key :user_id, ObjectId
-  key :name, String
-  key :address, String
-  key :city, String
-  key :state, String
-  key :zipcode, String
-  key :country, String, :default => "US"
-  key :time_zone, String
-  key :citycode, String
-  key :lat, Float
-  key :lng, Float
-  key :active, Boolean, :default => true
-  belongs_to :user
-  timestamps!
+  field :user_id, :type => String
+  field :name, :type => String
+  field :address, :type => String
+  field :city, :type => String
+  field :state, :type => String
+  field :zipcode, :type => String
+  field :country, :type => String, :default => "US"
+  field :time_zone, :type => String
+  field :citycode, :type => String
+  field :lat, :type => Float
+  field :lng, :type => Float
+  field :active, :type => Boolean, :default => true
   
   validates_length_of :name, :within => 1..45
   validates_length_of :address, :within => 3..75
