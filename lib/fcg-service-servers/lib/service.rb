@@ -1,7 +1,10 @@
 require 'sinatra' unless defined?(Sinatra)
+require File.expand_path("../rest", __FILE__)
+
 module FCG
   module Service
     class Base < Sinatra::Base
+      include FCG::Rest
       disable :layout
       set :logging, :true
       

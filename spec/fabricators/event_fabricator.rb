@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), 'venue_fabricator')
-
 Fabricator :tomorrow_event, :from => :event do
   date Date.new.slashed
   start_time "10:00pm"

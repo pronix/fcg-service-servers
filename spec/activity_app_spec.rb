@@ -35,8 +35,8 @@ describe "Activity App" do
 
   describe "GET on /api/#{API_VERSION}/activities/:id" do
     before(:each) do
-      act = Activity.create(activity_hash)
-      @id = Activity.first.id.to_s if Activity.first.respond_to? :id
+      @activity = Fabricate(:activity)
+      @id = @activity.id.to_s
     end
     
     it "should return an activity by id: #{@id}" do
@@ -84,6 +84,7 @@ describe "Activity App" do
         :verb => "mark_as_favorite",
         :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
         :site => "ATP"})
+        
       post "/api/#{API_VERSION}/activities", activity.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
@@ -96,9 +97,10 @@ describe "Activity App" do
 
   describe "DELETE on /api/#{API_VERSION}/activities/:id" do
     before(:each) do
-      u = Activity.create(activity_hash)
-      @id = u.id.to_s
+      @activity = Fabricate(:activity)
+      @id = @activity.id.to_s
     end
+    
     it "should delete a activity" do
       delete "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
