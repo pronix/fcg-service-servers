@@ -1,5 +1,5 @@
 module FCG::Service
   class PartyApp < FCG::Service::Base
-    FCG::Rest.restful :party, self
+    include FCG::Rest
   end
 end

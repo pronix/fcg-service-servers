@@ -104,8 +104,8 @@ class Event
   
   def party=(val)
     write_attribute(:party, val)
-    # set_utc(val.next_date, val.start_time, val.length_in_hours)
-    # self.venue = val.venue
+    set_utc(val.next_date, val.start_time, val.length_in_hours)
+    self.venue = val.venue
   end
   
   def full_address
@@ -113,7 +113,7 @@ class Event
   end
   
   def time_zone
-    self.venue.time_zone
+    self.venue["time_zone"]
   end
 
   def title_and_venue_name

@@ -1,5 +1,7 @@
 module FCG::Service
   class EventApp < FCG::Service::Base
-    FCG::Rest.restful :event, self
+    include FCG::Rest
+    rest :event
+    # FCG::Rest.restful :event, self
   end
 end

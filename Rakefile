@@ -20,6 +20,7 @@ begin
     gem.add_development_dependency "fabrication", ">= 0.8.3"
     gem.add_development_dependency "database_cleaner"
     gem.add_development_dependency "ffaker", ">= 0.4.0"
+    gem.add_development_dependency "ruby-debug"
     
     gem.add_dependency "fcg-core-ext", ">= 0.0.4"
     gem.add_dependency "fcg-service-ext", ">= 0.0.11"
@@ -31,6 +32,7 @@ begin
     gem.add_dependency "vegas", ">= 0.1.7"
     gem.add_dependency "bunny"
     gem.add_dependency "fastercsv", ">= 1.5.3"
+    gem.add_dependency "sanitize"
     # Redis
     gem.add_dependency "SystemTimer"
     gem.add_dependency "redis", ">= 2.0.10"

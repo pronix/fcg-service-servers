@@ -5,10 +5,9 @@ class Party
   RECUR = %w{ once weekly }
   
   scope :by_user, lambda { |userid| where(:user_id => userid) }
-  
 
-  field :user_id, :type => String
-  field :venue_id, :type => String
+  field :user_id#, :type => String
+  field :venue, :type => Hash
   field :events, :type => Hash
   field :url, :type => String
   field :title, :type => String
@@ -44,7 +43,7 @@ class Party
   attr_accessor :venue_name, :weekly, :old_event_id
   
   validates_with PartyValidator
-  validates_presence_of :title, :music, :description
+  validates_presence_of :title, :music, :description, :venue, :user_id, :next_date
   validates_format_of :start_time, :with => /^(0?[1-9]|1[0-2]):(00|15|30|45)(a|p)m$/i
   validates_format_of :end_time, :with => /^(0?[1-9]|1[0-2]):(00|15|30|45)(a|p)m$/i
   validates_length_of :title,   :within => 3..64
@@ -113,24 +112,24 @@ class Party
     end
   end
   
-  def as_json(*args)
-    {
-      :party => {
-        :id            => self.id,
-        :user          => self.user_id,
-        :title         => self.title,
-        :venue_id      => self.venue_id,
-        :venue_name    => self.venue_name,
-        :dj            => self.dj,
-        :music         => self.music,
-        :start_time    => self.start_time,
-        :end_time      => self.end_time,
-        :description   => self.description,
-        :current_event => self.current_event,
-        :created_at    => self.created_at
-      }
-    }
-  end
+  # def as_json(*args)
+  #   {
+  #     :party => {
+  #       :id            => self.id,
+  #       :user          => self.user_id,
+  #       :title         => self.title,
+  #       :venue_id      => self.venue_id,
+  #       :venue_name    => self.venue_name,
+  #       :dj            => self.dj,
+  #       :music         => self.music,
+  #       :start_time    => self.start_time,
+  #       :end_time      => self.end_time,
+  #       :description   => self.description,
+  #       :current_event => self.current_event,
+  #       :created_at    => self.created_at
+  #     }
+  #   }
+  # end
   
   def uploadable_by_user?(user)
     return true if user.id == self.user_id or photographer_list.include?("email:#{user.email}") or photographer_list.include?("username:#{user.username}")

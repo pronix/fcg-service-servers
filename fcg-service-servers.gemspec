@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Samuel O. Obukwelu"]
-  s.date = %q{2010-10-02}
+  s.date = %q{2010-10-04}
   s.default_executable = %q{fcg-service-server}
   s.description = %q{Servers for the different services offered by FCG}
   s.email = %q{sam@fcgmedia.com}
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/apps.rb",
      "lib/fcg-service-servers/apps/activity_app.rb",
      "lib/fcg-service-servers/apps/event_app.rb",
+     "lib/fcg-service-servers/apps/party_app.rb",
      "lib/fcg-service-servers/apps/stat_app.rb",
      "lib/fcg-service-servers/apps/user_app.rb",
      "lib/fcg-service-servers/apps/venue_app.rb",
@@ -42,6 +43,7 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/config/settings/mongodb.yml",
      "lib/fcg-service-servers/config/settings/redis.yml",
      "lib/fcg-service-servers/db/seed.rb",
+     "lib/fcg-service-servers/lib/rest.rb",
      "lib/fcg-service-servers/lib/service.rb",
      "lib/fcg-service-servers/models/activity.rb",
      "lib/fcg-service-servers/models/event.rb",
@@ -54,6 +56,11 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/version.rb",
      "spec/activity_app_spec.rb",
      "spec/event_app_spec.rb",
+     "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/user_fabricator.rb",
+     "spec/fabricators/venue_fabricator.rb",
+     "spec/party_app_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
      "spec/user_app_spec.rb",
@@ -67,7 +74,12 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/activity_app_spec.rb",
      "spec/event_app_spec.rb",
+     "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
+     "spec/fabricators/venue_fabricator.rb",
+     "spec/party_app_spec.rb",
      "spec/spec_helper.rb",
      "spec/user_app_spec.rb",
      "spec/venue_app_spec.rb"
@@ -84,6 +96,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<fabrication>, [">= 0.8.3"])
       s.add_development_dependency(%q<database_cleaner>, [">= 0"])
       s.add_development_dependency(%q<ffaker>, [">= 0.4.0"])
+      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_runtime_dependency(%q<thin>, ["= 1.2.7"])
@@ -94,6 +107,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<vegas>, [">= 0.1.7"])
       s.add_runtime_dependency(%q<bunny>, [">= 0"])
       s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
+      s.add_runtime_dependency(%q<sanitize>, [">= 0"])
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<redis>, [">= 2.0.10"])
       s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -105,6 +119,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<fabrication>, [">= 0.8.3"])
       s.add_dependency(%q<database_cleaner>, [">= 0"])
       s.add_dependency(%q<ffaker>, [">= 0.4.0"])
+      s.add_dependency(%q<ruby-debug>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_dependency(%q<thin>, ["= 1.2.7"])
@@ -115,6 +130,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<vegas>, [">= 0.1.7"])
       s.add_dependency(%q<bunny>, [">= 0"])
       s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
+      s.add_dependency(%q<sanitize>, [">= 0"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<redis>, [">= 2.0.10"])
       s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -127,6 +143,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<fabrication>, [">= 0.8.3"])
     s.add_dependency(%q<database_cleaner>, [">= 0"])
     s.add_dependency(%q<ffaker>, [">= 0.4.0"])
+    s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
     s.add_dependency(%q<thin>, ["= 1.2.7"])
@@ -137,6 +154,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<vegas>, [">= 0.1.7"])
     s.add_dependency(%q<bunny>, [">= 0"])
     s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
+    s.add_dependency(%q<sanitize>, [">= 0"])
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<redis>, [">= 2.0.10"])
     s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])

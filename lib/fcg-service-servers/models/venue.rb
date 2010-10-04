@@ -58,7 +58,9 @@ class Venue
   
   def update_city_state_by_zipcode
     if in_us?
+      zip = self.zipcode.split(/-/).first
       res = Geo.find_by_country_and_zipcode(self.country, self.zipcode)
+      # debugger
       self.city, self.state, self.time_zone = res["CityName"], res["StateAbbr"], res["UTC"] unless res.nil?
     end
   end

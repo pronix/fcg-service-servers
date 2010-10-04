@@ -7,34 +7,32 @@ describe "Party App" do
 
   describe "GET on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      pending do
-        @party = Fabricate(:party)
-        @id = @party.id.to_s        
-      end
+      user = Fabricate(:user)
+      venue = Fabricate(:venue, :user_id => user.id.to_s)
+      @party = Fabricate(:party, :venue => venue, :user_id => user.id.to_s)
+      puts @party.errors.inspect
+      @id = @party.id.to_s
     end
     
     it "should return an party by id: #{@id}" do
-      pending do
-        get "/api/#{API_VERSION}/parties/#{@id}"
-        last_response.should be_ok
-        attributes = JSON.parse(last_response.body)
-        attributes["_id"].should == @id
-        attributes["address"].should == "279 Fifth Aparty"
-        attributes["city"].should == "Brooklyn"
-        attributes["state"].should == "NY"
-        attributes["zipcode"].should == "11215"
-        attributes["country"].should == "US"
-        attributes["citycode"].should_not == "nyc"
-      end
+      get "/api/#{API_VERSION}/parties/#{@id}"
+      puts last_response.body
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      attributes["_id"].should == @id
+      attributes["address"].should == "279 Fifth Aparty"
+      attributes["city"].should == "Brooklyn"
+      attributes["state"].should == "NY"
+      attributes["zipcode"].should == "11215"
+      attributes["country"].should == "US"
+      attributes["citycode"].should_not == "nyc"
     end
     
     it "should return a 404 for a party that doesn't exist" do
-      pending do
-        get "/api/#{API_VERSION}/parties/foo"
-        last_response.status.should == 404        
-      end
+      get "/api/#{API_VERSION}/parties/foo"
+      last_response.status.should == 404
     end
-  end
+  end 
   
   describe "POST on /api/#{API_VERSION}/parties" do
     it "should create a party" do

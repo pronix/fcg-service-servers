@@ -15,6 +15,8 @@ require 'mocha'
 require 'fabrication'
 require 'database_cleaner'
 require 'ffaker'
+require 'pp'
+require 'ruby-debug'
 
 # load fabricators
 Dir[File.expand_path(File.join(File.dirname(__FILE__),'fabricators','**','*.rb'))].each{ |file| require file }
