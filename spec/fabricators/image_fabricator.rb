@@ -1,0 +1,3 @@
+Fabricator :image do
+  
+end
