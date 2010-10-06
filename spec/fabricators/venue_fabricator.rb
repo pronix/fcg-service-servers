@@ -18,6 +18,7 @@ Fabricator :venue do
   name      "#{Faker::Company.name} Lounge"
   address   Faker::Address.street_address
   country   "US"
+  citycode  "nyc"
   zipcode   "10010"
   user_id   "4c43475fff808d982a00001a"
 end

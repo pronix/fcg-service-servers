@@ -87,6 +87,7 @@ class Party
     v = Venue.find(val.to_s)
     self.venue = v.to_hash
   end
+  
   # def to_param
   #   %Q{#{id}-#{[title, venue.name, venue.city, venue.state].join(' ').gsub(/[^a-z0-9]+/i, '_')}}
   # end

@@ -36,6 +36,7 @@ describe "Venue App" do
         :name     => "Nightingale's",
         :address  => Faker::Address.street_address,
         :country  => "US",
+        :citycode => "nyc",
         :zipcode  => Faker::Address.zip_code,
         :user_id  => "4c43475fff808d982a00001a"
       }
@@ -47,6 +48,7 @@ describe "Venue App" do
       attributes = JSON.parse(last_response.body)
       attributes["name"].should == "Nightingale's"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
+      attributes["citycode"].should == "nyc"
     end
   end
 

@@ -20,7 +20,7 @@ class Venue
   validates_length_of :city, :within => 2..45,  :if => :not_in_us?
   validates_length_of :state, :within => 2..45, :if => :not_in_us?
   before_create :set_lat_and_lng
-  before_save :update_city_state_by_zipcode
+  before_save :update_city_state_by_zipcode #:set_citycode
   
   def full_address
     @full_address = "#{self.address}, #{self.city}, #{self.state}, #{self.zipcode}"
@@ -50,16 +50,13 @@ class Venue
   end
   
   def set_citycode
-    if in_us?
-      self.citycode = Geo.find_citycode_by_zipcode(self.zipcode)
-    end
+    self.citycode = Geo.find_citycode_by_zipcode(self.zipcode) if in_us?
   end
   
   def update_city_state_by_zipcode
     if in_us?
       zip = self.zipcode.split(/-/).first
       res = Geo.find_by_country_and_zipcode(self.country, self.zipcode)
-      # debugger
       self.city, self.state, self.time_zone = res["CityName"], res["StateAbbr"], res["UTC"] unless res.nil?
     end
   end
