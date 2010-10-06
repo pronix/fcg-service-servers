@@ -29,6 +29,12 @@ describe "Party App" do
       attributes["venue"].each_pair do |key, value|
         value.should == @venue.to_hash[key] unless ["created_at", "updated_at"].include?(key)
       end
+      
+      # Timecop.travel(Time.now + 30.days) do
+      #   get "/api/#{API_VERSION}/parties/#{@id}"
+      #   last_response.should be_ok
+      #   attributes = JSON.parse(last_response.body)
+      # end
     end
     
     it "should return a 404 for a party that doesn't exist" do
