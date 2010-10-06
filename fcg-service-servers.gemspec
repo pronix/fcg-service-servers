@@ -28,9 +28,14 @@ Gem::Specification.new do |s|
      "bin/fcg-service-server",
      "config.ru",
      "fcg-service-servers.gemspec",
+     "generators/models/app.tt",
+     "generators/models/fabricator.tt",
+     "generators/models/model.tt",
+     "generators/models/spec.tt",
      "lib/fcg-service-servers.rb",
      "lib/fcg-service-servers/apps.rb",
      "lib/fcg-service-servers/apps/activity_app.rb",
+     "lib/fcg-service-servers/apps/comment_app.rb",
      "lib/fcg-service-servers/apps/event_app.rb",
      "lib/fcg-service-servers/apps/party_app.rb",
      "lib/fcg-service-servers/apps/stat_app.rb",
@@ -47,6 +52,7 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/lib/rest.rb",
      "lib/fcg-service-servers/lib/service.rb",
      "lib/fcg-service-servers/models/activity.rb",
+     "lib/fcg-service-servers/models/comment.rb",
      "lib/fcg-service-servers/models/event.rb",
      "lib/fcg-service-servers/models/geo.rb",
      "lib/fcg-service-servers/models/party.rb",
@@ -56,8 +62,10 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/validators/user_validator.rb",
      "lib/fcg-service-servers/version.rb",
      "spec/activity_app_spec.rb",
+     "spec/comment_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
@@ -66,7 +74,8 @@ Gem::Specification.new do |s|
      "spec/spec.opts",
      "spec/spec_helper.rb",
      "spec/user_app_spec.rb",
-     "spec/venue_app_spec.rb"
+     "spec/venue_app_spec.rb",
+     "tasks/models.thor"
   ]
   s.homepage = %q{http://github.com/joemocha/fcg-service-servers}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -75,8 +84,10 @@ Gem::Specification.new do |s|
   s.summary = %q{FCG Service Servers}
   s.test_files = [
     "spec/activity_app_spec.rb",
+     "spec/comment_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
@@ -100,9 +111,9 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_development_dependency(%q<timecop>, [">= 0"])
-      s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_runtime_dependency(%q<thin>, ["= 1.2.7"])
       s.add_runtime_dependency(%q<sinatra>, [">= 1.0"])
       s.add_runtime_dependency(%q<bson_ext>, [">= 1.0.9"])
@@ -113,6 +124,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_runtime_dependency(%q<sanitize>, [">= 0"])
       s.add_runtime_dependency(%q<ice_cube>, [">= 0.5.9"])
+      s.add_runtime_dependency(%q<rdiscount>, [">= 1.6.5"])
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<redis>, [">= 2.0.10"])
       s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -126,9 +138,9 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
       s.add_dependency(%q<timecop>, [">= 0"])
-      s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<thin>, ["= 1.2.7"])
       s.add_dependency(%q<sinatra>, [">= 1.0"])
       s.add_dependency(%q<bson_ext>, [">= 1.0.9"])
@@ -139,6 +151,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_dependency(%q<sanitize>, [">= 0"])
       s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
+      s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<redis>, [">= 2.0.10"])
       s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -153,9 +166,9 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ffaker>, [">= 0.4.0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<timecop>, [">= 0"])
-    s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+    s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<thin>, ["= 1.2.7"])
     s.add_dependency(%q<sinatra>, [">= 1.0"])
     s.add_dependency(%q<bson_ext>, [">= 1.0.9"])
@@ -166,6 +179,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
     s.add_dependency(%q<sanitize>, [">= 0"])
     s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
+    s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<redis>, [">= 2.0.10"])
     s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])

@@ -26,6 +26,7 @@ describe "<%= klass %> App" do
   
   describe "POST on /api/#{API_VERSION}/<%= model_pluralize %>" do
     it "should create a <%= model %>" do
+      raise "create hash"
       <%= model %> = { }
       post "/api/#{API_VERSION}/<%= model_pluralize %>", <%= model %>.to_json
       
@@ -43,12 +44,15 @@ describe "<%= klass %> App" do
     end
     
     it "should update a <%= model %>" do
-      hash = { }
-      put "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}", hash.to_json
-      last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
-      attributes = JSON.parse(last_response.body)
+      pending do
+        raise "create hash"
+        hash = { }
+        put "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}", hash.to_json
+        last_response.should be_ok
+        attributes = JSON.parse(last_response.body)
+        get "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
+        attributes = JSON.parse(last_response.body)
+      end
     end
   end
   

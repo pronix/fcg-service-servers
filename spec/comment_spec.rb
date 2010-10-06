@@ -16,6 +16,10 @@ describe "Comment App" do
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       attributes["_id"].should == @id
+      attributes["model_with_id"].should  == "feed:4c43475fff808d982a00001a"
+      attributes["body_html"].should      == RDiscount.new(attributes["body"], :smart, :autolink).to_html
+      attributes["displayed_name"].should == "Sammy Davis Jr."
+      attributes["user_id"].should        == "4c43475fdf808f982a00001a"
     end
     
     it "should return a 404 for a comment that doesn't exist" do
@@ -26,13 +30,19 @@ describe "Comment App" do
   
   describe "POST on /api/#{API_VERSION}/comments" do
     it "should create a comment" do
-      comment = { }
+      comment = {
+        :site            => "alltheparties.com",
+        :model_with_id   => "feed:4c43475fff808d982a00001a",
+        :body            => "Ain't this some bullshit\n\nCheck me at www.twitter.com/fccgedv",
+        :displayed_name  => "Sammy Davis Jr.",
+        :user_id         => "4c43475fdf808f982a00001a"
+      }
       post "/api/#{API_VERSION}/comments", comment.to_json
-      
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       get "/api/#{API_VERSION}/comments/#{attributes['_id']}"
       attributes = JSON.parse(last_response.body)
+      attributes["body"].should == comment[:body]
     end
   end
 
@@ -43,12 +53,14 @@ describe "Comment App" do
     end
     
     it "should update a comment" do
-      hash = { }
+      hash = { :body => "Solid Bull Crappo!"}
       put "/api/#{API_VERSION}/comments/#{@id}", hash.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       get "/api/#{API_VERSION}/comments/#{@id}"
-      attributes = JSON.parse(last_response.body)
+      attributes2 = JSON.parse(last_response.body)
+      attributes2.should == attributes
+      attributes2["body"].should == hash[:body]
     end
   end
   

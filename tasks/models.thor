@@ -1,16 +1,21 @@
 require 'thor'
 require 'thor/group'
 require "active_support/all"
-class Models < Thor::Group
+class CreateModel < Thor::Group
   include Thor::Actions
   
-  argument :model
+  argument :name
   
   desc "Generate model, app, fabricator, and spec files for FCG Service Server"
+  
   def self.source_root
-    File.join(File.dirname(__FILE__), "generators", "models")
+    File.join(File.dirname(__FILE__), "../", "generators", "models")
   end
-    
+  
+  def model
+    @model ||= name.downcase.singularize
+  end
+  
   def model_pluralize
     @model_pluralize ||= model.pluralize
   end
