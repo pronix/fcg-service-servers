@@ -15,7 +15,7 @@ require 'mocha'
 require 'fabrication'
 require 'database_cleaner'
 require 'ffaker'
-require 'pp'
+require 'timecop'
 require 'ruby-debug'
 
 # load fabricators
@@ -25,8 +25,6 @@ set :environment, :test
 set :run, false
 set :raise_errors, true
 set :logging, false
-
-# Test::Unit::TestCase.send :include, Rack::Test::Methods
 
 def app
   @app ||= FCG::Service::Server

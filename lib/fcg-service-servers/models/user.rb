@@ -1,7 +1,6 @@
 class User
-  include Mongoid::Document
-  include Mongoid::Paranoia
-  include Mongoid::Timestamps
+  include FCG::Model
+  is_paranoid
 
   include UserHashPlugin
   include SocialPlugin

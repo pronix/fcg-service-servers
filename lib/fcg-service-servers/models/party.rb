@@ -1,14 +1,13 @@
 class Party
-  include Mongoid::Document
-  include Mongoid::Paranoia
-  include Mongoid::Timestamps
+  include FCG::Model
+  is_paranoid
   RECUR = %w{ once weekly }
   
   scope :by_user, lambda { |userid| where(:user_id => userid) }
 
-  field :user_id#, :type => String
+  field :user_id, :type => String
   field :venue, :type => Hash
-  field :events, :type => Hash
+  field :events, :type => Hash, :default => {}
   field :url, :type => String
   field :title, :type => String
   field :host, :type => String
@@ -64,15 +63,11 @@ class Party
   end
   
   def venue_name
-    venue.name if venue? and venue.respond_to? :name
+    venue[:name]
   end
   
   def next_date=(val)
     write_attribute(:next_date, Date.parse(val))
-  end
-  
-  def next_date_slashed
-    self.next_date.to_s(:slash) rescue nil
   end
   
   def current_event
@@ -111,25 +106,6 @@ class Party
       sum
     end
   end
-  
-  # def as_json(*args)
-  #   {
-  #     :party => {
-  #       :id            => self.id,
-  #       :user          => self.user_id,
-  #       :title         => self.title,
-  #       :venue_id      => self.venue_id,
-  #       :venue_name    => self.venue_name,
-  #       :dj            => self.dj,
-  #       :music         => self.music,
-  #       :start_time    => self.start_time,
-  #       :end_time      => self.end_time,
-  #       :description   => self.description,
-  #       :current_event => self.current_event,
-  #       :created_at    => self.created_at
-  #     }
-  #   }
-  # end
   
   def uploadable_by_user?(user)
     return true if user.id == self.user_id or photographer_list.include?("email:#{user.email}") or photographer_list.include?("username:#{user.username}")

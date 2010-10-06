@@ -21,10 +21,9 @@ class PartyValidator < ActiveModel::Validator
   end
   
   def validate_user(record)    
-    if !record.user_id.nil? 
-      debugger
+    if !record.user_id.nil?
       unless user = User.find(record.user_id)
-        record.errors[:user] << "can't be found (#{record.user_id})"
+        record.errors[:user] << "can't be found"
       end
     else
       record.errors[:user] << "can't be blank"
@@ -32,8 +31,8 @@ class PartyValidator < ActiveModel::Validator
   end
   
   def validate_venue(record)
-    if record.venue.andand["_id"]
-      venue = Venue.find(record.venue["_id"]) rescue nil
+    if record.venue.andand["id"]
+      venue = Venue.find(record.venue["id"]) rescue nil
       if venue.nil?
         record.errors[:venue] << "can't be found"
       end

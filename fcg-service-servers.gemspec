@@ -58,6 +58,7 @@ Gem::Specification.new do |s|
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
      "spec/fabricators/venue_fabricator.rb",
      "spec/party_app_spec.rb",
@@ -97,6 +98,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<database_cleaner>, [">= 0"])
       s.add_development_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
+      s.add_development_dependency(%q<timecop>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_runtime_dependency(%q<thin>, ["= 1.2.7"])
@@ -108,6 +110,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<bunny>, [">= 0"])
       s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_runtime_dependency(%q<sanitize>, [">= 0"])
+      s.add_runtime_dependency(%q<ice_cube>, [">= 0.5.9"])
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<redis>, [">= 2.0.10"])
       s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -120,6 +123,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<database_cleaner>, [">= 0"])
       s.add_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
+      s.add_dependency(%q<timecop>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_dependency(%q<thin>, ["= 1.2.7"])
@@ -131,6 +135,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<bunny>, [">= 0"])
       s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_dependency(%q<sanitize>, [">= 0"])
+      s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<redis>, [">= 2.0.10"])
       s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -144,6 +149,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<database_cleaner>, [">= 0"])
     s.add_dependency(%q<ffaker>, [">= 0.4.0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
+    s.add_dependency(%q<timecop>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
     s.add_dependency(%q<thin>, ["= 1.2.7"])
@@ -155,6 +161,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bunny>, [">= 0"])
     s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
     s.add_dependency(%q<sanitize>, [">= 0"])
+    s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<redis>, [">= 2.0.10"])
     s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])

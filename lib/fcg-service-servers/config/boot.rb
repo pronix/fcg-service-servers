@@ -39,7 +39,7 @@ configure do
   end
   
   Dir[
-    File.expand_path("../../lib/service.rb", __FILE__),
+    File.expand_path("../../lib/*.rb", __FILE__),
     File.expand_path("../../validators/*.rb", __FILE__),
     File.expand_path("../../models/*.rb", __FILE__),
     File.expand_path("../../apps/*.rb", __FILE__),

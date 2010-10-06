@@ -3,29 +3,33 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Party App" do
   before(:each) do
     Party.delete_all
+    User.delete_all
+    Venue.delete_all
   end
 
   describe "GET on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      user = Fabricate(:user)
-      venue = Fabricate(:venue, :user_id => user.id.to_s)
-      @party = Fabricate(:party, :venue => venue, :user_id => user.id.to_s)
-      puts @party.errors.inspect
+      @user = Fabricate(:user)
+      @venue = Fabricate(:venue, :user_id => @user.id.to_s)
+      @party = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id.to_s)
       @id = @party.id.to_s
     end
     
     it "should return an party by id: #{@id}" do
       get "/api/#{API_VERSION}/parties/#{@id}"
-      puts last_response.body
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       attributes["_id"].should == @id
-      attributes["address"].should == "279 Fifth Aparty"
-      attributes["city"].should == "Brooklyn"
-      attributes["state"].should == "NY"
-      attributes["zipcode"].should == "11215"
-      attributes["country"].should == "US"
-      attributes["citycode"].should_not == "nyc"
+      date = (Date.today + 7).slashed
+      attributes["next_date"] == date
+      attributes["start_time"] == "10:00pm"
+      attributes["end_time"] == "4:00am"
+      
+      attributes["events"].should include(Date.parse(date).to_s)
+      attributes["venue"].keys.sort.should == @venue.to_hash.keys.sort
+      attributes["venue"].each_pair do |key, value|
+        value.should == @venue.to_hash[key] unless ["created_at", "updated_at"].include?(key)
+      end
     end
     
     it "should return a 404 for a party that doesn't exist" do
@@ -58,36 +62,48 @@ describe "Party App" do
 
   describe "PUT on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      @party = Fabricate(:lounge)
-      @id = @party.id.to_s
+      @user   = Fabricate(:bryan)
+      @venue  = Fabricate(:lounge, :user_id => @user.id)
+      @venue2 = Fabricate(:venue, :user_id => @user.id)
+      @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
+      @id     = @party.id.to_s
     end
     
     it "should update a party" do
-      pending do
-        new_zipcode = Faker::Address.zip_code
-        put "/api/#{API_VERSION}/parties/#{@id}", { :zip_code => new_zipcode }.to_json
-        last_response.should be_ok
-        attributes = JSON.parse(last_response.body)
-        get "/api/#{API_VERSION}/parties/#{@id}"
-        attributes = JSON.parse(last_response.body)
-        attributes["zip_code"].should == new_zipcode
+      new_title = "#{Faker::Company.name} Launch Party"
+      put "/api/#{API_VERSION}/parties/#{@id}", { :title => new_title }.to_json
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      get "/api/#{API_VERSION}/parties/#{@id}"
+      attributes = JSON.parse(last_response.body)
+      attributes["title"].should == new_title
+    end
+    
+    it "should change the party venue" do
+      put "/api/#{API_VERSION}/parties/#{@id}", { :venue => @venue2.to_hash }.to_json
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      get "/api/#{API_VERSION}/parties/#{@id}"
+      attributes = JSON.parse(last_response.body)
+      attributes["venue"].each_pair do |key, value|
+        value.should == @venue2.to_hash[key] unless ["created_at", "updated_at"].include?(key)
       end
     end
   end
   
   describe "DELETE on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      @party = Fabricate(:bar)
+      @user = Fabricate(:bryan)
+      @venue = Fabricate(:venue, :user_id => @user.id)
+      @party = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
       @id = @party.id.to_s
     end
     
     it "should delete a party" do
-      pending do
-        delete "/api/#{API_VERSION}/parties/#{@id}"
-        last_response.should be_ok
-        get "/api/#{API_VERSION}/parties/#{@id}"
-        last_response.status.should == 404
-      end
+      delete "/api/#{API_VERSION}/parties/#{@id}"
+      last_response.should be_ok
+      get "/api/#{API_VERSION}/parties/#{@id}"
+      last_response.status.should == 404
     end
   end
 end

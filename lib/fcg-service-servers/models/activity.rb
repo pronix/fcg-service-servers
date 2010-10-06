@@ -1,6 +1,5 @@
 class Activity
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  include FCG::Model
   
   # [actor] [verb] [object] [target]
   field :actor, :type => Hash # {:display_name => "Samuel O. Obukwelu", :url => "http://www.fcgid.com/person/joemocha", :photo => nil, :id => "user:4c442ae8ff808daa0f000002"}

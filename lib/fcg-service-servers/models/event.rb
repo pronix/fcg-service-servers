@@ -1,9 +1,8 @@
 class Event
-  include Mongoid::Document
-  include Mongoid::Paranoia
-  include Mongoid::Timestamps
-  include Mongoid::Versioning
-  max_versions 5
+  include FCG::Model
+  is_paranoid
+  is_versioned
+  
   include ImagePlugin
   
   image_keys :photo, :flyer
@@ -31,11 +30,6 @@ class Event
   field :end_time, :type => String
   
   field :length_in_hours, :type => Integer
-
-  field :venue_name, :type => String
-  field :lat, :type => Float
-  field :lng, :type => Float
-  field :citycode, :type => String
     
   field :comments_allowed, :type => Boolean, :default => true
   field :active, :type => Boolean, :default => true
@@ -78,16 +72,20 @@ class Event
     set_utc(party.date, party.start_time, party.length_in_hours)
   end
   
+  def parse_time(date_time)
+    Time.parse date_time.to_s
+  end
+  
   def set_utc(date, start_time, hrs)
     raw_start_time = parse_time( date.to_s + " " + start_time )
-    end_date_time = hrs.hours.since(raw_start_time)
+    end_date_time = hrs.to_i.hours.since(raw_start_time)
     write_attribute(:start_time_utc, raw_start_time.local_to_utc( time_zone ))
     raw_end_time_utc = end_date_time.local_to_utc( time_zone )
     write_attribute(:end_time_utc, raw_end_time_utc)
   end
   
   def venue_name
-    @venue_name ||= venue.name
+    venue[:name]
   end
   
   def date=(val)
@@ -103,17 +101,21 @@ class Event
   # end
   
   def party=(val)
-    write_attribute(:party, val)
+    write_attribute(:party_id, val.id)
+    write_attribute(:venue, val.venue)
+    write_attribute(:start_time, val.start_time)
+    write_attribute(:end_time, val.end_time)
+    write_attribute(:user_id, val.user_id)
+    write_attribute(:date, val.next_date)
     set_utc(val.next_date, val.start_time, val.length_in_hours)
-    self.venue = val.venue
   end
   
   def full_address
-    venue.full_address
+    venue[:full_address]
   end
   
   def time_zone
-    self.venue["time_zone"]
+    venue[:time_zone]
   end
 
   def title_and_venue_name

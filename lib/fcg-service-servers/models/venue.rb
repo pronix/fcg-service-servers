@@ -1,7 +1,6 @@
 class Venue
-  include Mongoid::Document
-  include Mongoid::Paranoia
-  include Mongoid::Timestamps
+  include FCG::Model
+  is_paranoid
   
   field :user_id, :type => String
   field :name, :type => String
