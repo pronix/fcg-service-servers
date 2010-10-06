@@ -14,7 +14,7 @@ module FCG
       def error_hash(instance, message)
         errors = instance.errors.inject({}) do |sum,values| 
           k = values.shift
-          sum[k] = values.map(&:uniq)
+          sum[k] = values.map.andand(&:uniq)
           sum
         end
         {

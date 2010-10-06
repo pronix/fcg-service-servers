@@ -39,24 +39,32 @@ describe "Party App" do
   end 
   
   describe "POST on /api/#{API_VERSION}/parties" do
+    before(:each) do
+      @venue  = Fabricate(:venue)
+      @user   = Fabricate(:user)
+    end
+    
     it "should create a party" do
-      pending do
-        party = {
-          :name     => "Nightingale's",
-          :address  => Faker::Address.street_address,
-          :country  => "US",
-          :zipcode  => Faker::Address.zip_code,
-          :user_id  => "4c43475fff808d982a00001a"
-        }
-        post "/api/#{API_VERSION}/parties", party.to_json
-
-        last_response.should be_ok
-        attributes = JSON.parse(last_response.body)
-        get "/api/#{API_VERSION}/parties/#{attributes['_id']}"
-        attributes = JSON.parse(last_response.body)
-        attributes["name"].should == "Nightingale's"
-        attributes["user_id"].should == "4c43475fff808d982a00001a"        
-      end
+      date = (Date.today + 14).slashed
+      party = {
+        :title        => "Prada Launch Party",
+        :next_date    => date,
+        :start_time   => "10:00pm",
+        :end_time     => "2:00am",
+        :music        => "R&B",
+        :description  => Faker::Lorem.paragraphs(1),
+        :user_id      => @user.id.to_s,
+        :venue_id     => @venue.id.to_s
+      }
+      
+      post "/api/#{API_VERSION}/parties", party.to_json
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      get "/api/#{API_VERSION}/parties/#{attributes['_id']}"
+      attributes = JSON.parse(last_response.body)
+      attributes["title"].should == party[:title]
+      attributes["user_id"].should == @user.id.to_s
+      attributes["venue"]["id"] == @venue.id.to_s
     end
   end
 

@@ -39,7 +39,7 @@ class Party
   field :days_free, :type => Integer, :default => 7
   field :days_paid, :type => Integer, :default => 0
   
-  attr_accessor :venue_name, :weekly, :old_event_id
+  attr_accessor :venue_id, :weekly, :old_event_id
   
   validates_with PartyValidator
   validates_presence_of :title, :music, :description, :venue, :user_id, :next_date
@@ -83,6 +83,10 @@ class Party
     event = Event.create_based_on_party(self) if current_event.nil? 
   end
   
+  def venue_id=(val)
+    v = Venue.find(val.to_s)
+    self.venue = v.to_hash
+  end
   # def to_param
   #   %Q{#{id}-#{[title, venue.name, venue.city, venue.state].join(' ').gsub(/[^a-z0-9]+/i, '_')}}
   # end
