@@ -12,7 +12,7 @@ class Models < Thor::Group
   end
     
   def model_pluralize
-    @models ||= model.pluralize
+    @model_pluralize ||= model.pluralize
   end
   
   def klass

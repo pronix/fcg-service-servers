@@ -24,9 +24,9 @@ begin
     gem.add_development_dependency "timecop"
     
     # gem.add_dependency "rubigen", ">= 1.5.5"
-    gem.add_dependency "thor"
     gem.add_dependency "fcg-core-ext", ">= 0.0.4"
     gem.add_dependency "fcg-service-ext", ">= 0.0.11"
+    gem.add_dependency "thor"
     gem.add_dependency "thin", "1.2.7"
     gem.add_dependency "sinatra", ">= 1.0"
     gem.add_dependency "bson_ext", ">= 1.0.9"
@@ -37,6 +37,7 @@ begin
     gem.add_dependency "fastercsv", ">= 1.5.3"
     gem.add_dependency "sanitize"
     gem.add_dependency "ice_cube", ">= 0.5.9"
+    
     # Redis
     gem.add_dependency "SystemTimer"
     gem.add_dependency "redis", ">= 2.0.10"
