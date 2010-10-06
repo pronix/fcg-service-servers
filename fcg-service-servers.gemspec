@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Samuel O. Obukwelu"]
-  s.date = %q{2010-10-04}
+  s.date = %q{2010-10-06}
   s.default_executable = %q{fcg-service-server}
   s.description = %q{Servers for the different services offered by FCG}
   s.email = %q{sam@fcgmedia.com}
@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/config/settings/mongodb.yml",
      "lib/fcg-service-servers/config/settings/redis.yml",
      "lib/fcg-service-servers/db/seed.rb",
+     "lib/fcg-service-servers/lib/model.rb",
      "lib/fcg-service-servers/lib/rest.rb",
      "lib/fcg-service-servers/lib/service.rb",
      "lib/fcg-service-servers/models/activity.rb",
@@ -99,6 +100,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_development_dependency(%q<timecop>, [">= 0"])
+      s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_runtime_dependency(%q<thin>, ["= 1.2.7"])
@@ -124,6 +126,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<ffaker>, [">= 0.4.0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
       s.add_dependency(%q<timecop>, [">= 0"])
+      s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
       s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
       s.add_dependency(%q<thin>, ["= 1.2.7"])
@@ -150,6 +153,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ffaker>, [">= 0.4.0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<timecop>, [">= 0"])
+    s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
     s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
     s.add_dependency(%q<thin>, ["= 1.2.7"])

@@ -23,6 +23,8 @@ begin
     gem.add_development_dependency "ruby-debug"
     gem.add_development_dependency "timecop"
     
+    # gem.add_dependency "rubigen", ">= 1.5.5"
+    gem.add_dependency "thor"
     gem.add_dependency "fcg-core-ext", ">= 0.0.4"
     gem.add_dependency "fcg-service-ext", ">= 0.0.11"
     gem.add_dependency "thin", "1.2.7"

@@ -1,0 +1,3 @@
+class <%= klass %>
+  include FCG::Model
+end
