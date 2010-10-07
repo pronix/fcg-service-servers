@@ -8,6 +8,10 @@ module FCG::Model
       self.send :include, Mongoid::Versioning
       max_versions versions
     end
+    
+    def has_state
+      self.send :include, Transitions
+    end
   end
   
   module InstanceMethods

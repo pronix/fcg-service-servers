@@ -26,7 +26,6 @@ describe "Image App" do
     it "should return a 404 for an image that doesn't exist" do
       get "/api/#{API_VERSION}/images/foo"
       last_response.status.should == 404
-      puts last_response.body
     end
   end
   
@@ -58,11 +57,11 @@ describe "Image App" do
     
     it "should update a image" do
       pending do
-        raise "create hash"
-        hash = { }
+        hash = { :state => "completed" }
         put "/api/#{API_VERSION}/images/#{@id}", hash.to_json
         last_response.should be_ok
         attributes = JSON.parse(last_response.body)
+        attributes["state"].should_not == "completed"
       end
     end
   end

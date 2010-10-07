@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Samuel O. Obukwelu"]
-  s.date = %q{2010-10-06}
+  s.date = %q{2010-10-07}
   s.default_executable = %q{fcg-service-server}
   s.description = %q{Servers for the different services offered by FCG}
   s.email = %q{sam@fcgmedia.com}
@@ -35,9 +35,12 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers.rb",
      "lib/fcg-service-servers/apps.rb",
      "lib/fcg-service-servers/apps/activity_app.rb",
+     "lib/fcg-service-servers/apps/album_app.rb",
      "lib/fcg-service-servers/apps/comment_app.rb",
      "lib/fcg-service-servers/apps/event_app.rb",
+     "lib/fcg-service-servers/apps/image_app.rb",
      "lib/fcg-service-servers/apps/party_app.rb",
+     "lib/fcg-service-servers/apps/post_app.rb",
      "lib/fcg-service-servers/apps/stat_app.rb",
      "lib/fcg-service-servers/apps/user_app.rb",
      "lib/fcg-service-servers/apps/venue_app.rb",
@@ -45,6 +48,7 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/config/settings/amqp.yml",
      "lib/fcg-service-servers/config/settings/app.yml",
      "lib/fcg-service-servers/config/settings/app.yml.temp",
+     "lib/fcg-service-servers/config/settings/image.yml",
      "lib/fcg-service-servers/config/settings/mongodb.yml",
      "lib/fcg-service-servers/config/settings/redis.yml",
      "lib/fcg-service-servers/db/seed.rb",
@@ -52,25 +56,34 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/lib/rest.rb",
      "lib/fcg-service-servers/lib/service.rb",
      "lib/fcg-service-servers/models/activity.rb",
+     "lib/fcg-service-servers/models/album.rb",
      "lib/fcg-service-servers/models/comment.rb",
      "lib/fcg-service-servers/models/event.rb",
      "lib/fcg-service-servers/models/geo.rb",
+     "lib/fcg-service-servers/models/image.rb",
      "lib/fcg-service-servers/models/party.rb",
+     "lib/fcg-service-servers/models/post.rb",
      "lib/fcg-service-servers/models/user.rb",
      "lib/fcg-service-servers/models/venue.rb",
      "lib/fcg-service-servers/validators/party_validator.rb",
      "lib/fcg-service-servers/validators/user_validator.rb",
      "lib/fcg-service-servers/version.rb",
      "spec/activity_app_spec.rb",
+     "spec/album_spec.rb",
      "spec/comment_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/album_fabricator.rb",
      "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/image_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
+     "spec/fabricators/post_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
      "spec/fabricators/venue_fabricator.rb",
+     "spec/image_spec.rb",
      "spec/party_app_spec.rb",
+     "spec/post_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
      "spec/user_app_spec.rb",
@@ -84,15 +97,21 @@ Gem::Specification.new do |s|
   s.summary = %q{FCG Service Servers}
   s.test_files = [
     "spec/activity_app_spec.rb",
+     "spec/album_spec.rb",
      "spec/comment_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
+     "spec/fabricators/album_fabricator.rb",
      "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/image_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
+     "spec/fabricators/post_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
      "spec/fabricators/venue_fabricator.rb",
+     "spec/image_spec.rb",
      "spec/party_app_spec.rb",
+     "spec/post_spec.rb",
      "spec/spec_helper.rb",
      "spec/user_app_spec.rb",
      "spec/venue_app_spec.rb"
@@ -125,6 +144,8 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sanitize>, [">= 0"])
       s.add_runtime_dependency(%q<ice_cube>, [">= 0.5.9"])
       s.add_runtime_dependency(%q<rdiscount>, [">= 1.6.5"])
+      s.add_runtime_dependency(%q<transitions>, [">= 0"])
+      s.add_runtime_dependency(%q<msgpack>, [">= 0"])
       s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
       s.add_runtime_dependency(%q<redis>, [">= 2.0.10"])
       s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -152,6 +173,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<sanitize>, [">= 0"])
       s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
       s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
+      s.add_dependency(%q<transitions>, [">= 0"])
+      s.add_dependency(%q<msgpack>, [">= 0"])
       s.add_dependency(%q<SystemTimer>, [">= 0"])
       s.add_dependency(%q<redis>, [">= 2.0.10"])
       s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
@@ -180,6 +203,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<sanitize>, [">= 0"])
     s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
     s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
+    s.add_dependency(%q<transitions>, [">= 0"])
+    s.add_dependency(%q<msgpack>, [">= 0"])
     s.add_dependency(%q<SystemTimer>, [">= 0"])
     s.add_dependency(%q<redis>, [">= 2.0.10"])
     s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])

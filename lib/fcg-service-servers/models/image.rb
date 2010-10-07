@@ -1,8 +1,8 @@
 class Image
   include FCG::Model
   is_paranoid
+  has_state
   
-  field :state,     :type => String, :default => "new"
   field :caption,   :type => String
   field :types,     :type => Array
   field :url,       :type => Hash
@@ -11,8 +11,18 @@ class Image
   field :job_id,    :type => String
   field :album_id,  :type => String
   
-  validates_presence_of :user_id, :types, :state, :album_id
+  validates_presence_of :user_id, :types, :album_id
   
+  state_machine do
+    state :new # first one is initial state
+    state :in_process
+    state :complete, :enter => lambda { |product| product.cancel_orders }
+    
+    event :complete do
+      transitions :to => :complete, :from => [:in_process], :guard => lambda { |image| !image.types.all?{|t| image.url[t] } }
+    end
+  end
+     
   class << self
     def add_to_objekt(val)
       img = self.by_job_id(val["id"]).first
@@ -79,8 +89,7 @@ class Image
   end
   
   def check_if_completed?
-    return true if self.state == "completed"
-    self.types.all?{|t| self.url[t] }
+    self.state == "completed"
   end
   
   protected

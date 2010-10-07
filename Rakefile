@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'rake'
 
 dir = File.dirname(File.expand_path(__FILE__))
@@ -37,6 +36,8 @@ begin
     gem.add_dependency "sanitize"
     gem.add_dependency "ice_cube", ">= 0.5.9"
     gem.add_dependency "rdiscount", ">= 1.6.5"
+    gem.add_dependency "transitions"
+    gem.add_dependency "msgpack"
     
     # Redis
     gem.add_dependency "SystemTimer"
