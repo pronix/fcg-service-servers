@@ -1,0 +1,3 @@
+Fabricator :bookmark do
+  
+end
