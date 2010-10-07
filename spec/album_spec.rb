@@ -16,6 +16,10 @@ describe "Album App" do
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
       attributes["_id"].should == @id
+      attributes["title"].split(/ /).size.should == 12
+      attributes["user_id"].should == "4c43475fff808d982a00001a"
+      yesterday = (Date.today - 1)
+      attributes["date"].should == yesterday.to_s
     end
     
     it "should return a 404 for a album that doesn't exist" do
@@ -26,15 +30,26 @@ describe "Album App" do
   
   describe "POST on /api/#{API_VERSION}/albums" do
     it "should create a album" do
-      raise "create hash"
-      album = { }
+      two_weeks_ago = (Date.today - 14).to_s
+      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_ago }
       post "/api/#{API_VERSION}/albums", album.to_json
-      
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/albums/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes["title"].should     == album[:title]
+      attributes["user_id"].should   == album[:user_id]
+      attributes["date"].should      == album[:date]
     end
+    
+    it "should not create an album that has a future date" do
+      two_weeks_since = (Date.today + 14).slashed
+      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_since }
+      post "/api/#{API_VERSION}/albums", album.to_json
+      last_response.should_not be_ok
+      attributes = JSON.parse(last_response.body)
+      puts attributes["errors"].keys.inspect
+      attributes["errors"].keys.should == ["date"]
+    end
+    
   end
 
   describe "PUT on /api/#{API_VERSION}/albums/:id" do
@@ -44,15 +59,15 @@ describe "Album App" do
     end
     
     it "should update a album" do
-      pending do
-        raise "create hash"
-        hash = { }
-        put "/api/#{API_VERSION}/albums/#{@id}", hash.to_json
-        last_response.should be_ok
-        attributes = JSON.parse(last_response.body)
-        get "/api/#{API_VERSION}/albums/#{@id}"
-        attributes = JSON.parse(last_response.body)
-      end
+      today = (Date.today - 30).to_s
+      hash = { :title => "What are you going to do?", :date => today }
+      put "/api/#{API_VERSION}/albums/#{@id}", hash.to_json
+      last_response.should be_ok
+      attributes = JSON.parse(last_response.body)
+      attributes["title"].should  == hash[:title]
+      attributes["date"].should   == hash[:date]
+      @album.title.should_not     == attributes["title"]
+      @album.date.should_not      == attributes["date"]
     end
   end
   

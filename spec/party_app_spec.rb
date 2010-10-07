@@ -90,16 +90,12 @@ describe "Party App" do
       put "/api/#{API_VERSION}/parties/#{@id}", { :title => new_title }.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/parties/#{@id}"
-      attributes = JSON.parse(last_response.body)
       attributes["title"].should == new_title
     end
     
     it "should change the party venue" do
       put "/api/#{API_VERSION}/parties/#{@id}", { :venue => @venue2.to_hash }.to_json
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/parties/#{@id}"
       attributes = JSON.parse(last_response.body)
       attributes["venue"].each_pair do |key, value|
         value.should == @venue2.to_hash[key] unless ["created_at", "updated_at"].include?(key)

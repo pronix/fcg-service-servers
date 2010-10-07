@@ -63,8 +63,6 @@ describe "Post App" do
       put "/api/#{API_VERSION}/posts/#{@id}", hash.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/posts/#{@id}"
-      attributes = JSON.parse(last_response.body)
       attributes["body"].should == hash[:body]
     end
   end

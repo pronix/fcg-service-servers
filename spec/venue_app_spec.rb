@@ -63,8 +63,6 @@ describe "Venue App" do
       put "/api/#{API_VERSION}/venues/#{@id}", { :zip_code => new_zipcode }.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/venues/#{@id}"
-      attributes = JSON.parse(last_response.body)
       attributes["zip_code"].should == new_zipcode
     end
   end

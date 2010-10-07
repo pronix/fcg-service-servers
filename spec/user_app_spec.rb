@@ -76,8 +76,6 @@ describe "User App" do
       put "/api/#{API_VERSION}/users/#{@id}", { :bio => "testing freak"}.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/users/#{@id}"
-      attributes = JSON.parse(last_response.body)
       attributes["bio"].should == "testing freak"
     end
  

@@ -57,10 +57,8 @@ describe "Comment App" do
       put "/api/#{API_VERSION}/comments/#{@id}", hash.to_json
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/comments/#{@id}"
-      attributes2 = JSON.parse(last_response.body)
-      attributes2.should == attributes
-      attributes2["body"].should == hash[:body]
+      attributes.should == attributes
+      attributes["body"].should == hash[:body]
     end
   end
   

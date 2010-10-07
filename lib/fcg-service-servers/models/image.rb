@@ -2,15 +2,16 @@ class Image
   include FCG::Model
   is_paranoid
   
-  field :job_id,    :type => String
-  field :caption,   :type => String
   field :state,     :type => String, :default => "new"
+  field :caption,   :type => String
   field :types,     :type => Array
   field :url,       :type => Hash
   field :size,      :type => Hash
   field :user_id,   :type => String
+  field :job_id,    :type => String
+  field :album_id,  :type => String
   
-  validates_presence_of :user_id, :types, :state
+  validates_presence_of :user_id, :types, :state, :album_id
   
   class << self
     def add_to_objekt(val)
