@@ -59,12 +59,12 @@ describe "Album App" do
     
     it "should update a album" do
       today = (Date.today - 30).to_s
-      hash = { :title => "What are you going to do?", :date => today }
-      put "/api/#{API_VERSION}/albums/#{@id}", hash.to_msgpack
+      album = { :title => "What are you going to do?", :date => today }
+      put "/api/#{API_VERSION}/albums/#{@id}", album.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      attributes["title"].should  == hash[:title]
-      attributes["date"].should   == hash[:date]
+      attributes["title"].should  == album[:title]
+      attributes["date"].should   == album[:date]
       @album.title.should_not     == attributes["title"]
       @album.date.should_not      == attributes["date"]
     end
