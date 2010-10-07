@@ -15,8 +15,8 @@ describe "Image App" do
     it "should return an image by id: #{@id}" do
       get "/api/#{API_VERSION}/images/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       attributes["user_id"].should == @image.user_id
       attributes["state"].should == "new"
       attributes["types"].should == @image.types
@@ -36,12 +36,12 @@ describe "Image App" do
         :types      => FCG_CONFIG.image.flyer,
         :album_id   => @album.id.to_s
       }
-      post "/api/#{API_VERSION}/images", image.to_json
+      post "/api/#{API_VERSION}/images", image.to_msgpack
       
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/images/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/images/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["user_id"].should == image[:user_id]
       attributes["state"].should == "new"
       attributes["types"].should == image[:types]
@@ -56,13 +56,12 @@ describe "Image App" do
     end
     
     it "should update a image" do
-      pending do
-        hash = { :state => "completed" }
-        put "/api/#{API_VERSION}/images/#{@id}", hash.to_json
-        last_response.should be_ok
-        attributes = JSON.parse(last_response.body)
-        attributes["state"].should_not == "completed"
-      end
+      hash = { :state => "completed" }
+      put "/api/#{API_VERSION}/images/#{@id}", hash.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["state"].should == "new"
+      attributes["state"].should_not == "completed"
     end
   end
   

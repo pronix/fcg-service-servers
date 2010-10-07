@@ -1,7 +1,7 @@
 class Image
   include FCG::Model
   is_paranoid
-  has_state
+  has_transitions
   
   field :caption,   :type => String
   field :types,     :type => Array
@@ -14,9 +14,9 @@ class Image
   validates_presence_of :user_id, :types, :album_id
   
   state_machine do
-    state :new # first one is initial state
+    state :new
     state :in_process
-    state :complete, :enter => lambda { |product| product.cancel_orders }
+    state :complete
     
     event :complete do
       transitions :to => :complete, :from => [:in_process], :guard => lambda { |image| !image.types.all?{|t| image.url[t] } }

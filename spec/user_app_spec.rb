@@ -11,21 +11,21 @@ describe "User App" do
     it "should return a user by id" do
       get "/api/#{API_VERSION}/users/#{subject.id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["username"].should == "pauld"
     end
 
     it "should return a user with an email" do
       get "/api/#{API_VERSION}/users/#{subject.id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["email"].should == subject.email
     end
 
     it "should not return a user's password" do
       get "/api/#{API_VERSION}/users/#{subject.id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes.should_not have_key("password")
     end
 
@@ -43,7 +43,7 @@ describe "User App" do
     it "should return a user by email" do
       get "/api/#{API_VERSION}/users/find_by_email/#{subject.email}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["username"].should == "paulyd"
     end
   end
@@ -55,12 +55,12 @@ describe "User App" do
         :email    => "trotter@nospam.com",
         :password => "whatever"
       }
-      post "/api/#{API_VERSION}/users", new_user.to_json
+      post "/api/#{API_VERSION}/users", new_user.to_msgpack
           
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/users/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/users/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["username"].should  == "trotter"
       attributes["email"].should == "trotter@nospam.com"
     end
@@ -73,9 +73,9 @@ describe "User App" do
     end
     
     it "should update a user" do
-      put "/api/#{API_VERSION}/users/#{@id}", { :bio => "testing freak"}.to_json
+      put "/api/#{API_VERSION}/users/#{@id}", { :bio => "testing freak"}.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["bio"].should == "testing freak"
     end
  
@@ -84,9 +84,9 @@ describe "User App" do
         :username => "bryan",
         :email => "bigsmyG2@aol.com",
         :password => "whatever"
-      }.to_json
+      }.to_msgpack
       last_response.should_not be_ok
-      errors = JSON.parse(last_response.body)
+      errors = MessagePack.unpack(last_response.body)
     end
     
     it "should not add user with same email address" do
@@ -94,9 +94,9 @@ describe "User App" do
         :username => "bryan2",
         :email => "bigsmyG@aol.com",
         :password => "whatever"
-      }.to_json
+      }.to_msgpack
       last_response.should_not be_ok
-      errors = JSON.parse(last_response.body)
+      errors = MessagePack.unpack(last_response.body)
     end
   end
 
@@ -116,15 +116,15 @@ describe "User App" do
 
     it "should return the user object on valid credentials" do
       post "/api/#{API_VERSION}/users/#{subject.id}/sessions", {
-        :password => "whatever"}.to_json
+        :password => "whatever"}.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["username"].should == "bryan"
     end
 
     it "should fail on invalid credentials" do
       post "/api/#{API_VERSION}/users/#{subject.id}/sessions", {
-        :password => "wrong"}.to_json
+        :password => "wrong"}.to_msgpack
       last_response.status.should == 400
     end
   end

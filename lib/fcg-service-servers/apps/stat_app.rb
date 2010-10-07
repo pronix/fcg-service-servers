@@ -7,9 +7,9 @@ module FCG::Service
       key = "count:#{params[:verb]}:#{params[:key]}:time:#{params[:time]}"
       begin
         value = REDIS.get key
-        value.to_json
+        value.to_msgpack
       rescue
-        error 404, "key missing".to_json
+        error 404, "key missing".to_msgpack
       end
     end
     
@@ -30,9 +30,9 @@ module FCG::Service
         else
           []
         end
-        res.to_json
+        res.to_msgpack
       rescue Exception => e
-        error 404, e.to_json
+        error 404, e.to_msgpack
       end
     end
   end

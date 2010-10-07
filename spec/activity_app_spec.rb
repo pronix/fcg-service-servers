@@ -42,29 +42,29 @@ describe "Activity App" do
     it "should return an activity by id: #{@id}" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["actor"]["display_name"].should == "Paul Dix"
     end
 
     it "should return a activity with an verb" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["verb"].should == "view"
     end
 
     it "should return site" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["site"].should == "alltheparties.com"
     end
 
     it "should return proper id" do
       get "/api/#{API_VERSION}/activities/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
     end
     
     it "should return a 404 for a activity that doesn't exist" do
@@ -85,11 +85,11 @@ describe "Activity App" do
         :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
         :site => "ATP"})
         
-      post "/api/#{API_VERSION}/activities", activity.to_json
+      post "/api/#{API_VERSION}/activities", activity.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/activities/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/activities/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["actor"]["display_name"].should == "Trotter Cashion"
       attributes["actor"]["url"].should == "http://www.fcgid.com/person/tcash"
     end

@@ -15,7 +15,7 @@ describe "<%= klass %> App" do
       get "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes["id"].should == @id
     end
     
     it "should return a 404 for a <%= model %> that doesn't exist" do
@@ -33,7 +33,7 @@ describe "<%= klass %> App" do
       
       last_response.should be_ok
       attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/<%= model_pluralize %>/#{attributes['_id']}"
+      get "/api/#{API_VERSION}/<%= model_pluralize %>/#{attributes["id"]}"
       attributes = JSON.parse(last_response.body)
     end
   end

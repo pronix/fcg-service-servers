@@ -4,24 +4,24 @@ module FCG::Service
     get "/api/#{API_VERSION}/activities/:id" do
       activity = Activity.find(params[:id]) rescue nil
       if activity
-        activity.to_json
+        activity.to_msgpack
       else
-        error 404, "activity not found".to_json
+        error 404, "activity not found".to_msgpack
       end
     end
 
     # create a new activity
     post "/api/#{API_VERSION}/activities" do
       begin
-        params = JSON.parse(request.body.read)
+        params = MessagePack.unpack(request.body.read)
         activity = Activity.new(params)
         if activity.valid? and activity.save
-          activity.to_json
+          activity.to_msgpack
         else
-          error 400, error_hash(activity, "failed validation").to_json
+          error 400, error_hash(activity, "failed validation").to_msgpack
         end
       rescue => e
-        error 400, e.message.to_json
+        error 400, e.message.to_msgpack
       end
     end
 
@@ -30,9 +30,9 @@ module FCG::Service
       activity = Activity.find(params[:id])
       if activity
         activity.destroy
-        activity.to_json
+        activity.to_msgpack
       else
-        error 404, "activity not found".to_json
+        error 404, "activity not found".to_msgpack
       end
     end
   end

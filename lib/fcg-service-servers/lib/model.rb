@@ -9,18 +9,28 @@ module FCG::Model
       max_versions versions
     end
     
-    def has_state
+    def has_transitions
       self.send :include, Transitions
     end
   end
   
   module InstanceMethods
     def to_hash
-      self.attributes.inject({}) do |result, (key, value)|
+      self.serializable_hash.inject({}) do |result, (key, value)|
         key, value = "id", value.to_s if key.to_s == "_id"
+        
+        case value
+        when Date, DateTime, Time
+          value = value.to_s
+        end
+        
         result[key] = value
         result
       end
+    end
+    
+    def to_msgpack(*args)
+      self.to_hash.to_msgpack(*args)
     end
   end
   
@@ -29,5 +39,6 @@ module FCG::Model
     receiver.send :include, InstanceMethods
     receiver.send :include, Mongoid::Document
     receiver.send :include, Mongoid::Timestamps
+    receiver.attr_protected :_id
   end
 end

@@ -14,8 +14,8 @@ describe "Post App" do
     it "should return an post by id: #{@id}" do
       get "/api/#{API_VERSION}/posts/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       attributes["title"].should == "this is the sample title"
       attributes["username"].should == "sdj"
       attributes["display_name"].should == "Sammy Davis Jr."
@@ -39,11 +39,11 @@ describe "Post App" do
         :display_name    => "Faith Evans",
         :username        => "faith"
       }
-      post "/api/#{API_VERSION}/posts", post.to_json
+      post "/api/#{API_VERSION}/posts", post.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/posts/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/posts/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["username"].should == "faith"
       attributes["site"].should == "flyerdeep.com"
       attributes["title"].should == "Stand on your feet and sing!"
@@ -60,9 +60,9 @@ describe "Post App" do
     
     it "should update a post" do
       hash = { :body => "Ain't this some sh*t!" }
-      put "/api/#{API_VERSION}/posts/#{@id}", hash.to_json
+      put "/api/#{API_VERSION}/posts/#{@id}", hash.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["body"].should == hash[:body]
     end
   end

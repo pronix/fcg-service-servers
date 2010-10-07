@@ -18,8 +18,8 @@ describe "Party App" do
     it "should return an party by id: #{@id}" do
       get "/api/#{API_VERSION}/parties/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       date = (Date.today + 7).slashed
       attributes["next_date"] == date
       attributes["start_time"] == "10:00pm"
@@ -33,7 +33,7 @@ describe "Party App" do
       # Timecop.travel(Time.now + 30.days) do
       #   get "/api/#{API_VERSION}/parties/#{@id}"
       #   last_response.should be_ok
-      #   attributes = JSON.parse(last_response.body)
+      #   attributes = MessagePack.unpack(last_response.body)
       # end
     end
     
@@ -62,11 +62,11 @@ describe "Party App" do
         :venue_id     => @venue.id.to_s
       }
       
-      post "/api/#{API_VERSION}/parties", party.to_json
+      post "/api/#{API_VERSION}/parties", party.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/parties/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/parties/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should == party[:title]
       attributes["user_id"].should == @user.id.to_s
       attributes["venue"]["id"].should == @venue.id.to_s
@@ -87,16 +87,16 @@ describe "Party App" do
     
     it "should update a party" do
       new_title = "#{Faker::Company.name} Launch Party"
-      put "/api/#{API_VERSION}/parties/#{@id}", { :title => new_title }.to_json
+      put "/api/#{API_VERSION}/parties/#{@id}", { :title => new_title }.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should == new_title
     end
     
     it "should change the party venue" do
-      put "/api/#{API_VERSION}/parties/#{@id}", { :venue => @venue2.to_hash }.to_json
+      put "/api/#{API_VERSION}/parties/#{@id}", { :venue => @venue2.to_hash }.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["venue"].each_pair do |key, value|
         value.should == @venue2.to_hash[key] unless ["created_at", "updated_at"].include?(key)
       end

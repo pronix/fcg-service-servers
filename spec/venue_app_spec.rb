@@ -14,8 +14,8 @@ describe "Venue App" do
     it "should return an venue by id: #{@id}" do
       get "/api/#{API_VERSION}/venues/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       attributes["address"].should == "279 Fifth Avenue"
       attributes["city"].should == "Brooklyn"
       attributes["state"].should == "NY"
@@ -40,12 +40,12 @@ describe "Venue App" do
         :zipcode  => Faker::Address.zip_code,
         :user_id  => "4c43475fff808d982a00001a"
       }
-      post "/api/#{API_VERSION}/venues", venue.to_json
+      post "/api/#{API_VERSION}/venues", venue.to_msgpack
       
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/venues/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/venues/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["name"].should == "Nightingale's"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
       attributes["citycode"].should == "nyc"
@@ -60,9 +60,9 @@ describe "Venue App" do
     
     it "should update a venue" do
       new_zipcode = Faker::Address.zip_code
-      put "/api/#{API_VERSION}/venues/#{@id}", { :zip_code => new_zipcode }.to_json
+      put "/api/#{API_VERSION}/venues/#{@id}", { :zip_code => new_zipcode }.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes["zip_code"].should == new_zipcode
     end
   end

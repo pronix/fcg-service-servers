@@ -14,8 +14,8 @@ describe "Comment App" do
     it "should return an comment by id: #{@id}" do
       get "/api/#{API_VERSION}/comments/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       attributes["model_with_id"].should  == "feed:4c43475fff808d982a00001a"
       attributes["body_html"].should      == RDiscount.new(attributes["body"], :smart, :autolink).to_html
       attributes["displayed_name"].should == "Sammy Davis Jr."
@@ -37,11 +37,11 @@ describe "Comment App" do
         :displayed_name  => "Sammy Davis Jr.",
         :user_id         => "4c43475fdf808f982a00001a"
       }
-      post "/api/#{API_VERSION}/comments", comment.to_json
+      post "/api/#{API_VERSION}/comments", comment.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/comments/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/comments/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["body"].should == comment[:body]
     end
   end
@@ -54,9 +54,9 @@ describe "Comment App" do
     
     it "should update a comment" do
       hash = { :body => "Solid Bull Crappo!"}
-      put "/api/#{API_VERSION}/comments/#{@id}", hash.to_json
+      put "/api/#{API_VERSION}/comments/#{@id}", hash.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
       attributes.should == attributes
       attributes["body"].should == hash[:body]
     end

@@ -14,8 +14,8 @@ describe "Event App" do
     it "should return an event by id: #{@id}" do
       get "/api/#{API_VERSION}/events/#{@id}"
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      attributes["_id"].should == @id
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == @id
       attributes["party_id"].should == "4f43475fff808d982a00001a"
       attributes["venue"]["_id"].should == "4cf3475fff808d982a00001a"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
@@ -46,11 +46,11 @@ describe "Event App" do
         :venue       => venue
       }
       
-      post "/api/#{API_VERSION}/events", event.to_json
+      post "/api/#{API_VERSION}/events", event.to_msgpack
       last_response.should be_ok
-      attributes = JSON.parse(last_response.body)
-      get "/api/#{API_VERSION}/events/#{attributes['_id']}"
-      attributes = JSON.parse(last_response.body)
+      attributes = MessagePack.unpack(last_response.body)
+      get "/api/#{API_VERSION}/events/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
       attributes["venue"]["name"].should == "Nightingale's"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
     end
