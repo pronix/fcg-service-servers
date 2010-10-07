@@ -1,0 +1,43 @@
+common_attr: &common_attr
+  sizes:
+    icon: 50x50
+    thumb: 100x100
+    cover: 480x206
+    medium: 700x640
+    maximum: 800x800
+  missing:
+    icon: /images/missing/picture_50x50.jpg
+    thumb: /images/missing/picture_100x100.jpg
+    medium: /images/missing/picture_700x640.jpg
+    maximum: /images/missing/picture_800x800.jpg
+  user:
+    - icon
+    - thumb
+    - medium
+    - maximum
+  flyer:
+    - icon
+    - thumb
+    - medium
+    - maximum
+  event:
+    - icon
+    - thumb
+    - medium
+    - maximum
+  cover:
+    - thumb
+    - maximum
+    - cover
+  
+development:
+  <<: *common_attr
+
+test:
+  <<: *common_attr
+
+production:
+  <<: *common_attr
+
+staging:
+  <<: *common_attr

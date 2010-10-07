@@ -7,7 +7,7 @@ Bundler.setup
 Bundler.require(:default, FCG_ENV)
 
 configure do
-  FCG_CONFIG = %w(app amqp redis mongodb).inject(Hashie::Mash.new) do |result, file|
+  FCG_CONFIG = %w(app amqp redis mongodb image).inject(Hashie::Mash.new) do |result, file|
     raw_config = File.read(File.expand_path("../settings/#{file}.yml", __FILE__))
     result[file.to_sym]= Hashie::Mash.new(YAML.load(raw_config)[FCG_ENV.to_s])
     result

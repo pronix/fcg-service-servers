@@ -1,0 +1,3 @@
+Fabricator :album do
+  
+end
