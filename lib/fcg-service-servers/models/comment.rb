@@ -1,11 +1,11 @@
 class Comment
   include FCG::Model
-  scope :threaded_with_field_sorted_by_votes, lambda {|tid| where(:model_with_id => tid).sort(['path','ascending'], ['net_votes', 'descending']) }
+  scope :threaded_with_field_sorted_by_votes, lambda {|tid| where(:record => tid).sort(['path','ascending'], ['net_votes', 'descending']) }
   
   field :site,            :type => String 
-  field :model_with_id,   :type => String #format model:id
+  field :record,   :type => String #format model:id
   field :body,            :type => String 
-  field :body_html,       :type => String 
+  field :body_as_html,    :type => String 
   field :deleted,         :type => Boolean
   field :flagged_by,      :type => Array
   field :depth,           :type => Integer, :default => 0
@@ -14,7 +14,7 @@ class Comment
   field :displayed_name,  :type => String,  :default => 'Anonymous Coward'
   field :user_id,         :type => String
   
-  validates_presence_of :site, :model_with_id, :body, :displayed_name, :user_id
+  validates_presence_of :site, :record, :body, :displayed_name, :user_id
   validates_length_of :body,   :within => 3..3000
 
   # Callbacks.
@@ -26,8 +26,8 @@ class Comment
     # Sorts by votes descending by default, but could use any other field.
     # If you want to build out an internal balanced score, pass that field in,
     # and be sure to index it on the database.
-    def threaded_with_field(model_with_id, field_name='net_votes')
-      comments = threaded_with_field_sorted_by_votes(model_with_id).all
+    def threaded_with_field(record, field_name='net_votes')
+      comments = threaded_with_field_sorted_by_votes(record).all
       results, map  = [], {}
       comments.each do |comment|
         if comment.parent_id.blank?
@@ -64,7 +64,7 @@ class Comment
   end
 
   def htmlify
-    self.body_html = RDiscount.new(body, :smart, :autolink).to_html
+    self.body_as_html = RDiscount.new(body, :smart, :autolink).to_html
   end
 
   private
@@ -72,7 +72,7 @@ class Comment
   def set_path
     unless self.parent_id.blank?
       parent              = self.class.find(self.parent_id)
-      self.model_with_id = parent.model_with_id
+      self.record         = parent.record
       self.depth          = parent.depth + 1
       self.path           = parent.path + ":" + parent.id.to_s
     end

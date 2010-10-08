@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Party App" do
   before(:each) do
+    User.delete_all
     Party.delete_all
     Venue.delete_all
-    User.delete_all
     @user = Fabricate(:user)
   end
 

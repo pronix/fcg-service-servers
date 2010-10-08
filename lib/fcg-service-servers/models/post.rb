@@ -6,7 +6,7 @@ class Post
   field :site,          :type => String
   field :title,         :type => String
   field :body,          :type => String
-  field :body_html,     :type => String
+  field :body_as_html,  :type => String
   field :username,      :type => String
   field :display_name,  :type => String
   field :feed_id,       :type => String
@@ -18,6 +18,6 @@ class Post
   before_create :htmlify
   
   def htmlify
-    self.body_html = RDiscount.new(body, :smart, :autolink).to_html
+    self.body_as_html = RDiscount.new(body, :smart, :autolink).to_html
   end
 end

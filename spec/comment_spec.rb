@@ -16,8 +16,8 @@ describe "Comment App" do
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
-      attributes["model_with_id"].should  == "feed:4c43475fff808d982a00001a"
-      attributes["body_html"].should      == RDiscount.new(attributes["body"], :smart, :autolink).to_html
+      attributes["record"].should  == "feed:4c43475fff808d982a00001a"
+      attributes["body_as_html"].should      == RDiscount.new(attributes["body"], :smart, :autolink).to_html
       attributes["displayed_name"].should == "Sammy Davis Jr."
       attributes["user_id"].should        == "4c43475fdf808f982a00001a"
     end
@@ -32,7 +32,7 @@ describe "Comment App" do
     it "should create a comment" do
       comment = {
         :site            => "alltheparties.com",
-        :model_with_id   => "feed:4c43475fff808d982a00001a",
+        :record   => "feed:4c43475fff808d982a00001a",
         :body            => "Ain't this some bullshit\n\nCheck me at www.twitter.com/fccgedv",
         :displayed_name  => "Sammy Davis Jr.",
         :user_id         => "4c43475fdf808f982a00001a"

@@ -19,7 +19,7 @@ describe "Post App" do
       attributes["title"].should == "this is the sample title"
       attributes["username"].should == "sdj"
       attributes["display_name"].should == "Sammy Davis Jr."
-      attributes.should include("body_html")
+      attributes.should include("body_as_html")
       attributes.should include("version")
     end
     
