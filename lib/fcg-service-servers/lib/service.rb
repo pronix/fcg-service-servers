@@ -3,18 +3,19 @@ require File.expand_path("../rest", __FILE__)
 
 module FCG
   module Service
-    CONTENT_TYPES = {:html => 'text/html', :css => 'text/css', :js  => 'application/javascript'}
+    CONTENT_TYPES = {:html => 'text/html', :css => 'text/css', :js  => 'application/javascript', :default => 'text/plain' }
     class Base < Sinatra::Base
       disable :layout
-      set :logging, :true
+      set :logging, true
       
       before do
-       request_uri = case request.env['REQUEST_URI']
-         when /\.css$/ : :css
-         when /\.js$/  : :js
-         else          :html
-       end
-       content_type CONTENT_TYPES[request_uri], :charset => 'utf-8'
+        request_uri = case request.env['REQUEST_URI']
+          when /\.css$/       : :css
+          when /\.js(on)?$/   : :js
+          when /\.htm(l)?$/   : :html
+          else                  :default
+        end
+        content_type CONTENT_TYPES[request_uri], :charset => 'utf-8'
       end
       
       def error_hash(instance, message)
