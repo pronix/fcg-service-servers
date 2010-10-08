@@ -53,7 +53,9 @@ describe "<%= klass %> App" do
     
     it "should update a <%= model %>" do
       pending do
-        <%= model %> = { }
+        <%= model %> = {
+          
+        }
         put "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}", <%= model %>.to_msgpack
         last_response.should be_ok
         attributes = MessagePack.unpack(last_response.body)
