@@ -4,7 +4,7 @@ module FCG
       def rest(model, *args)
         options = args.extract_options!
         opts = {
-          :actions => [:get, :post, :put, :delete]
+          :only => [:get, :post, :put, :delete]
         }.merge(options)
         
         klass = model.to_s.classify.constantize
@@ -17,7 +17,7 @@ module FCG
             else
               error 404, "#{model} not found".to_msgpack
             end
-          end if opts[:actions].include? :get
+          end if opts[:only].include? :get
           # create a new #{model}
           post "/api/#{API_VERSION}/#{model_plural}" do
             begin
@@ -31,7 +31,7 @@ module FCG
             rescue => e
               error 400, e.message.to_msgpack
             end
-          end if opts[:actions].include? :post
+          end if opts[:only].include? :post
 
           # update an existing #{model}
           put "/api/#{API_VERSION}/#{model_plural}/:id" do
@@ -50,7 +50,7 @@ module FCG
             else
               error 404, "#{model} not found".to_msgpack
             end
-          end if opts[:actions].include? :put
+          end if opts[:only].include? :put
 
           # destroy an existing #{model}
           delete "/api/#{API_VERSION}/#{model_plural}/:id" do
@@ -61,7 +61,7 @@ module FCG
             else
               error 404, "#{model} not found".to_msgpack
             end
-          end if opts[:actions].include? :delete
+          end if opts[:only].include? :delete
         RUBY
         class_eval(str, __FILE__, __LINE__)
       end

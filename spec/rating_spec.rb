@@ -28,7 +28,7 @@ describe "Rating App" do
   describe "POST on /api/#{API_VERSION}/ratings" do
     it "should create a rating" do
       rating = {
-        :model_and_id  => "post:4c43475fffefad982a00001a",
+        :record  => "post:4c43475fffefad982a00001a",
         :user_id       => "4c43475fff808d982a00001a",
         :score         => 4
       }
@@ -37,21 +37,20 @@ describe "Rating App" do
       attributes = MessagePack.unpack(last_response.body)
       get "/api/#{API_VERSION}/ratings/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
-      attributes["model_and_id"].should == rating[:model_and_id]
+      attributes["record"].should == rating[:record]
       attributes["user_id"].should      == rating[:user_id]
       attributes["score"].should        == rating[:score]
     end
     
-    it "should not allow a rating outside of range" do
+    it "should not allow rating outside of range" do
       rating = {
-        :model_and_id  => "post:4c43475fffefad982a00001a",
+        :record  => "post:4c43475fffefad982a00001a",
         :user_id       => "4c43475fff808d982a00001a",
         :score         => 9
       }
       post "/api/#{API_VERSION}/ratings", rating.to_msgpack
       last_response.should_not be_ok
       attributes = MessagePack.unpack(last_response.body)
-      puts attributes.inspect
     end
   end
 

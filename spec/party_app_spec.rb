@@ -3,13 +3,13 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Party App" do
   before(:each) do
     Party.delete_all
-    User.delete_all
     Venue.delete_all
+    User.delete_all
+    @user = Fabricate(:user)
   end
 
   describe "GET on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      @user   = Fabricate(:user)
       @venue  = Fabricate(:venue, :user_id => @user.id.to_s)
       @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id.to_s)
       @id     = @party.id.to_s
@@ -46,7 +46,6 @@ describe "Party App" do
   describe "POST on /api/#{API_VERSION}/parties" do
     before(:each) do
       @venue  = Fabricate(:venue)
-      @user   = Fabricate(:user)
     end
     
     it "should create a party" do
@@ -78,7 +77,6 @@ describe "Party App" do
 
   describe "PUT on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      @user   = Fabricate(:bryan)
       @venue  = Fabricate(:lounge, :user_id => @user.id)
       @venue2 = Fabricate(:venue, :user_id => @user.id)
       @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
@@ -106,7 +104,6 @@ describe "Party App" do
   
   describe "DELETE on /api/#{API_VERSION}/parties/:id" do
     before(:each) do
-      @user = Fabricate(:bryan)
       @venue = Fabricate(:venue, :user_id => @user.id)
       @party = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
       @id = @party.id.to_s

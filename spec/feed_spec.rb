@@ -19,7 +19,7 @@ describe "Feed App" do
       attributes["title"].should == "Let'em Shine"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
       attributes["site"].should == "alltheparties.com"
-      attributes["model_and_id"].should == "user:4c43475fff808d982a00001a"
+      attributes["record"].should == "user:4c43475fff808d982a00001a"
     end
     
     it "should return a 404 for a feed that doesn't exist" do
@@ -35,7 +35,7 @@ describe "Feed App" do
         :title        =>  "Let'em Shine",
         :user_id      =>  "4c43475fff808d982a00001a",
         :site         =>  "alltheparties.com",
-        :model_and_id =>  "user:4c43475fff808d982a00001a"
+        :record =>  "user:4c43475fff808d982a00001a"
       }
       post "/api/#{API_VERSION}/feeds", feed.to_msgpack
       last_response.should be_ok
@@ -53,12 +53,12 @@ describe "Feed App" do
     
     it "should update a feed" do
       feed = {
-        :model_and_id =>  "user:4ffff75fff808d982a00001a"
+        :record =>  "user:4ffff75fff808d982a00001a"
       }
       put "/api/#{API_VERSION}/feeds/#{@id}", feed.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      attributes["model_and_id"].should == feed[:model_and_id]
+      attributes["record"].should == feed[:record]
     end
   end
   

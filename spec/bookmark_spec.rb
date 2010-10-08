@@ -31,7 +31,7 @@ describe "Bookmark App" do
         :user_id         => "4c5f475fff808d982a00001a",
         :site            => "flyerdeep.com",
         :path            => "/profile/jeremiah",
-        :model_and_id    => "user:4c43475fff808d982a00001a"
+        :record    => "user:4c43475fff808d982a00001a"
       }
       post "/api/#{API_VERSION}/bookmarks", bookmark.to_msgpack
       last_response.should be_ok

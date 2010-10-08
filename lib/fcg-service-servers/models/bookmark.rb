@@ -8,9 +8,9 @@ class Bookmark
   field :user_id,       :type => String
   field :title,         :type => String
   field :path,          :type => String
-  field :model_and_id,  :type => String
+  field :record,  :type => String
   field :site,          :type => String
   field :extra,         :type => Hash,    :default => {}
   
-  validates_presence_of :user_id, :site, :path, :model_and_id
+  validates_presence_of :user_id, :site, :path, :record
 end
