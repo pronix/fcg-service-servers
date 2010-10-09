@@ -1,0 +1,3 @@
+Fabricator :follower do
+  
+end
