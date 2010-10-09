@@ -11,10 +11,14 @@ module FCG
         model_plural = model.to_s.pluralize
         str = <<-RUBY
           get "/api/#{API_VERSION}/#{model_plural}/:id" do
-            #{model} = #{klass}.find(params[:id]) rescue nil
-            if #{model}
-              #{model}.to_msgpack
-            else
+            begin
+              #{model} = #{klass}.find(params[:id])
+              if #{model}
+                #{model}.to_msgpack
+              else
+                error 404, "#{model} not found".to_msgpack
+              end
+            rescue BSON::InvalidObjectId => e
               error 404, "#{model} not found".to_msgpack
             end
           end if opts[:only].include? :get

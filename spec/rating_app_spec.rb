@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Rating App" do
   before(:each) do
     Rating.delete_all
+    RatingRecord.delete_all
   end
   
   describe "GET on /api/#{API_VERSION}/ratings/:id" do
@@ -25,12 +26,27 @@ describe "Rating App" do
     end
   end
   
+  describe "GET on /api/#{API_VERSION}/ratings/record/:record" do
+    before(:each) do
+      @rating = Fabricate(:rating)
+      1.upto(25){|i| Fabricate("rating_#{i}".to_sym) }
+    end
+    
+    it "should return a score and count for a rating record" do
+      get "/api/#{API_VERSION}/ratings/record/#{@rating.record}"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["rating_count"].should == 26
+      attributes["score_average"].should > 1.0
+    end
+  end
+  
   describe "POST on /api/#{API_VERSION}/ratings" do
     it "should create a rating" do
       rating = {
-        :record  => "post:4c43475fffefad982a00001a",
-        :user_id       => "4c43475fff808d982a00001a",
-        :score         => 4
+        :record       => "post:4c43475fffefad982a00001a",
+        :user_id      => "4c43475fff808d982a00001a",
+        :score        => 4
       }
       post "/api/#{API_VERSION}/ratings", rating.to_msgpack
       last_response.should be_ok

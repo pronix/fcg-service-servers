@@ -37,6 +37,6 @@ class CreateModel < Thor::Group
   end
   
   def create_spec_file
-    template('spec.tt', "spec/#{model}_spec.rb")
+    template('spec.tt', "spec/#{model}_app_spec.rb")
   end
 end
