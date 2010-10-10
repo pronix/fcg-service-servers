@@ -29,7 +29,11 @@ set :logging, false
 def app
   @app ||= FCG::Service::Server
 end
-  
+
+def new_user_id
+  rand(23602195835208247086376026138).to_s(16)
+end
+
 Spec::Runner.configure do |config|
   config.include Rack::Test::Methods
   
