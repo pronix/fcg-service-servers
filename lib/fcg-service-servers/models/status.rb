@@ -4,6 +4,7 @@ class Status
   field :user_id,           :type => String
   field :message,           :type => String
   field :message_as_html,   :type => String
+  field :visible,           :type => Boolean, :default => true
   
   validates_presence_of :user_id
   validates_length_of :message, :in => 1..160

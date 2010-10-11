@@ -34,6 +34,10 @@ def new_user_id
   rand(23602195835208247086376026138).to_s(16)
 end
 
+def text_as_html(text)
+  RDiscount.new(text, :autolink).to_html
+end
+
 Spec::Runner.configure do |config|
   config.include Rack::Test::Methods
   
