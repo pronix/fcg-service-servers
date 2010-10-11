@@ -55,15 +55,13 @@ rescue LoadError
 end
 
 require 'rspec/core/rake_task'
-# require 'lib/fcg-service-servers'
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  # spec.libs << 'lib' << 'spec'
-  # spec.spec_files = FileList['spec/**/*_spec.rb']
+RSpec::Core::RakeTask.new do |t|
+  t.rspec_opts = ["-c", "-f progress", "-r ./spec/spec_helper.rb"]
+  t.pattern = 'spec/**/*_spec.rb'
 end
 
 RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov_opts =  %q[--exclude "spec"]
-  # spec.libs << 'lib' << 'spec'
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
 end

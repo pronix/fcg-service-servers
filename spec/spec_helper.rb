@@ -43,6 +43,8 @@ def text_as_html(text)
 end
 
 RSpec.configure do |config|
+  config.mock_with :rspec
+  
   config.include Rack::Test::Methods
   
   config.before(:suite) do
