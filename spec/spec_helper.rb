@@ -6,9 +6,13 @@ ENV['SINATRA_ENV'] = 'test'
 ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'fcg-service-servers')
-require 'spec'
-require 'spec/interop/test'
-require 'spec/autorun'
+# require 'spec'
+# require 'spec/interop/test'
+# require 'spec/autorun'
+require 'rspec'
+# require 'rspec/interop/test'
+# require 'rspec/autorun'
+
 require 'test/unit'
 require 'rack/test'
 require 'mocha'
@@ -38,7 +42,7 @@ def text_as_html(text)
   RDiscount.new(text, :autolink).to_html
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include Rack::Test::Methods
   
   config.before(:suite) do

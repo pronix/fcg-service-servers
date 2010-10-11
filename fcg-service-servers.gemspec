@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Samuel O. Obukwelu"]
-  s.date = %q{2010-10-07}
+  s.date = %q{2010-10-11}
   s.default_executable = %q{fcg-service-server}
   s.description = %q{Servers for the different services offered by FCG}
   s.email = %q{sam@fcgmedia.com}
@@ -36,14 +36,22 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/apps.rb",
      "lib/fcg-service-servers/apps/activity_app.rb",
      "lib/fcg-service-servers/apps/album_app.rb",
+     "lib/fcg-service-servers/apps/bookmark_app.rb",
      "lib/fcg-service-servers/apps/comment_app.rb",
      "lib/fcg-service-servers/apps/event_app.rb",
+     "lib/fcg-service-servers/apps/feed_app.rb",
+     "lib/fcg-service-servers/apps/follower_app.rb",
      "lib/fcg-service-servers/apps/image_app.rb",
+     "lib/fcg-service-servers/apps/message_app.rb",
      "lib/fcg-service-servers/apps/party_app.rb",
      "lib/fcg-service-servers/apps/post_app.rb",
+     "lib/fcg-service-servers/apps/rating_app.rb",
+     "lib/fcg-service-servers/apps/rsvp_app.rb",
      "lib/fcg-service-servers/apps/stat_app.rb",
+     "lib/fcg-service-servers/apps/status_app.rb",
      "lib/fcg-service-servers/apps/user_app.rb",
      "lib/fcg-service-servers/apps/venue_app.rb",
+     "lib/fcg-service-servers/apps/vote_app.rb",
      "lib/fcg-service-servers/config/boot.rb",
      "lib/fcg-service-servers/config/settings/amqp.yml",
      "lib/fcg-service-servers/config/settings/app.yml",
@@ -52,42 +60,69 @@ Gem::Specification.new do |s|
      "lib/fcg-service-servers/config/settings/mongodb.yml",
      "lib/fcg-service-servers/config/settings/redis.yml",
      "lib/fcg-service-servers/db/seed.rb",
+     "lib/fcg-service-servers/lib/inflections.rb",
      "lib/fcg-service-servers/lib/model.rb",
      "lib/fcg-service-servers/lib/rest.rb",
      "lib/fcg-service-servers/lib/service.rb",
+     "lib/fcg-service-servers/lib/transitions.rb",
      "lib/fcg-service-servers/models/activity.rb",
      "lib/fcg-service-servers/models/album.rb",
+     "lib/fcg-service-servers/models/bookmark.rb",
      "lib/fcg-service-servers/models/comment.rb",
      "lib/fcg-service-servers/models/event.rb",
+     "lib/fcg-service-servers/models/feed.rb",
+     "lib/fcg-service-servers/models/follower.rb",
      "lib/fcg-service-servers/models/geo.rb",
      "lib/fcg-service-servers/models/image.rb",
+     "lib/fcg-service-servers/models/message.rb",
      "lib/fcg-service-servers/models/party.rb",
      "lib/fcg-service-servers/models/post.rb",
+     "lib/fcg-service-servers/models/rating.rb",
+     "lib/fcg-service-servers/models/rating_record.rb",
+     "lib/fcg-service-servers/models/rsvp.rb",
+     "lib/fcg-service-servers/models/status.rb",
      "lib/fcg-service-servers/models/user.rb",
      "lib/fcg-service-servers/models/venue.rb",
+     "lib/fcg-service-servers/models/vote.rb",
      "lib/fcg-service-servers/validators/party_validator.rb",
      "lib/fcg-service-servers/validators/user_validator.rb",
      "lib/fcg-service-servers/version.rb",
      "spec/activity_app_spec.rb",
-     "spec/album_spec.rb",
-     "spec/comment_spec.rb",
+     "spec/album_app_spec.rb",
+     "spec/bookmark_app_spec.rb",
+     "spec/comment_app_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
      "spec/fabricators/album_fabricator.rb",
+     "spec/fabricators/bookmark_fabricator.rb",
      "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/feed_fabricator.rb",
+     "spec/fabricators/follower_fabricator.rb",
      "spec/fabricators/image_fabricator.rb",
+     "spec/fabricators/message_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/post_fabricator.rb",
+     "spec/fabricators/rating_fabricator.rb",
+     "spec/fabricators/rsvp_fabricator.rb",
+     "spec/fabricators/status_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
      "spec/fabricators/venue_fabricator.rb",
-     "spec/image_spec.rb",
+     "spec/fabricators/vote_fabricator.rb",
+     "spec/feed_app_spec.rb",
+     "spec/follower_app_spec.rb",
+     "spec/image_app_spec.rb",
+     "spec/message_app_spec.rb",
      "spec/party_app_spec.rb",
-     "spec/post_spec.rb",
+     "spec/post_app_spec.rb",
+     "spec/rating_app_spec.rb",
+     "spec/rsvp_app_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
+     "spec/status_app_spec.rb",
      "spec/user_app_spec.rb",
      "spec/venue_app_spec.rb",
+     "spec/vote_app_spec.rb",
      "tasks/models.thor"
   ]
   s.homepage = %q{http://github.com/joemocha/fcg-service-servers}
@@ -97,24 +132,40 @@ Gem::Specification.new do |s|
   s.summary = %q{FCG Service Servers}
   s.test_files = [
     "spec/activity_app_spec.rb",
-     "spec/album_spec.rb",
-     "spec/comment_spec.rb",
+     "spec/album_app_spec.rb",
+     "spec/bookmark_app_spec.rb",
+     "spec/comment_app_spec.rb",
      "spec/event_app_spec.rb",
      "spec/fabricators/activity_fabricator.rb",
      "spec/fabricators/album_fabricator.rb",
+     "spec/fabricators/bookmark_fabricator.rb",
      "spec/fabricators/comment_fabricator.rb",
      "spec/fabricators/event_fabricator.rb",
+     "spec/fabricators/feed_fabricator.rb",
+     "spec/fabricators/follower_fabricator.rb",
      "spec/fabricators/image_fabricator.rb",
+     "spec/fabricators/message_fabricator.rb",
      "spec/fabricators/party_fabricator.rb",
      "spec/fabricators/post_fabricator.rb",
+     "spec/fabricators/rating_fabricator.rb",
+     "spec/fabricators/rsvp_fabricator.rb",
+     "spec/fabricators/status_fabricator.rb",
      "spec/fabricators/user_fabricator.rb",
      "spec/fabricators/venue_fabricator.rb",
-     "spec/image_spec.rb",
+     "spec/fabricators/vote_fabricator.rb",
+     "spec/feed_app_spec.rb",
+     "spec/follower_app_spec.rb",
+     "spec/image_app_spec.rb",
+     "spec/message_app_spec.rb",
      "spec/party_app_spec.rb",
-     "spec/post_spec.rb",
+     "spec/post_app_spec.rb",
+     "spec/rating_app_spec.rb",
+     "spec/rsvp_app_spec.rb",
      "spec/spec_helper.rb",
+     "spec/status_app_spec.rb",
      "spec/user_app_spec.rb",
-     "spec/venue_app_spec.rb"
+     "spec/venue_app_spec.rb",
+     "spec/vote_app_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -123,7 +174,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<mocha>, [">= 0.9.0"])
-      s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
+      s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.6"])
       s.add_development_dependency(%q<fabrication>, [">= 0.8.3"])
       s.add_development_dependency(%q<database_cleaner>, [">= 0"])
@@ -152,7 +203,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<redisk>, [">= 0"])
     else
       s.add_dependency(%q<mocha>, [">= 0.9.0"])
-      s.add_dependency(%q<rspec>, [">= 1.3.0"])
+      s.add_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_dependency(%q<rack-test>, [">= 0.5.6"])
       s.add_dependency(%q<fabrication>, [">= 0.8.3"])
       s.add_dependency(%q<database_cleaner>, [">= 0"])
@@ -182,7 +233,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<mocha>, [">= 0.9.0"])
-    s.add_dependency(%q<rspec>, [">= 1.3.0"])
+    s.add_dependency(%q<rspec>, [">= 2.0.0"])
     s.add_dependency(%q<rack-test>, [">= 0.5.6"])
     s.add_dependency(%q<fabrication>, [">= 0.8.3"])
     s.add_dependency(%q<database_cleaner>, [">= 0"])
