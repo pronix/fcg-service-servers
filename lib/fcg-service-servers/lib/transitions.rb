@@ -54,7 +54,7 @@ module FCG::Model
       receiver.before_validation :set_initial_state
       receiver.validates_presence_of :state
       receiver.validate :state_inclusion
-      receiver.field :state,     :type => String
+      receiver.field :state, :type => String
       receiver.attr_protected :state
     end
   end

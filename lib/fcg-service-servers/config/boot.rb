@@ -45,6 +45,7 @@ configure do
     File.expand_path("../../apps/*.rb", __FILE__),
     File.expand_path("../../db/*.rb", __FILE__)
   ].each do |file|
+    puts file
     require file
   end
 end
