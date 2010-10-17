@@ -1,9 +1,9 @@
 module FCG::Service
   class RatingApp < FCG::Service::Base
     include FCG::Rest
-    rest :rating
+    restful
     
-    get "/api/#{API_VERSION}/ratings/record/:record" do
+    get "/ratings/record/:record" do
       begin
         record_rating = RatingRecord.find_with_hashed_record(params[:record])
         if record_rating

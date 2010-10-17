@@ -1,6 +1,6 @@
 module FCG::Service
   class CommentApp < FCG::Service::Base
     include FCG::Rest
-    rest :comment
+    restful
   end
 end

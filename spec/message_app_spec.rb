@@ -5,14 +5,14 @@ describe "Message App" do
     Message.delete_all
   end
   
-  describe "GET on /api/#{API_VERSION}/messages/:id" do
+  describe "GET on /messages/:id" do
     before(:each) do
       @message = Fabricate(:message)
       @id = @message.id.to_s
     end
     
     it "should return an message by id: #{@id}" do
-      get "/api/#{API_VERSION}/messages/#{@id}"
+      get "/messages/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -25,23 +25,23 @@ describe "Message App" do
     end
     
     it "should return a 404 for a message that doesn't exist" do
-      get "/api/#{API_VERSION}/messages/foo"
+      get "/messages/foo"
       last_response.status.should == 404
       last_response.body.should == "message not found".to_msgpack
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/messages" do
+  describe "POST on /messages" do
     it "should create a message" do
       message = {
-        :sender_id   => new_user_id,
-        :receiver_id => new_user_id,
+        :sender_id   => new_id,
+        :receiver_id => new_id,
         :body        => Faker::Lorem.paragraph(5)
       }
-      post "/api/#{API_VERSION}/messages", message.to_msgpack
+      post "/messages", message.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/messages/#{attributes["id"]}"
+      get "/messages/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["sender_id"].should            == message[:sender_id]
       attributes["receiver_id"].should          == message[:receiver_id]  
@@ -52,7 +52,7 @@ describe "Message App" do
     end
   end
 
-  describe "PUT on /api/#{API_VERSION}/messages/:id" do
+  describe "PUT on /messages/:id" do
     before(:each) do
       @message = Fabricate(:message)
       @id = @message.id.to_s
@@ -63,7 +63,7 @@ describe "Message App" do
         :body => Faker::Lorem.paragraph(5),
         :viewable_by_receiver => false
       }
-      put "/api/#{API_VERSION}/messages/#{@id}", message.to_msgpack
+      put "/messages/#{@id}", message.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["viewable_by_receiver"].should be_false
@@ -71,16 +71,16 @@ describe "Message App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/messages/:id" do
+  describe "DELETE on /messages/:id" do
     before(:each) do
       @message = Fabricate(:message)
       @id = @message.id.to_s
     end
     
     it "should delete a message" do
-      delete "/api/#{API_VERSION}/messages/#{@id}"
+      delete "/messages/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/messages/#{@id}"
+      get "/messages/#{@id}"
       last_response.status.should == 404
     end
   end

@@ -5,14 +5,14 @@ describe "Event App" do
     Event.delete_all
   end
 
-  describe "GET on /api/#{API_VERSION}/events/:id" do
+  describe "GET on /events/:id" do
     before(:each) do
       @event = Fabricate(:tomorrow_event)
       @id = @event.id.to_s
     end
     
     it "should return an event by id: #{@id}" do
-      get "/api/#{API_VERSION}/events/#{@id}"
+      get "/events/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -22,12 +22,12 @@ describe "Event App" do
     end
     
     it "should return a 404 for a event that doesn't exist" do
-      get "/api/#{API_VERSION}/events/foo"
+      get "/events/foo"
       last_response.status.should == 404
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/events" do
+  describe "POST on /events" do
     it "should create a event" do
       venue = {
         :name     => "Nightingale's",
@@ -46,26 +46,26 @@ describe "Event App" do
         :venue       => venue
       }
       
-      post "/api/#{API_VERSION}/events", event.to_msgpack
+      post "/events", event.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/events/#{attributes["id"]}"
+      get "/events/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["venue"]["name"].should == "Nightingale's"
       attributes["user_id"].should == "4c43475fff808d982a00001a"
     end
   end
 
-  describe "DELETE on /api/#{API_VERSION}/events/:id" do
+  describe "DELETE on /events/:id" do
     before(:each) do
       @event = Fabricate(:tomorrow_event)
       @id = @event.id.to_s
     end
     
     it "should delete a event" do
-      delete "/api/#{API_VERSION}/events/#{@id}"
+      delete "/events/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/events/#{@id}"
+      get "/events/#{@id}"
       last_response.status.should == 404
     end
   end

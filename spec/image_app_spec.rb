@@ -6,14 +6,14 @@ describe "Image App" do
     @album = Fabricate(:album)
   end
   
-  describe "GET on /api/#{API_VERSION}/images/:id" do
+  describe "GET on /images/:id" do
     before(:each) do
       @image = Fabricate(:image, :album_id => @album.id)
       @id = @image.id.to_s
     end
     
     it "should return an image by id: #{@id}" do
-      get "/api/#{API_VERSION}/images/#{@id}"
+      get "/images/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -24,23 +24,23 @@ describe "Image App" do
     end
     
     it "should return a 404 for an image that doesn't exist" do
-      get "/api/#{API_VERSION}/images/foo"
+      get "/images/foo"
       last_response.status.should == 404
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/images" do
+  describe "POST on /images" do
     it "should create a image" do
       image = {
         :user_id    => "4c4a475fff808d982af0001a",
         :types      => FCG_CONFIG.image.flyer,
         :album_id   => @album.id.to_s
       }
-      post "/api/#{API_VERSION}/images", image.to_msgpack
+      post "/images", image.to_msgpack
       
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/images/#{attributes["id"]}"
+      get "/images/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["user_id"].should == image[:user_id]
       attributes["state"].should == "new"
@@ -49,7 +49,7 @@ describe "Image App" do
     end
   end
 
-  describe "PUT on /api/#{API_VERSION}/images/:id" do
+  describe "PUT on /images/:id" do
     before(:each) do
       @image = Fabricate(:image, :album_id => @album.id)
       @id = @image.id.to_s
@@ -57,7 +57,7 @@ describe "Image App" do
     
     it "should update a image" do
       hash = { :state => "completed" }
-      put "/api/#{API_VERSION}/images/#{@id}", hash.to_msgpack
+      put "/images/#{@id}", hash.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["state"].should == "new"
@@ -65,16 +65,16 @@ describe "Image App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/images/:id" do
+  describe "DELETE on /images/:id" do
     before(:each) do
       @image = Fabricate(:image, :album_id => @album.id)
       @id = @image.id.to_s
     end
     
     it "should delete a image" do
-      delete "/api/#{API_VERSION}/images/#{@id}"
+      delete "/images/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/images/#{@id}"
+      get "/images/#{@id}"
       last_response.status.should == 404
     end
   end

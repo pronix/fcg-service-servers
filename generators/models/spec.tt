@@ -5,7 +5,7 @@ describe "<%= klass %> App" do
     <%= klass %>.delete_all
   end
   
-  describe "GET on /api/#{API_VERSION}/<%= model_pluralize %>/:id" do
+  describe "GET on /<%= model_pluralize %>/:id" do
     before(:each) do
       @<%= model %> = Fabricate(:<%= model %>)
       @id = @<%= model %>.id.to_s
@@ -13,7 +13,7 @@ describe "<%= klass %> App" do
     
     it "should return an <%= model %> by id: #{@id}" do
       pending do
-        get "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
+        get "/<%= model_pluralize %>/#{@id}"
         last_response.should be_ok
         attributes = MessagePack.unpack(last_response.body)
         attributes["id"].should == @id
@@ -22,30 +22,30 @@ describe "<%= klass %> App" do
     
     it "should return a 404 for a <%= model %> that doesn't exist" do
       pending do
-        get "/api/#{API_VERSION}/<%= model_pluralize %>/foo"
+        get "/<%= model_pluralize %>/foo"
         last_response.status.should == 404
         last_response.body.should == "<%= model %> not found".to_msgpack
       end
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/<%= model_pluralize %>" do
+  describe "POST on /<%= model_pluralize %>" do
     it "should create a <%= model %>" do
       pending do
         <%= model %> = {
           
         }
-        post "/api/#{API_VERSION}/<%= model_pluralize %>", <%= model %>.to_msgpack
+        post "/<%= model_pluralize %>", <%= model %>.to_msgpack
 
         last_response.should be_ok
         attributes = MessagePack.unpack(last_response.body)
-        get "/api/#{API_VERSION}/<%= model_pluralize %>/#{attributes["id"]}"
+        get "/<%= model_pluralize %>/#{attributes["id"]}"
         attributes = MessagePack.unpack(last_response.body)
       end
     end
   end
 
-  describe "PUT on /api/#{API_VERSION}/<%= model_pluralize %>/:id" do
+  describe "PUT on /<%= model_pluralize %>/:id" do
     before(:each) do
       @<%= model %> = Fabricate(:<%= model %>)
       @id = @<%= model %>.id.to_s
@@ -56,23 +56,23 @@ describe "<%= klass %> App" do
         <%= model %> = {
           
         }
-        put "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}", <%= model %>.to_msgpack
+        put "/<%= model_pluralize %>/#{@id}", <%= model %>.to_msgpack
         last_response.should be_ok
         attributes = MessagePack.unpack(last_response.body)
       end
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/<%= model_pluralize %>/:id" do
+  describe "DELETE on /<%= model_pluralize %>/:id" do
     before(:each) do
       @<%= model %> = Fabricate(:<%= model %>)
       @id = @<%= model %>.id.to_s
     end
     
     it "should delete a <%= model %>" do
-      delete "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
+      delete "/<%= model_pluralize %>/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/<%= model_pluralize %>/#{@id}"
+      get "/<%= model_pluralize %>/#{@id}"
       last_response.status.should == 404
     end
   end

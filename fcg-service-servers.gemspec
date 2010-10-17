@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.rdoc",
      "Rakefile",
+     "autotest/discover.rb",
      "bin/fcg-service-server",
      "config.ru",
      "fcg-service-servers.gemspec",
@@ -117,7 +118,6 @@ Gem::Specification.new do |s|
      "spec/post_app_spec.rb",
      "spec/rating_app_spec.rb",
      "spec/rsvp_app_spec.rb",
-     "spec/spec.opts",
      "spec/spec_helper.rb",
      "spec/status_app_spec.rb",
      "spec/user_app_spec.rb",
@@ -173,6 +173,27 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<fcg-service-servers>, [">= 0"])
+      s.add_runtime_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
+      s.add_runtime_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_runtime_dependency(%q<thor>, [">= 0"])
+      s.add_runtime_dependency(%q<thin>, ["= 1.2.7"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 1.0"])
+      s.add_runtime_dependency(%q<bson_ext>, [">= 1.0.9"])
+      s.add_runtime_dependency(%q<mongoid>, ["= 2.0.0.beta.19"])
+      s.add_runtime_dependency(%q<rack-mount>, [">= 0.6.13"])
+      s.add_runtime_dependency(%q<vegas>, [">= 0.1.7"])
+      s.add_runtime_dependency(%q<bunny>, [">= 0"])
+      s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
+      s.add_runtime_dependency(%q<sanitize>, [">= 0"])
+      s.add_runtime_dependency(%q<ice_cube>, [">= 0.5.9"])
+      s.add_runtime_dependency(%q<rdiscount>, [">= 1.6.5"])
+      s.add_runtime_dependency(%q<transitions>, [">= 0"])
+      s.add_runtime_dependency(%q<msgpack>, [">= 0"])
+      s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
+      s.add_runtime_dependency(%q<redis>, [">= 2.0.10"])
+      s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
+      s.add_runtime_dependency(%q<redisk>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0.9.0"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<rack-test>, [">= 0.5.6"])
@@ -202,6 +223,27 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<redis-namespace>, [">= 0.10.0"])
       s.add_runtime_dependency(%q<redisk>, [">= 0"])
     else
+      s.add_dependency(%q<fcg-service-servers>, [">= 0"])
+      s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
+      s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+      s.add_dependency(%q<thor>, [">= 0"])
+      s.add_dependency(%q<thin>, ["= 1.2.7"])
+      s.add_dependency(%q<sinatra>, [">= 1.0"])
+      s.add_dependency(%q<bson_ext>, [">= 1.0.9"])
+      s.add_dependency(%q<mongoid>, ["= 2.0.0.beta.19"])
+      s.add_dependency(%q<rack-mount>, [">= 0.6.13"])
+      s.add_dependency(%q<vegas>, [">= 0.1.7"])
+      s.add_dependency(%q<bunny>, [">= 0"])
+      s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
+      s.add_dependency(%q<sanitize>, [">= 0"])
+      s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
+      s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
+      s.add_dependency(%q<transitions>, [">= 0"])
+      s.add_dependency(%q<msgpack>, [">= 0"])
+      s.add_dependency(%q<SystemTimer>, [">= 0"])
+      s.add_dependency(%q<redis>, [">= 2.0.10"])
+      s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
+      s.add_dependency(%q<redisk>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0.9.0"])
       s.add_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_dependency(%q<rack-test>, [">= 0.5.6"])
@@ -232,6 +274,27 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<redisk>, [">= 0"])
     end
   else
+    s.add_dependency(%q<fcg-service-servers>, [">= 0"])
+    s.add_dependency(%q<fcg-core-ext>, [">= 0.0.4"])
+    s.add_dependency(%q<fcg-service-ext>, [">= 0.0.11"])
+    s.add_dependency(%q<thor>, [">= 0"])
+    s.add_dependency(%q<thin>, ["= 1.2.7"])
+    s.add_dependency(%q<sinatra>, [">= 1.0"])
+    s.add_dependency(%q<bson_ext>, [">= 1.0.9"])
+    s.add_dependency(%q<mongoid>, ["= 2.0.0.beta.19"])
+    s.add_dependency(%q<rack-mount>, [">= 0.6.13"])
+    s.add_dependency(%q<vegas>, [">= 0.1.7"])
+    s.add_dependency(%q<bunny>, [">= 0"])
+    s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
+    s.add_dependency(%q<sanitize>, [">= 0"])
+    s.add_dependency(%q<ice_cube>, [">= 0.5.9"])
+    s.add_dependency(%q<rdiscount>, [">= 1.6.5"])
+    s.add_dependency(%q<transitions>, [">= 0"])
+    s.add_dependency(%q<msgpack>, [">= 0"])
+    s.add_dependency(%q<SystemTimer>, [">= 0"])
+    s.add_dependency(%q<redis>, [">= 2.0.10"])
+    s.add_dependency(%q<redis-namespace>, [">= 0.10.0"])
+    s.add_dependency(%q<redisk>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0.9.0"])
     s.add_dependency(%q<rspec>, [">= 2.0.0"])
     s.add_dependency(%q<rack-test>, [">= 0.5.6"])

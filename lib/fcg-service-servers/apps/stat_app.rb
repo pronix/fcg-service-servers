@@ -1,7 +1,7 @@
 module FCG::Service
   class StatApp < FCG::Service::Base
     # get a stats by key
-    get "/api/#{API_VERSION}/stats/:verb/:key/:time" do
+    get "/stats/:verb/:key/:time" do
       # /stats/view/image:4c4e7da0ff808d20c9000003/2010092614
       # count:view:image:4c4e7da0ff808d20c9000003:time:2010092614
       key = "count:#{params[:verb]}:#{params[:key]}:time:#{params[:time]}"
@@ -14,7 +14,7 @@ module FCG::Service
     end
     
     # citycode || album || image
-    get "/api/#{API_VERSION}/stats/rank/:verb/:rankable_key/:model/:time" do
+    get "/stats/rank/:verb/:rankable_key/:model/:time" do
       start = params[:start] || 0
       limit = params[:limit] || 10
       key = "rank:#{params[:verb]}:#{params[:rankable_key]}:model:#{params[:model]}:time:#{params[:time]}"

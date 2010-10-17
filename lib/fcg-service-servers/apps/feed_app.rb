@@ -1,6 +1,6 @@
 module FCG::Service
   class FeedApp < FCG::Service::Base
     include FCG::Rest
-    rest :feed
+    restful
   end
 end

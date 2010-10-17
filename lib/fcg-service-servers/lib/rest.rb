@@ -1,16 +1,17 @@
+require "facets/module/cattr"
 module FCG
   module Rest
+    attr_accessor :model
     module ClassMethods
-      def rest(model, *args)
+      def restful(*args)
         options = args.extract_options!
         opts = {
           :only => [:get, :post, :put, :delete]
         }.merge(options)
-        
         klass = model.to_s.classify.constantize
         model_plural = model.to_s.pluralize
         str = <<-RUBY
-          get "/api/#{API_VERSION}/#{model_plural}/:id" do
+          get "/#{model_plural}/:id" do
             begin
               #{model} = #{klass}.find(params[:id])
               if #{model}
@@ -23,7 +24,7 @@ module FCG
             end
           end if opts[:only].include? :get
           # create a new #{model}
-          post "/api/#{API_VERSION}/#{model_plural}" do
+          post "/#{model_plural}" do
             begin
               params = MessagePack.unpack(request.body.read)
               #{model} = #{klass}.new(params)
@@ -38,7 +39,7 @@ module FCG
           end if opts[:only].include? :post
 
           # update an existing #{model}
-          put "/api/#{API_VERSION}/#{model_plural}/:id" do
+          put "/#{model_plural}/:id" do
             #{model} = #{klass}.find(params[:id])
             if #{model}
               begin
@@ -57,7 +58,7 @@ module FCG
           end if opts[:only].include? :put
 
           # destroy an existing #{model}
-          delete "/api/#{API_VERSION}/#{model_plural}/:id" do
+          delete "/#{model_plural}/:id" do
             #{model} = #{klass}.find(params[:id])
             if #{model}
               #{model}.destroy
@@ -68,6 +69,34 @@ module FCG
           end if opts[:only].include? :delete
         RUBY
         class_eval(str, __FILE__, __LINE__)
+      end
+      
+      def search(model, *args)
+        options = args.extract_options!
+        opts = { }.merge(options)
+
+        klass = model.to_s.classify.constantize
+        model_plural = model.to_s.pluralize
+
+        str = <<-RUBY
+          get "/#{model_plural}/search" do
+            begin
+              #{model} = #{klass}.find(params[:id])
+              if #{model}
+                #{model}.to_msgpack
+              else
+                error 404, "#{model} not found".to_msgpack
+              end
+            rescue BSON::InvalidObjectId => e
+              error 404, "#{model} not found".to_msgpack
+            end
+          end
+          RUBY
+        class_eval(str, __FILE__, __LINE__)
+      end
+      
+      def model
+        @model ||= self.to_s.split(/::/).last.sub(/App/, '').snakecase
       end
     end
     

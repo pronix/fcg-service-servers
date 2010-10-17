@@ -5,14 +5,14 @@ describe "Comment App" do
     Comment.delete_all
   end
   
-  describe "GET on /api/#{API_VERSION}/comments/:id" do
+  describe "GET on /comments/:id" do
     before(:each) do
       @comment = Fabricate(:comment)
       @id = @comment.id.to_s
     end
     
     it "should return an comment by id: #{@id}" do
-      get "/api/#{API_VERSION}/comments/#{@id}"
+      get "/comments/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -23,12 +23,12 @@ describe "Comment App" do
     end
     
     it "should return a 404 for a comment that doesn't exist" do
-      get "/api/#{API_VERSION}/comments/foo"
+      get "/comments/foo"
       last_response.status.should == 404
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/comments" do
+  describe "POST on /comments" do
     it "should create a comment" do
       comment = {
         :site            => "alltheparties.com",
@@ -37,16 +37,16 @@ describe "Comment App" do
         :displayed_name  => "Sammy Davis Jr.",
         :user_id         => "4c43475fdf808f982a00001a"
       }
-      post "/api/#{API_VERSION}/comments", comment.to_msgpack
+      post "/comments", comment.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/comments/#{attributes["id"]}"
+      get "/comments/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["body"].should == comment[:body]
     end
   end
 
-  describe "PUT on /api/#{API_VERSION}/comments/:id" do
+  describe "PUT on /comments/:id" do
     before(:each) do
       @comment = Fabricate(:comment)
       @id = @comment.id.to_s
@@ -54,7 +54,7 @@ describe "Comment App" do
     
     it "should update a comment" do
       hash = { :body => "Solid Bull Crappo!"}
-      put "/api/#{API_VERSION}/comments/#{@id}", hash.to_msgpack
+      put "/comments/#{@id}", hash.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes.should == attributes
@@ -62,16 +62,16 @@ describe "Comment App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/comments/:id" do
+  describe "DELETE on /comments/:id" do
     before(:each) do
       @comment = Fabricate(:comment)
       @id = @comment.id.to_s
     end
     
     it "should delete a comment" do
-      delete "/api/#{API_VERSION}/comments/#{@id}"
+      delete "/comments/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/comments/#{@id}"
+      get "/comments/#{@id}"
       last_response.status.should == 404
     end
   end

@@ -9,12 +9,7 @@ end
 
 require 'fcg-service-servers/apps'
 
-Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server', {
-  :before_run => lambda do |v|
-    path = (ENV['FCG_CONFIG'] || v.args.first)
-    load path.to_s.strip if path
-  end
-}) do |runner, opts, app|
+Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server') do |runner, opts, app|
   opts.on('-N NAMESPACE', "--namespace NAMESPACE", "set the namespace") do |namespace|
     runner.logger.info "Using Redis namespace '#{namespace}'"
     # Resque.redis.namespace = namespace

@@ -1,6 +1,6 @@
 module FCG::Service
   class <%= klass %>App < FCG::Service::Base
     include FCG::Rest
-    rest :<%= model %>
+    restful
   end
 end

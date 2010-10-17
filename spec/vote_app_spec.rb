@@ -5,14 +5,14 @@ describe "Vote App" do
     Vote.delete_all
   end
   
-  describe "POST on /api/#{API_VERSION}/votes" do
+  describe "POST on /votes" do
     it "should create a vote" do
       vote = {
         :record  => "post:4c43475fffefad982a00001a",
         :user_id       => "4c43475fff808d982a00001a",
         :state         => "up"
       }
-      post "/api/#{API_VERSION}/votes", vote.to_msgpack
+      post "/votes", vote.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["user_id"].should == "4c43475fff808d982a00001a"
@@ -21,16 +21,16 @@ describe "Vote App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/votes/:id" do
+  describe "DELETE on /votes/:id" do
     before(:each) do
       @vote = Fabricate(:vote)
       @id = @vote.id.to_s
     end
     
     it "should delete a vote" do
-      delete "/api/#{API_VERSION}/votes/#{@id}"
+      delete "/votes/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/votes/#{@id}"
+      get "/votes/#{@id}"
       last_response.status.should == 404
     end
   end

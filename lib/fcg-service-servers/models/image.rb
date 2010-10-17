@@ -60,17 +60,6 @@ class Image
       end
     end
     
-    def find_objekt(type, objekt_id)
-      case type
-      when "Event"
-        Event.find(objekt_id)
-      when "User"
-        User.find(objekt_id)
-      when "Flyer"
-        Event.find(objekt_id)
-      end
-    end
-    
     def from_job_hash(val)
       imgs = case val["type"]
       when "Event", "User"

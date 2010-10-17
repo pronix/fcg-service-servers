@@ -34,7 +34,7 @@ def app
   @app ||= FCG::Service::Server
 end
 
-def new_user_id
+def new_id
   rand(23602195835208247086376026138).to_s(16)
 end
 

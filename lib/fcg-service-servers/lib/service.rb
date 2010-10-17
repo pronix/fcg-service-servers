@@ -7,15 +7,16 @@ module FCG
     class Base < Sinatra::Base
       disable :layout
       set :logging, true
+      set :run, false
       
       before do
-        request_uri = case request.env['REQUEST_URI']
+        format = case request.env['REQUEST_URI']
           when /\.css$/       : :css
           when /\.js(on)?$/   : :js
           when /\.htm(l)?$/   : :html
           else                  :default
         end
-        content_type CONTENT_TYPES[request_uri], :charset => 'utf-8'
+        content_type CONTENT_TYPES[format], :charset => 'utf-8'
       end
       
       def error_hash(instance, message)

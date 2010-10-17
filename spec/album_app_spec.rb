@@ -5,14 +5,14 @@ describe "Album App" do
     Album.delete_all
   end
   
-  describe "GET on /api/#{API_VERSION}/albums/:id" do
+  describe "GET on /albums/:id" do
     before(:each) do
       @album = Fabricate(:album)
       @id = @album.id.to_s
     end
     
     it "should return an album by id: #{@id}" do
-      get "/api/#{API_VERSION}/albums/#{@id}"
+      get "/albums/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -23,16 +23,16 @@ describe "Album App" do
     end
     
     it "should return a 404 for a album that doesn't exist" do
-      get "/api/#{API_VERSION}/albums/foo"
+      get "/albums/foo"
       last_response.status.should == 404
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/albums" do
+  describe "POST on /albums" do
     it "should create a album" do
       two_weeks_ago = (Date.today - 14).to_s
-      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_ago }
-      post "/api/#{API_VERSION}/albums", album.to_msgpack
+      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_ago, :record => "event:#{new_id}"  }
+      post "/albums", album.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should     == album[:title]
@@ -42,8 +42,8 @@ describe "Album App" do
     
     it "should not create an album that has a future date" do
       two_weeks_since = (Date.today + 14).slashed
-      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_since }
-      post "/api/#{API_VERSION}/albums", album.to_msgpack
+      album = { :title => "Sharon Angle is blah blah blah", :user_id => "4c43475fff808d982a00001f", :date => two_weeks_since, :record => "event:#{new_id}" }
+      post "/albums", album.to_msgpack
       last_response.should_not be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["errors"].keys.should == ["date"]
@@ -51,7 +51,7 @@ describe "Album App" do
     
   end
 
-  describe "PUT on /api/#{API_VERSION}/albums/:id" do
+  describe "PUT on /albums/:id" do
     before(:each) do
       @album = Fabricate(:album)
       @id = @album.id.to_s
@@ -60,7 +60,7 @@ describe "Album App" do
     it "should update a album" do
       today = (Date.today - 30).to_s
       album = { :title => "What are you going to do?", :date => today }
-      put "/api/#{API_VERSION}/albums/#{@id}", album.to_msgpack
+      put "/albums/#{@id}", album.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should  == album[:title]
@@ -70,16 +70,16 @@ describe "Album App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/albums/:id" do
+  describe "DELETE on /albums/:id" do
     before(:each) do
       @album = Fabricate(:album)
       @id = @album.id.to_s
     end
     
     it "should delete a album" do
-      delete "/api/#{API_VERSION}/albums/#{@id}"
+      delete "/albums/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/albums/#{@id}"
+      get "/albums/#{@id}"
       last_response.status.should == 404
     end
   end

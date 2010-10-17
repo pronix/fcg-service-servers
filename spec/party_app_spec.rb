@@ -8,7 +8,7 @@ describe "Party App" do
     @user = Fabricate(:user)
   end
 
-  describe "GET on /api/#{API_VERSION}/parties/:id" do
+  describe "GET on /parties/:id" do
     before(:each) do
       @venue  = Fabricate(:venue, :user_id => @user.id.to_s)
       @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id.to_s)
@@ -16,7 +16,7 @@ describe "Party App" do
     end
     
     it "should return an party by id: #{@id}" do
-      get "/api/#{API_VERSION}/parties/#{@id}"
+      get "/parties/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
@@ -31,19 +31,19 @@ describe "Party App" do
       end
       
       # Timecop.travel(Time.now + 30.days) do
-      #   get "/api/#{API_VERSION}/parties/#{@id}"
+      #   get "/parties/#{@id}"
       #   last_response.should be_ok
       #   attributes = MessagePack.unpack(last_response.body)
       # end
     end
     
     it "should return a 404 for a party that doesn't exist" do
-      get "/api/#{API_VERSION}/parties/foo"
+      get "/parties/foo"
       last_response.status.should == 404
     end
   end 
   
-  describe "POST on /api/#{API_VERSION}/parties" do
+  describe "POST on /parties" do
     before(:each) do
       @venue  = Fabricate(:venue)
     end
@@ -61,10 +61,10 @@ describe "Party App" do
         :venue_id     => @venue.id.to_s
       }
       
-      post "/api/#{API_VERSION}/parties", party.to_msgpack
+      post "/parties", party.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/parties/#{attributes["id"]}"
+      get "/parties/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should == party[:title]
       attributes["user_id"].should == @user.id.to_s
@@ -75,7 +75,7 @@ describe "Party App" do
     end
   end
 
-  describe "PUT on /api/#{API_VERSION}/parties/:id" do
+  describe "PUT on /parties/:id" do
     before(:each) do
       @venue  = Fabricate(:lounge, :user_id => @user.id)
       @venue2 = Fabricate(:venue, :user_id => @user.id)
@@ -85,14 +85,14 @@ describe "Party App" do
     
     it "should update a party" do
       new_title = "#{Faker::Company.name} Launch Party"
-      put "/api/#{API_VERSION}/parties/#{@id}", { :title => new_title }.to_msgpack
+      put "/parties/#{@id}", { :title => new_title }.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should == new_title
     end
     
     it "should change the party venue" do
-      put "/api/#{API_VERSION}/parties/#{@id}", { :venue => @venue2.to_hash }.to_msgpack
+      put "/parties/#{@id}", { :venue => @venue2.to_hash }.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["venue"].each_pair do |key, value|
@@ -102,7 +102,7 @@ describe "Party App" do
     end
   end
   
-  describe "DELETE on /api/#{API_VERSION}/parties/:id" do
+  describe "DELETE on /parties/:id" do
     before(:each) do
       @venue = Fabricate(:venue, :user_id => @user.id)
       @party = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
@@ -110,9 +110,9 @@ describe "Party App" do
     end
     
     it "should delete a party" do
-      delete "/api/#{API_VERSION}/parties/#{@id}"
+      delete "/parties/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/parties/#{@id}"
+      get "/parties/#{@id}"
       last_response.status.should == 404
     end
   end

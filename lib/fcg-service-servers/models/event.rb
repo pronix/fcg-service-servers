@@ -2,7 +2,6 @@ class Event
   include FCG::Model
   is_paranoid
   is_versioned
-  
   include ImagePlugin
   
   image_keys :photo, :flyer
@@ -11,11 +10,6 @@ class Event
   scope :by_range, lambda {|date_range| where(:start_time_utc.gt => date_range.first, :start_time_utc.lte => date_range.last).sort(:date) }
   scope :recent, lambda { where(:date.gt => Time.now.utc).sort(:date) }
   scope :by_citycode, lambda { |city| where(:citycode => city) }
-  
-  # many :rsvps
-  # belongs_to :user
-  # belongs_to :party
-  # belongs_to :venue
   
   field :user_id, :type => String
   field :party_id, :type => String

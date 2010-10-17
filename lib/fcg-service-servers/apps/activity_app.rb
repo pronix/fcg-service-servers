@@ -1,7 +1,7 @@
 module FCG::Service
   class ActivityApp < FCG::Service::Base
     # get an activity stream by id
-    get "/api/#{API_VERSION}/activities/:id" do
+    get "/activities/:id" do
       activity = Activity.find(params[:id]) rescue nil
       if activity
         activity.to_msgpack
@@ -11,7 +11,7 @@ module FCG::Service
     end
 
     # create a new activity
-    post "/api/#{API_VERSION}/activities" do
+    post "/activities" do
       begin
         params = MessagePack.unpack(request.body.read)
         activity = Activity.new(params)
@@ -26,7 +26,7 @@ module FCG::Service
     end
 
     # destroy an existing activity
-    delete "/api/#{API_VERSION}/activities/:id" do
+    delete "/activities/:id" do
       activity = Activity.find(params[:id])
       if activity
         activity.destroy

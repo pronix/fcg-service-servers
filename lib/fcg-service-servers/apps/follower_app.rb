@@ -1,6 +1,6 @@
 module FCG::Service
   class FollowerApp < FCG::Service::Base
     include FCG::Rest
-    rest :follower
+    restful
   end
 end

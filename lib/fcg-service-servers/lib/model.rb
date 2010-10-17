@@ -18,12 +18,10 @@ module FCG::Model
     def to_hash
       self.serializable_hash.inject({}) do |result, (key, value)|
         key, value = "id", value.to_s if key.to_s == "_id"
-        
         case value
         when Date, DateTime, Time
           value = value.to_s
         end
-        
         result[key] = value
         result
       end

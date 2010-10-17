@@ -1,10 +1,10 @@
 module FCG::Service
   class UserApp < FCG::Service::Base
     include FCG::Rest
-    rest :user
+    restful
     
     # get a user by email
-    get "/api/#{API_VERSION}/users/find_by_:field/:value" do
+    get "/users/find_by_:field/:value" do
       user = User.first(:conditions => { params[:field].to_sym => params[:value] })
       if user and !user.destroyed?
         user.to_msgpack
@@ -14,7 +14,7 @@ module FCG::Service
     end
 
     # verify a user name and password
-    post "/api/#{API_VERSION}/users/:id/sessions" do
+    post "/users/:id/sessions" do
       begin
         attributes = MessagePack.unpack(request.body.read)
         user = User.find(params[:id])

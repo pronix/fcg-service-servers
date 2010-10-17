@@ -1,6 +1,6 @@
 class User
   include FCG::Model
-  is_paranoid
+  # is_paranoid
 
   include UserHashPlugin
   include SocialPlugin

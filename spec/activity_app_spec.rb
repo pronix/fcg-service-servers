@@ -33,47 +33,47 @@ describe "Activity App" do
     Activity.delete_all
   end
 
-  describe "GET on /api/#{API_VERSION}/activities/:id" do
+  describe "GET on /activities/:id" do
     before(:each) do
       @activity = Fabricate(:activity)
       @id = @activity.id.to_s
     end
     
     it "should return an activity by id: #{@id}" do
-      get "/api/#{API_VERSION}/activities/#{@id}"
+      get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["actor"]["display_name"].should == "Paul Dix"
     end
 
     it "should return a activity with an verb" do
-      get "/api/#{API_VERSION}/activities/#{@id}"
+      get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["verb"].should == "view"
     end
 
     it "should return site" do
-      get "/api/#{API_VERSION}/activities/#{@id}"
+      get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["site"].should == "alltheparties.com"
     end
 
     it "should return proper id" do
-      get "/api/#{API_VERSION}/activities/#{@id}"
+      get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["id"].should == @id
     end
     
     it "should return a 404 for a activity that doesn't exist" do
-      get "/api/#{API_VERSION}/activities/foo"
+      get "/activities/foo"
       last_response.status.should == 404
     end
   end
   
-  describe "POST on /api/#{API_VERSION}/activities" do
+  describe "POST on /activities" do
     it "should create a activity" do
       activity = activity_hash({
         :actor => {
@@ -85,26 +85,26 @@ describe "Activity App" do
         :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
         :site => "ATP"})
         
-      post "/api/#{API_VERSION}/activities", activity.to_msgpack
+      post "/activities", activity.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      get "/api/#{API_VERSION}/activities/#{attributes["id"]}"
+      get "/activities/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
       attributes["actor"]["display_name"].should == "Trotter Cashion"
       attributes["actor"]["url"].should == "http://www.fcgid.com/person/tcash"
     end
   end
 
-  describe "DELETE on /api/#{API_VERSION}/activities/:id" do
+  describe "DELETE on /activities/:id" do
     before(:each) do
       @activity = Fabricate(:activity)
       @id = @activity.id.to_s
     end
     
     it "should delete a activity" do
-      delete "/api/#{API_VERSION}/activities/#{@id}"
+      delete "/activities/#{@id}"
       last_response.should be_ok
-      get "/api/#{API_VERSION}/activities/#{@id}"
+      get "/activities/#{@id}"
       last_response.status.should == 404
     end
   end
