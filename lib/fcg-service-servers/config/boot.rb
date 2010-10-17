@@ -15,11 +15,11 @@ configure do
   API_VERSION = FCG_CONFIG.app.version
   
   # Redis Client
-  redis       = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port, :timeout => 10
-  GEO_REDIS   = Redis::Namespace.new(:geo, :redis => redis)
-  SITE_REDIS  = Redis::Namespace.new(:site, :redis => redis)
+  REDIS       = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port, :timeout => 10
+  GEO_REDIS   = Redis::Namespace.new(:geo,  :redis => REDIS)
+  SITE_REDIS  = Redis::Namespace.new(:site, :redis => REDIS)
   
-  LOGGER = Logger.new(File.expand_path("../../../../logs/#{FCG_ENV}.log", __FILE__))
+  LOGGER = Logger.new(File.expand_path("../../../../log/#{FCG_ENV}.log", __FILE__))
   LOGGER.level  = Logger::INFO
   
   # Bunny Client

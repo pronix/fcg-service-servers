@@ -3,20 +3,33 @@ require File.expand_path("../rest", __FILE__)
 
 module FCG
   module Service
-    CONTENT_TYPES = {:html => 'text/html', :css => 'text/css', :js  => 'application/javascript', :default => 'text/plain' }
+    CONTENT_TYPES = {:xml => 'application/xml', :js  => 'application/javascript', :msgpack => 'text/html' }
     class Base < Sinatra::Base
       disable :layout
       set :logging, true
       set :run, false
       
       before do
-        format = case request.env['REQUEST_URI']
-          when /\.css$/       : :css
-          when /\.js(on)?$/   : :js
-          when /\.htm(l)?$/   : :html
-          else                  :default
+        format = case params[:format]
+          when /js(on)?/
+            :js
+          when /xml/
+            :xml
+          else
+            :msgpack
         end
         content_type CONTENT_TYPES[format], :charset => 'utf-8'
+      end
+      
+      def respond_with(result)
+        case params[:format]
+          when /js(on)?/
+            result.to_json
+          when /xml/
+            result.to_xml
+          else
+            result.to_msgpack
+        end
       end
       
       def error_hash(instance, message)
@@ -33,6 +46,3 @@ module FCG
     end
   end
 end
-
-
-

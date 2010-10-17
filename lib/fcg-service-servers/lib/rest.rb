@@ -1,4 +1,3 @@
-require "facets/module/cattr"
 module FCG
   module Rest
     attr_accessor :model
@@ -6,7 +5,8 @@ module FCG
       def restful(*args)
         options = args.extract_options!
         opts = {
-          :only => [:get, :post, :put, :delete]
+          :only => [:get, :post, :put, :delete],
+          :search => false
         }.merge(options)
         klass = model.to_s.classify.constantize
         model_plural = model.to_s.pluralize
@@ -15,12 +15,12 @@ module FCG
             begin
               #{model} = #{klass}.find(params[:id])
               if #{model}
-                #{model}.to_msgpack
+                respond_with #{model}
               else
-                error 404, "#{model} not found".to_msgpack
+                error 404, respond_with("#{model} not found")
               end
             rescue BSON::InvalidObjectId => e
-              error 404, "#{model} not found".to_msgpack
+              error 404, respond_with("#{model} not found")
             end
           end if opts[:only].include? :get
           # create a new #{model}
@@ -29,12 +29,12 @@ module FCG
               params = MessagePack.unpack(request.body.read)
               #{model} = #{klass}.new(params)
               if #{model}.valid? and #{model}.save
-                #{model}.to_msgpack
+                respond_with #{model}
               else
-                error 400, error_hash(#{model}, "failed validation").to_msgpack
+                error 400, respond_with(error_hash(#{model}, "failed validation"))
               end
             rescue => e
-              error 400, e.message.to_msgpack
+              error 400, respond_with(e.message)
             end
           end if opts[:only].include? :post
 
@@ -45,15 +45,15 @@ module FCG
               begin
                 #{model}.update_attributes(MessagePack.unpack(request.body.read))
                 if #{model}.valid?
-                  #{model}.to_msgpack
+                  respond_with #{model}
                 else
-                  error 400, error_hash(#{model}, "failed validation").to_msgpack # do nothing for now. we'll cover later
+                  error 400, respond_with(error_hash(#{model}, "failed validation")) # do nothing for now. we'll cover later
                 end
               rescue => e
-                error 400, e.message.to_msgpack
+                error 400, respond_with(e.message)
               end
             else
-              error 404, "#{model} not found".to_msgpack
+              error 404, respond_with("#{model} not found")
             end
           end if opts[:only].include? :put
 
@@ -62,36 +62,36 @@ module FCG
             #{model} = #{klass}.find(params[:id])
             if #{model}
               #{model}.destroy
-              #{model}.to_msgpack
+              respond_with #{model}
             else
-              error 404, "#{model} not found".to_msgpack
+              error 404, respond_with("#{model} not found")
             end
           end if opts[:only].include? :delete
-        RUBY
-        class_eval(str, __FILE__, __LINE__)
-      end
-      
-      def search(model, *args)
-        options = args.extract_options!
-        opts = { }.merge(options)
-
-        klass = model.to_s.classify.constantize
-        model_plural = model.to_s.pluralize
-
-        str = <<-RUBY
-          get "/#{model_plural}/search" do
+          
+          post "/#{model_plural}/search" do
             begin
-              #{model} = #{klass}.find(params[:id])
-              if #{model}
-                #{model}.to_msgpack
+              query = params[:query]
+              query.symbolize_keys!
+              query_builder = Hashie::Clash.new
+              # add limit
+              query_builder.limit(query[:limit] || 10)
+              # add offset
+              query_builder.offset(query[:offset] || 0)
+              # add fields that I want returned
+              query_builder.only(query[:only]) if query[:only]
+              # add where
+              query_builder.where(query[:where]) if query[:where]
+              results = #{klass}.find(query_builder)
+              if results
+                results.to_msgpack
               else
-                error 404, "#{model} not found".to_msgpack
+                error 404, "#{model_plural} not found".to_msgpack
               end
             rescue BSON::InvalidObjectId => e
-              error 404, "#{model} not found".to_msgpack
+              error 404, "#{model_plural} not found".to_msgpack
             end
-          end
-          RUBY
+          end if opts[:search]
+        RUBY
         class_eval(str, __FILE__, __LINE__)
       end
       

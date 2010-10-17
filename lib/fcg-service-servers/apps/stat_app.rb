@@ -7,9 +7,9 @@ module FCG::Service
       key = "count:#{params[:verb]}:#{params[:key]}:time:#{params[:time]}"
       begin
         value = REDIS.get key
-        value.to_msgpack
+        respond_with(value)
       rescue
-        error 404, "key missing".to_msgpack
+        error 404, respond_with("key missing")
       end
     end
     
@@ -18,11 +18,6 @@ module FCG::Service
       start = params[:start] || 0
       limit = params[:limit] || 10
       key = "rank:#{params[:verb]}:#{params[:rankable_key]}:model:#{params[:model]}:time:#{params[:time]}"
-      # hurls = redis.sort key(id, :hurls),
-      # :by    => "#{key(id, :hurls)}:*",
-      # :order => 'DESC',
-      # :get   => "*",
-      # :limit => [0, 100]
       begin
         value = REDIS.sort key, :limit => [ start, limit ], :by => "nosort"
         res = if value.respond_to? :map
@@ -30,9 +25,9 @@ module FCG::Service
         else
           []
         end
-        res.to_msgpack
+        respond_to res
       rescue Exception => e
-        error 404, e.to_msgpack
+        error 404, respond_to(e)
       end
     end
   end
