@@ -70,20 +70,25 @@ module FCG
           
           post "/#{model_plural}/search" do
             begin
-              query = params[:query]
-              query.symbolize_keys!
+              params = MessagePack.unpack(request.body.read)
+              LOGGER.info "#{model}:" + params.inspect
+              # query = MessagePack.unpack(params[:query])
+              # LOGGER.info query.inspect
+              query = params.symbolize_keys
               query_builder = Hashie::Clash.new
               # add limit
               query_builder.limit(query[:limit] || 10)
-              # add offset
-              query_builder.offset(query[:offset] || 0)
+              # add skip aka offset
+              query_builder.skip(query[:skip] || 0)
               # add fields that I want returned
               query_builder.only(query[:only]) if query[:only]
               # add where
-              query_builder.where(query[:where]) if query[:where]
+              query_builder.conditions(query[:conditions]) if query[:conditions]
               results = #{klass}.find(query_builder)
-              if results
-                results.to_msgpack
+              LOGGER.info "#{model}:size:" + results.size.to_s
+              LOGGER.info "#{model}:results:" + results.inspect
+              if results.size
+                results.map(&:to_hash).to_msgpack
               else
                 error 404, "#{model_plural} not found".to_msgpack
               end
