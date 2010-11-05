@@ -16,7 +16,7 @@ module FCG::Service
     # verify a user name and password
     post "/users/:id/sessions" do
       begin
-        attributes = MessagePack.unpack(request.body.read)
+        attributes = payload
         user = User.find(params[:id])
         if user and !user.destroyed? and user.authenticated?(attributes["password"])
           respond_with user

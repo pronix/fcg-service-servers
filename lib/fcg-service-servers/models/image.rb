@@ -1,6 +1,6 @@
 class Image
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   has_transitions
   
   field :caption,   :type => String

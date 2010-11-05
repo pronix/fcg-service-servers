@@ -1,6 +1,6 @@
 class Party
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   RECUR = %w{ once weekly }
   
   scope :by_user, lambda { |userid| where(:user_id => userid) }
@@ -39,7 +39,7 @@ class Party
   field :days_free, :type => Integer, :default => 7
   field :days_paid, :type => Integer, :default => 0
   
-  attr_accessor :venue_id, :weekly, :old_event_id
+  attr_accessor :weekly, :old_event_id
   
   validates_with PartyValidator
   validates_presence_of :title, :music, :description, :venue, :user_id, :next_date
@@ -67,6 +67,7 @@ class Party
   end
   
   def next_date=(val)
+    LOGGER.info "val:#{val.inspect}"
     write_attribute(:next_date, Date.parse(val))
   end
   
@@ -119,6 +120,7 @@ class Party
   
   protected
   def handle_before_create
+    self.events = {}
     self.events[self.next_date.to_s] = begin
       ev = Event.create_based_on_party(self)
       raise "Bad Event (\nevent: #{ev.errors.inspect}\nparty: #{self.errors.inspect})" unless ev.valid?

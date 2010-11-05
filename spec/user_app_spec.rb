@@ -64,6 +64,28 @@ describe "User App" do
       attributes["username"].should  == "trotter"
       attributes["email"].should == "trotter@nospam.com"
     end
+    
+    it "should create a user" do
+      new_user = {
+        :username   => "joemocha",
+        :email      => "onyekwelu@obukwelu.com",
+        :password   => "test1test2",
+        :last_name  => "Abdullah",
+        :first_name => "Anik"
+      }
+      post "/users", new_user.to_msgpack
+          
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      get "/users/#{attributes["id"]}"
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["username"].should  == "joemocha"
+      attributes["email"].should == "onyekwelu@obukwelu.com"
+      attributes["last_name"].should == "Abdullah"
+      attributes["first_name"].should == "Anik"
+      attributes["location"].class.should == Hash
+      attributes["location"]["country"].should == "US"
+    end
   end
 
   describe "PUT on /users/:id" do
@@ -72,13 +94,21 @@ describe "User App" do
       @id = @user.id.to_s
     end
     
-    it "should update a user" do
+    it "should update a user's bio" do
       put "/users/#{@id}", { :bio => "testing freak"}.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["bio"].should == "testing freak"
     end
  
+    it "should update a user's first and last name" do
+      put "/users/#{@id}", { :last_name => "Denzel", :first_name => "Hampton"}.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["last_name"].should == "Denzel"
+      attributes["first_name"].should == "Hampton"
+    end
+    
     it "should not add user with same username" do
       post "/users", {
         :username => "bryan",

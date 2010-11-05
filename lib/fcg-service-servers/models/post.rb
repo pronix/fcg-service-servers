@@ -1,7 +1,7 @@
 class Post
   include FCG::Model
   is_versioned
-  is_paranoid
+  # is_paranoid
   
   field :site,          :type => String
   field :title,         :type => String

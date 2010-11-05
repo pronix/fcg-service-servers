@@ -1,6 +1,6 @@
 class Message
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   
   field :sender_id,             :type => String
   field :receiver_id,           :type => String

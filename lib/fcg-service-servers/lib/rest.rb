@@ -20,20 +20,24 @@ module FCG
                 error 404, respond_with("#{model} not found")
               end
             rescue BSON::InvalidObjectId => e
+              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
               error 404, respond_with("#{model} not found")
             end
           end if opts[:only].include? :get
           # create a new #{model}
           post "/#{model_plural}" do
             begin
-              params = MessagePack.unpack(request.body.read)
+              params = payload
+              LOGGER.info "payload:\#{payload.inspect}"
               #{model} = #{klass}.new(params)
+              LOGGER.info "#{model}:" + params.inspect
               if #{model}.valid? and #{model}.save
                 respond_with #{model}
               else
                 error 400, respond_with(error_hash(#{model}, "failed validation"))
               end
-            rescue => e
+            rescue Exception => e
+              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
               error 400, respond_with(e.message)
             end
           end if opts[:only].include? :post
@@ -43,14 +47,16 @@ module FCG
             #{model} = #{klass}.find(params[:id])
             if #{model}
               begin
-                #{model}.update_attributes(MessagePack.unpack(request.body.read))
+                LOGGER.info "payload:\#{payload.inspect}"
+                #{model}.update_attributes(payload)
                 if #{model}.valid?
                   respond_with #{model}
                 else
                   error 400, respond_with(error_hash(#{model}, "failed validation")) # do nothing for now. we'll cover later
                 end
               rescue => e
-                error 400, respond_with(e.message)
+                LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
+                error 404, respond_with(e.message)
               end
             else
               error 404, respond_with("#{model} not found")
@@ -70,10 +76,7 @@ module FCG
           
           post "/#{model_plural}/search" do
             begin
-              params = MessagePack.unpack(request.body.read)
-              LOGGER.info "#{model}:" + params.inspect
-              # query = MessagePack.unpack(params[:query])
-              # LOGGER.info query.inspect
+              params = payload
               query = params.symbolize_keys
               query_builder = Hashie::Clash.new
               # add limit
@@ -85,15 +88,15 @@ module FCG
               # add where
               query_builder.conditions(query[:conditions]) if query[:conditions]
               results = #{klass}.find(query_builder)
-              LOGGER.info "#{model}:size:" + results.size.to_s
-              LOGGER.info "#{model}:results:" + results.inspect
-              if results.size
-                results.map(&:to_hash).to_msgpack
+              if results.size > 0
+                respond_with(results.map(&:to_hash))
               else
-                error 404, "#{model_plural} not found".to_msgpack
+                respond_with([])
+                # error 404, respond_with("#{model_plural} not found")
               end
             rescue BSON::InvalidObjectId => e
-              error 404, "#{model_plural} not found".to_msgpack
+              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
+              error 404, respond_with("#{model_plural} not found")
             end
           end if opts[:search]
         RUBY

@@ -1,6 +1,6 @@
 class Event
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   is_versioned
   include ImagePlugin
   

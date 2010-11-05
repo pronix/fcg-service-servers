@@ -1,6 +1,6 @@
 class Venue
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   
   field :user_id, :type => String
   field :name, :type => String
@@ -23,9 +23,9 @@ class Venue
   before_save :update_city_state_by_zipcode #:set_citycode
   
   def full_address
-    @full_address = "#{self.address}, #{self.city}, #{self.state}, #{self.zipcode}"
-    @full_address << ", #{self.country}" unless in_us?
-    @full_address
+    res = "#{self.address}, #{self.city}, #{self.state}, #{self.zipcode}"
+    res << ", #{self.country}" unless in_us?
+    res
   end
   
   def to_param

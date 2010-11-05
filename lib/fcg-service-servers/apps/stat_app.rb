@@ -25,9 +25,20 @@ module FCG::Service
         else
           []
         end
-        respond_to res
+        respond_with(res)
       rescue Exception => e
-        error 404, respond_to(e)
+        error 404, respond_with(e)
+      end
+    end
+    
+    get "/stats/most_visited" do
+      start = params[:start] || 0
+      limit = params[:limit] || 10
+      begin
+        res = []
+        respond_with res
+      rescue Exception => e
+        error 404, respond_with(e)
       end
     end
   end

@@ -3,7 +3,7 @@ require File.expand_path("../rest", __FILE__)
 
 module FCG
   module Service
-    CONTENT_TYPES = {:xml => 'application/xml', :js  => 'application/javascript', :msgpack => 'text/html' }
+    CONTENT_TYPES = {:js  => 'application/javascript', :msgpack => 'text/html' }
     class Base < Sinatra::Base
       disable :layout
       set :logging, true
@@ -13,23 +13,33 @@ module FCG
         format = case params[:format]
           when /js(on)?/
             :js
-          when /xml/
-            :xml
           else
             :msgpack
         end
         content_type CONTENT_TYPES[format], :charset => 'utf-8'
       end
       
+      def payload
+        @payload ||= begin
+          case params[:format]
+            when /js(on)?/
+              JSON.parse(request.body.read)
+            else
+              MessagePack.unpack(request.body.read)
+          end
+        end
+      end
+      
       def respond_with(result)
-        case params[:format]
+        LOGGER.info "result: " + result.inspect
+        post_result = case params[:format]
           when /js(on)?/
             result.to_json
-          when /xml/
-            result.to_xml
           else
             result.to_msgpack
         end
+        LOGGER.info "post_result: " + post_result + "\n\n"
+        post_result
       end
       
       def error_hash(instance, message)

@@ -13,7 +13,7 @@ module FCG::Service
     # create a new activity
     post "/activities" do
       begin
-        params = MessagePack.unpack(request.body.read)
+        params = payload
         activity = Activity.new(params)
         if activity.valid? and activity.save
           activity.to_msgpack

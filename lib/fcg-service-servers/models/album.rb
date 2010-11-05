@@ -1,6 +1,6 @@
 class Album
   include FCG::Model
-  is_paranoid
+  # is_paranoid
   
   field :image_type,                    :type => String, :default => "photos" # photos or flyers
   field :record,                        :type => String # event:#{id} or user:#{id}

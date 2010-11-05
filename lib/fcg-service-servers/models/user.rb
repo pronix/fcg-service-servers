@@ -126,7 +126,7 @@ class User
   
   protected
   def setup
-    self.location[:country] = "US"
+    self.location = {:country => "US"} if self.location.nil?
     self.flags = {
       :enabled => true,
       :confirmed => false,

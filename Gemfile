@@ -1,7 +1,7 @@
 # gemspec
 source :gemcutter
 
-gem "fcg-core-ext", ">= 0.0.4"
+gem "fcg-core-ext", ">= 0.0.5"
 gem "fcg-service-ext", ">= 0.0.11"
 gem "thor"
 gem "thin", "1.2.7"
