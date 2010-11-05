@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + '/../fcg-service-servers'
 require File.dirname(__FILE__) + '/config/boot.rb'
 require 'rack/mount'
 

@@ -7,7 +7,6 @@ rescue LoadError
   require 'vegas'
 end
 
-require 'fcg-service-servers'
 require 'fcg-service-servers/apps'
 
 Vegas::Runner.new(FCG::Service::Server, 'fcg-service-server') do |runner, opts, app|

@@ -3,12 +3,12 @@ source :gemcutter
 
 gem "fcg-core-ext", ">= 0.0.5"
 gem "fcg-service-ext", ">= 0.0.11"
+gem "rack-mount", ">= 0.6.13"
 gem "thor"
 gem "thin", "1.2.7"
 gem "sinatra", ">= 1.0"
 gem "bson_ext", ">= 1.0.9"
 gem "mongoid", "2.0.0.beta.19"
-gem "rack-mount", ">= 0.6.13"
 gem "vegas", ">= 0.1.7"
 gem "bunny"
 gem "fastercsv", ">= 1.5.3"
