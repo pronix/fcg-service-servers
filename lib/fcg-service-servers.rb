@@ -15,3 +15,12 @@ Dir[
 ].each do |file|
   require file
 end
+
+# /Users/onyekwelu/.rvm/gems/ruby-1.8.7-p249/bin:
+# /Users/onyekwelu/.rvm/gems/ruby-1.8.7-p249@global/bin:
+# /Users/onyekwelu/.rvm/rubies/ruby-1.8.7-p249/bin:
+# /Users/onyekwelu/.rvm/bin:
+# /usr/local/sbin:
+# /Users/onyekwelu/db/mongodb/bin:
+# /System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home:
+# ~/bin:~/rds/bin:~/ec2/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin
