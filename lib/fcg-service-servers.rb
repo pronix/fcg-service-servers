@@ -1,3 +1,4 @@
+require 'rubygems'
 require "fcg-service-ext"
 require "fcg-core-ext"
 require 'yajl/json_gem'
