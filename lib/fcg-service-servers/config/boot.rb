@@ -1,6 +1,6 @@
 require "bundler"
 env_arg = ARGV.index("-e")
-FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym 
+FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym unless defined? FCG_ENV
 begin
   Bundler.setup
   Bundler.require(:default, FCG_ENV)
@@ -10,12 +10,12 @@ begin
       raw_config = File.read(File.expand_path("../settings/#{file}.yml", __FILE__))
       result[file.to_sym]= Hashie::Mash.new(YAML.load(raw_config)[FCG_ENV.to_s])
       result
-    end
+    end unless defined? FCG_CONFIG
   
-    API_VERSION = FCG_CONFIG.app.version
+    API_VERSION = FCG_CONFIG.app.version unless defined? API_VERSION
   
     # Redis Client
-    REDIS       = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port, :timeout => 10
+    REDIS       = Redis.new :db => FCG_CONFIG.redis.db, :host => FCG_CONFIG.redis.host, :port => FCG_CONFIG.redis.port, :timeout => 10 
     GEO_REDIS   = Redis::Namespace.new(:geo,  :redis => REDIS)
     SITE_REDIS  = Redis::Namespace.new(:site, :redis => REDIS)
   

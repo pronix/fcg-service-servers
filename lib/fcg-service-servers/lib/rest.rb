@@ -11,6 +11,33 @@ module FCG
         klass = model.to_s.classify.constantize
         model_plural = model.to_s.pluralize
         str = <<-RUBY
+          get "/#{model_plural}/search" do
+            begin
+              # params = payload
+              query = params
+              query_builder = Hashie::Clash.new
+              # add limit
+              query_builder.limit(query[:limit].to_i || 10)
+              # add skip aka offset
+              query_builder.skip(query[:skip].to_i || 0)
+              # add fields that I want returned
+              query_builder.only(query[:only]) if query[:only]
+              # add where
+              query_builder.conditions(query[:conditions]) if query[:conditions]
+              
+              results = #{klass}.find(query_builder)
+              if results.size > 0
+                respond_with(results.map(&:to_hash))
+              else
+                respond_with([])
+                # error 404, respond_with("#{model_plural} not found")
+              end
+            rescue BSON::InvalidObjectId => e
+              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
+              error 404, respond_with("#{model_plural} not found")
+            end
+          end if opts[:search]
+        
           get "/#{model_plural}/:id" do
             begin
               #{model} = #{klass}.find(params[:id])
@@ -73,33 +100,8 @@ module FCG
               error 404, respond_with("#{model} not found")
             end
           end if opts[:only].include? :delete
-          
-          post "/#{model_plural}/search" do
-            begin
-              params = payload
-              query = params.symbolize_keys
-              query_builder = Hashie::Clash.new
-              # add limit
-              query_builder.limit(query[:limit] || 10)
-              # add skip aka offset
-              query_builder.skip(query[:skip] || 0)
-              # add fields that I want returned
-              query_builder.only(query[:only]) if query[:only]
-              # add where
-              query_builder.conditions(query[:conditions]) if query[:conditions]
-              results = #{klass}.find(query_builder)
-              if results.size > 0
-                respond_with(results.map(&:to_hash))
-              else
-                respond_with([])
-                # error 404, respond_with("#{model_plural} not found")
-              end
-            rescue BSON::InvalidObjectId => e
-              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
-              error 404, respond_with("#{model_plural} not found")
-            end
-          end if opts[:search]
         RUBY
+        
         class_eval(str, __FILE__, __LINE__)
       end
       

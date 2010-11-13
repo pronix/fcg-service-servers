@@ -17,7 +17,7 @@ module FCG
   
     module InstanceMethods
       def to_hash
-        self.serializable_hash.inject({}) do |result, (key, value)|
+        self.serializable_hash.reject{|key, value| key.to_s == "versions" }.inject({}) do |result, (key, value)|
           key, value = "id", value.to_s if key.to_s == "_id"
           case value
           when Date, DateTime, Time

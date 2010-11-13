@@ -3,7 +3,7 @@ class Comment
   scope :threaded_with_field_sorted_by_votes, lambda {|tid| where(:record => tid).sort(['path','ascending'], ['net_votes', 'descending']) }
   
   field :site,            :type => String 
-  field :record,   :type => String #format model:id
+  field :record,          :type => String #format model:id
   field :body,            :type => String 
   field :body_as_html,    :type => String 
   field :deleted,         :type => Boolean

@@ -31,14 +31,14 @@ module FCG
       end
       
       def respond_with(result)
-        LOGGER.info "result: " + result.inspect
+        LOGGER.info "\n\nresult: " + result.inspect
         post_result = case params[:format]
           when /js(on)?/
             result.to_json
           else
             result.to_msgpack
         end
-        LOGGER.info "post_result: " + post_result + "\n\n"
+        LOGGER.info "\n\npost_result: " + post_result
         post_result
       end
       

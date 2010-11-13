@@ -81,17 +81,18 @@ class Party
   end
   
   def create_current_event
-    event = Event.create_based_on_party(self) if current_event.nil? 
+    self.events = {} if self.events.nil?
+    self.events[self.next_date.to_s] = begin
+      ev = Event.create_based_on_party(self) if current_event.nil? 
+      raise "Bad Event (\nevent: #{ev.errors.inspect}\nparty: #{self.errors.inspect})" unless ev.valid?
+      ev.id.to_s
+    end
   end
   
   def venue_id=(val)
     v = Venue.find(val.to_s)
     self.venue = v.to_hash
   end
-  
-  # def to_param
-  #   %Q{#{id}-#{[title, venue.name, venue.city, venue.state].join(' ').gsub(/[^a-z0-9]+/i, '_')}}
-  # end
   
   def get_length_in_hours
     start_t = Time.parse("#{self.next_date} #{self.start_time}") 
@@ -120,19 +121,19 @@ class Party
   
   protected
   def handle_before_create
-    self.events = {}
-    self.events[self.next_date.to_s] = begin
-      ev = Event.create_based_on_party(self)
-      raise "Bad Event (\nevent: #{ev.errors.inspect}\nparty: #{self.errors.inspect})" unless ev.valid?
-      ev.id.to_s
-    end
+    create_current_event
+    self.active = true
   end
   
   def handle_before_update
-    if self.active and self.current_event and self.current_event.date == self.next_date
-      ev = self.current_event
-      ev.party = self
-      ev.save
+    if self.active
+      if self.current_event and self.current_event.date == self.next_date
+        ev = self.current_event
+        ev.party = self
+        ev.save
+      else
+        create_current_event
+      end
     end
     if self.next_date_changed? and self.current_event and old_event = Event.find(self.events[self.next_date_was.to_s])
       old_event.active = false

@@ -1,7 +1,7 @@
 class Event
   include FCG::Model
   # is_paranoid
-  is_versioned
+  # is_versioned
   include ImagePlugin
   
   image_keys :photo, :flyer
@@ -96,6 +96,7 @@ class Event
   
   def party=(val)
     write_attribute(:party_id, val.id)
+    write_attribute(:title, val.title)
     write_attribute(:venue, val.venue)
     write_attribute(:start_time, val.start_time)
     write_attribute(:end_time, val.end_time)
