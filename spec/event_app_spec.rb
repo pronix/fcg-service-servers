@@ -38,7 +38,7 @@ describe "Event App" do
       }
       
       event = {
-        :date        => Date.new.slashed,
+        :date        => Date.today.slashed,
         :start_time  => "10:00pm",
         :end_time    => "4:00am",
         :user_id     => "4c43475fff808d982a00001a",

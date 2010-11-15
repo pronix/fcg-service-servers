@@ -1,6 +1,8 @@
 Fabricator :bar, :from => :venue do
   name      "Aperitivo"
   address   "279 Fifth Avenue"
+  city      "Brooklyn"
+  state     "NY"
   country   "US"
   zipcode   "11215"
   user_id   "4c43475fff808d982a00001a"
@@ -12,6 +14,7 @@ Fabricator :lounge, :from => :venue do
   country   "US"
   zipcode   '78745'
   user_id   "4c43475fff808d982a00001a"
+  time_zone "gmt"
 end
 
 Fabricator :venue do
@@ -21,4 +24,5 @@ Fabricator :venue do
   citycode  "nyc"
   zipcode   "10010"
   user_id   "4c43475fff808d982a00001a"
+  time_zone "gmt + 1"
 end
