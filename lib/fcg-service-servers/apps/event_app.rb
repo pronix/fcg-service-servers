@@ -8,6 +8,11 @@ module FCG::Service
         LOGGER.info "params:#{params.inspect}"
         # time = Time.parse(params[:time]) || Time.now.utc
         results = Event.by_citycode(params[:citycode]).limit(params[:limit].to_i || 10).skip(params[:skip].to_i || 0)
+        if params[:active] == "true"
+          results.active
+        else
+          results.inactive 
+        end
         case params[:state]
         when "future"
           time = Time.parse(params[:time]) || Time.now.utc
