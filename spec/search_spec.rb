@@ -13,10 +13,7 @@ describe "Search" do
   describe "GET on /albums/search" do
     it "should return an array containing 1 album" do
       search_hash = {"conditions" => { "image_type"=>"event" }, "limit"=>20, "skip"=>0}
-      get "/albums/search", search_hash 
-      # puts last_request.inspect
-  
-      puts last_response.body
+      get "/albums/search", search_hash
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes.should be_a_kind_of(Array)

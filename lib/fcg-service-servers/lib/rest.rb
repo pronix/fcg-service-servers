@@ -13,18 +13,16 @@ module FCG
         str = <<-RUBY
           get "/#{model_plural}/search" do
             begin
-              # params = payload
-              query = params
               query_builder = Hashie::Clash.new
               # add limit
-              query_builder.limit(query[:limit].to_i || 10)
+              query_builder.limit(params[:limit].to_i || 10)
               # add skip aka offset
-              query_builder.skip(query[:skip].to_i || 0)
+              query_builder.skip(params[:skip].to_i || 0)
               # add fields that I want returned
-              query_builder.only(query[:only]) if query[:only]
+              query_builder.only(params[:only]) if params[:only]
               # add where
-              query_builder.conditions(query[:conditions]) if query[:conditions]
-              
+              query_builder.conditions(params[:conditions]) if params[:conditions]
+              LOGGER.info query_builder.inspect
               results = #{klass}.find(query_builder)
               if results.size > 0
                 respond_with(results.map(&:to_hash))

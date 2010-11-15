@@ -7,9 +7,11 @@ class Event
   image_keys :photo, :flyer
   
   scope :active, where(:active => true)
-  scope :by_range, lambda {|date_range| where(:start_time_utc.gt => date_range.first, :start_time_utc.lte => date_range.last).sort(:date) }
+  scope :by_range, lambda {|date_range| where(:start_time_utc.gt => date_range.first, :start_time_utc.lte => date_range.last) }
+  scope :future, lambda {|time| where(:start_time_utc.gt => time) }
+  scope :past,   lambda {|time| where(:start_time_utc.lte => time) }
   scope :recent, lambda { where(:date.gt => Time.now.utc).sort(:date) }
-  scope :by_citycode, lambda { |city| where(:citycode => city) }
+  scope :by_citycode, lambda { |city| where(:"venue.citycode" => city) }
   
   field :user_id, :type => String
   field :party_id, :type => String
