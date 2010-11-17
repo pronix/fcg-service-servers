@@ -20,7 +20,7 @@ module FCG
         self.serializable_hash.reject{|key, value| key.to_s == "versions" }.inject({}) do |result, (key, value)|
           key, value = "id", value.to_s if key.to_s == "_id"
           case value
-          when Date, DateTime, Time
+          when Date, DateTime, Time, BSON::ObjectId
             value = value.to_s
           end
           result[key] = value
