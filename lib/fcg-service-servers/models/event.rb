@@ -2,12 +2,13 @@ class Event
   include FCG::Model
   # is_paranoid
   # is_versioned
-  include ImagePlugin
+  include ImagePlugin # look in service-ext gem at lib/fcg-service-ext/mongo_mapper/plugins/image_plugin.rb
   
   image_keys :photo, :flyer
   
   scope :active,   where(:active => true)
   scope :inactive, where(:active => false)
+  
   scope :by_range, lambda {|date_range| where(:start_time_utc.gt => date_range.first, :start_time_utc.lte => date_range.last) }
   scope :future, lambda {|time| where(:start_time_utc.gt => time) }
   scope :past,   lambda {|time| where(:start_time_utc.lte => time) }
