@@ -13,6 +13,10 @@ module FCG
       def has_transitions
         self.send :include, Transitions
       end
+      
+      def attributes_for_client
+        self.fields.keys.sort.map(&:to_sym)
+      end
     end
   
     module InstanceMethods

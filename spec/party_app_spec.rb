@@ -5,12 +5,13 @@ describe "Party App" do
     User.delete_all
     Party.delete_all
     Venue.delete_all
+    Event.delete_all
     @user = Fabricate(:user)
   end
 
   describe "GET on /parties/:id" do
     before(:each) do
-      @venue  = Fabricate(:venue, :user_id => @user.id.to_s)
+      @venue  = Fabricate(:venue, :user_id => @user.id)
       @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id.to_s)
       @id     = @party.id.to_s
     end
@@ -45,11 +46,12 @@ describe "Party App" do
   
   describe "POST on /parties" do
     before(:each) do
+      
       @venue  = Fabricate(:venue)
     end
     
     it "should create a party" do
-      date = (Date.today + 14).slashed
+      date = (Date.today + 14).to_s
       party = {
         :title        => "Prada Launch Party",
         :next_date    => date,
@@ -71,24 +73,32 @@ describe "Party App" do
       attributes["venue"]["id"].should == @venue.id.to_s
       attributes["venue"]["citycode"].should == "nyc"
       attributes["length_in_hours"].should == 4.0
-       
+      next_date = Date.parse(attributes["next_date"])
     end
   end
 
   describe "PUT on /parties/:id" do
     before(:each) do
       @venue  = Fabricate(:lounge, :user_id => @user.id)
-      @venue2 = Fabricate(:venue, :user_id => @user.id)
+      @venue2 = Fabricate(:venue,  :user_id => @user.id)
       @party  = Fabricate(:party, :venue => @venue.to_hash, :user_id => @user.id)
       @id     = @party.id.to_s
     end
     
     it "should update a party" do
+      old_next_date = @party.next_date
+      date = (Date.today + 14).to_s
       new_title = "#{Faker::Company.name} Launch Party"
-      put "/parties/#{@id}", { :title => new_title }.to_msgpack
+      put "/parties/#{@id}", { :title => new_title, :next_date => date }.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes["title"].should == new_title
+      attributes["next_date"].should == date
+      attributes["events"].keys.size.should == 2
+      old_event = Event.find(attributes["events"][old_next_date.to_s])
+      old_event.active.should be_false
+      event = Event.find(attributes["events"][date])
+      event.active.should be_true
     end
     
     it "should change the party venue" do

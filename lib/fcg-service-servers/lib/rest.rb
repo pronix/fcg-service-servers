@@ -22,6 +22,7 @@ module FCG
               query_builder.only(params[:only]) if params[:only]
               # add where
               query_builder.conditions(params[:conditions]) if params[:conditions]
+              
               LOGGER.info query_builder.inspect
               results = #{klass}.find(query_builder)
               if results.size > 0

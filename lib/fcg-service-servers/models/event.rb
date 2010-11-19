@@ -3,12 +3,12 @@ class Event
   # is_paranoid
   # is_versioned
   include ImagePlugin # look in service-ext gem at lib/fcg-service-ext/mongo_mapper/plugins/image_plugin.rb
-  
-  image_keys :photo, :flyer
+  # image_keys :photo, :flyer
   
   scope :active,   where(:active => true)
   scope :inactive, where(:active => false)
-  
+  scope :has_photos, where(:photo_album_id.exists => true)
+  scope :has_flyers, where(:flyer_album_id.exists => true)
   scope :by_range, lambda {|date_range| where(:start_time_utc.gt => date_range.first, :start_time_utc.lte => date_range.last) }
   scope :future, lambda {|time| where(:start_time_utc.gt => time) }
   scope :past,   lambda {|time| where(:start_time_utc.lte => time) }
@@ -18,7 +18,6 @@ class Event
   field :user_id, :type => String
   field :party_id, :type => String
   field :venue, :type => Hash
-  
   field :title, :type => String
   field :description, :type => String
   field :music, :type => String
@@ -26,16 +25,15 @@ class Event
   field :dj, :type => String
   field :start_time, :type => String
   field :end_time, :type => String
-  
   field :length_in_hours, :type => Integer
-    
-  field :comments_allowed, :type => Boolean, :default => true
-  field :active, :type => Boolean, :default => true
-  
+  field :comments_allowed, :type => Boolean
+  field :active, :type => Boolean
   field :date, :type => Date
   field :start_time_utc, :type => Time
   field :end_time_utc, :type => Time
   field :posted_to_twitter_at, :type => Date
+  field :photo_album_id, :type => String
+  field :flyer_album_id, :type => String
   
   validates_presence_of :user_id, :party_id, :venue, :date
   validates_format_of :start_time, :with => /^(0?[1-9]|1[0-2]):(00|15|30|45)(a|p)m$/i
@@ -90,14 +88,6 @@ class Event
     write_attribute(:date, Date.parse(val))
   end
   
-  # def venue=(val)
-  #   write_attribute(:venue_id, val.id)
-  #   write_attribute(:venue_name, val.name)
-  #   write_attribute(:lat, val.lat) unless lat.nil?
-  #   write_attribute(:lng, val.lng) unless lng.nil?
-  #   write_attribute(:citycode, val.citycode) unless citycode?
-  # end
-  
   def party=(val)
     write_attribute(:party_id, val.id)
     write_attribute(:title, val.title)
@@ -106,6 +96,11 @@ class Event
     write_attribute(:end_time, val.end_time)
     write_attribute(:user_id, val.user_id)
     write_attribute(:date, val.next_date)
+    write_attribute(:description, val.description)
+    write_attribute(:music, val.music)
+    write_attribute(:host, val.host)
+    write_attribute(:dj, val.dj)
+    write_attribute(:active, val.active)
     set_utc(val.next_date, val.start_time, val.length_in_hours)
   end
   

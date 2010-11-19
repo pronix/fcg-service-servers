@@ -17,8 +17,7 @@ class Party
   field :rsvp_email, :type => String
   field :photographer_list, :type => Array
   field :start_time, :type => String, :default => "11:00PM"
-  field :end_time, :type => String, :default => "4:00AM"
-  
+  field :end_time, :type => String, :default => "4:00AM"  
   field :door_charge_in_cents, :type => Integer
   field :guestlist_in_cents, :type => Integer
   field :length_in_hours, :type => Float
@@ -31,7 +30,6 @@ class Party
   field :hide_guestlist, :type => Boolean, :default => false
   field :private, :type => Boolean, :default => false
   field :post_updates_to_twitter, :type => Boolean, :default => false
-  
   # frequency parameters
   field :recur, :type => String
   field :pictures_left, :type => Integer, :default => 0
@@ -67,7 +65,6 @@ class Party
   end
   
   def next_date=(val)
-    LOGGER.info "val:#{val.inspect}"
     write_attribute(:next_date, Date.parse(val))
   end
   
@@ -77,7 +74,7 @@ class Party
   end
   
   def current_event_id
-    events["#{next_date}"]
+    events[next_date.to_s]
   end
   
   def create_current_event
@@ -121,8 +118,8 @@ class Party
   
   protected
   def handle_before_create
-    create_current_event
     self.active = true
+    create_current_event
   end
   
   def handle_before_update
@@ -135,9 +132,16 @@ class Party
         create_current_event
       end
     end
-    if self.next_date_changed? and self.current_event and old_event = Event.find(self.events[self.next_date_was.to_s])
-      old_event.active = false
-      old_event.save
+    
+    LOGGER.info "next_date_changed:#{next_date_changed?}\nnext_date:#{self.next_date_was.to_s}"
+    
+    if self.next_date_changed? and self.current_event
+      old_next_date = Date.parse(self.next_date_was.to_s)
+      if old_event = Event.find(self.events[old_next_date.to_s])
+        LOGGER.info "old_event:#{old_event.inspect}"
+        old_event.active = false
+        old_event.save
+      end
     end
   end
 end

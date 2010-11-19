@@ -6,7 +6,6 @@ module FCG::Service
     get "/events/citycode/:citycode" do
       begin
         LOGGER.info "params:#{params.inspect}"
-        # time = Time.parse(params[:time]) || Time.now.utc
         results = Event.by_citycode(params[:citycode]).limit(params[:limit].to_i || 10).skip(params[:skip].to_i || 0)
         
         results.has_photos if params[:photos] == "true"

@@ -53,6 +53,22 @@ module FCG
           :errors => errors
         }
       end
+      
+      def clean_up_params(param_as_hash)
+        param_as_hash.inject({}) do |result, (key, value)|
+          result[key.to_sym] = case value
+            when Hash
+              clean_up_params(value)
+            when "true"
+              true
+            when "false"
+              false
+            else
+              value
+            end
+          result
+        end
+      end
     end
   end
 end
