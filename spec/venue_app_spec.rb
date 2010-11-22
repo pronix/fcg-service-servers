@@ -50,6 +50,96 @@ describe "Venue App" do
       attributes["user_id"].should == "4c43475fff808d982a00001a"
       attributes["citycode"].should == "nyc"
     end
+
+    it "should not duplicate venue - a similar venue name that have the same address" do
+      venue = {
+        :name     => "Nightingale",
+        :address  => "140 Market st",
+        :country  => "US",
+        :city     => "San Francisco",
+        :state    => "CA",
+        :zipcode  => 94105,
+        :user_id  => "4c43475fff808d982a00001a"
+      }
+      post "/venues", venue.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      saved_venue_id = attributes["id"]
+      get "/venues/#{saved_venue_id}"
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["name"].should == "Nightingale"
+
+      venue = {
+        :name     => "Nightingale 1",
+        :address  => "140 Market st",
+        :country  => "US",
+        :city     => "San Francisco",
+        :state    => "CA",
+        :zipcode  => 94105,
+        :user_id  => "4c43475fff808d982a00002b"
+      }
+      post "/venues", venue.to_msgpack
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should == saved_venue_id
+      attributes["name"].should == "Nightingale"
+      attributes["user_id"].should == "4c43475fff808d982a00001a"
+      Venue.where({:name => "Nightingale 1"}).length.should == 0
+    end
+
+    it "should create venue that have the same address, but not similar name" do
+      venue = {
+        :name     => "Nightingale",
+        :address  => "140 Market st",
+        :country  => "US",
+        :city     => "San Francisco",
+        :state    => "CA",
+        :zipcode  => 94105,
+        :user_id  => "4c43475fff808d982a00001a"
+      }
+      post "/venues", venue.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      saved_venue_id = attributes["id"]
+      get "/venues/#{saved_venue_id}"
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["name"].should == "Nightingale"
+
+      venue = {
+        :name     => "Another venue",
+        :address  => "140 Market st",
+        :country  => "US",
+        :city     => "San Francisco",
+        :state    => "CA",
+        :zipcode  => 94105,
+        :user_id  => "4c43475fff808d982a00002b"
+      }
+      post "/venues", venue.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["id"].should_not eql(saved_venue_id)
+      get "/venues/#{attributes["id"]}"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["name"].should == "Another venue"
+    end
+
+    it "should set lat, lng, city, state, timezone by address and zipcode" do
+      venue = {
+        :name     => "Nightingale 3",
+        :address  => "140 Market st, San Francisco",
+        :country  => "US",
+        :zipcode  => 94105,
+        :user_id  => "4c43475fff808d982a00001a"
+      }
+      post "/venues", venue.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes["lat"].should_not be_nil
+      attributes["lng"].should_not be_nil
+      attributes["city"].should_not be_nil
+      attributes["state"].should_not be_nil
+      attributes["time_zone"].should_not be_nil
+    end
   end
 
   describe "PUT on /venues/:id" do

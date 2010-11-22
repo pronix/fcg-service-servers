@@ -43,6 +43,8 @@ module FCG
       receiver.send :include, Mongoid::Document
       receiver.send :include, Mongoid::Timestamps
       receiver.attr_protected :_id
+      receiver.attr_protected :created_at
+      receiver.attr_protected :updated_at
     end
   end
 end
