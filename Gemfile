@@ -17,6 +17,7 @@ gem "ice_cube", ">= 0.5.9"
 gem "rdiscount", ">= 1.6.5"
 gem "transitions"
 gem "msgpack"
+gem "geokit"
    
 # Redis
 gem "SystemTimer"
