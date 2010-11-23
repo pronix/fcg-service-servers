@@ -24,7 +24,6 @@ class Venue
   validates_length_of :address, :within => 3..75
   validates_length_of :city, :within => 2..45,  :if => :not_in_us?
   validates_length_of :state, :within => 2..45, :if => :not_in_us?
-  #validates_uniqueness_of :name
   before_create :set_lat_and_lng, :set_default
   before_save :update_city_state_by_zipcode #:set_citycode
   
@@ -144,8 +143,8 @@ class Venue
   
   def update_city_state_by_zipcode
     if in_us?
-      zip = self.zipcode.split(/-/).first
-      res = Geo.find_by_country_and_zipcode(self.country, self.zipcode)
+      zipcode = self.zipcode.split(/-/).first
+      res = Geo.find_by_country_and_zipcode(self.country, zipcode)
       self.city, self.state, self.time_zone = res["CityName"], res["StateAbbr"], res["UTC"] unless res.nil?
     end
   end
