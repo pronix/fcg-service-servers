@@ -18,7 +18,8 @@ gem "rdiscount", ">= 1.6.5"
 gem "transitions"
 gem "msgpack"
 gem "geokit"
-   
+gem "simple_record", ">= 1.5.4"
+
 # Redis
 gem "SystemTimer"
 gem "redis", ">= 2.0.10"

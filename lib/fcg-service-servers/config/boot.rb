@@ -34,11 +34,16 @@ begin
       puts "AMQP is down. Try again later, Sucka!"
     end
   
+    # Mongoid
     Mongoid.configure do |config|
       Mongoid.from_hash FCG_CONFIG.mongodb.to_hash
       config.logger = LOGGER if defined? LOGGER
     end
   
+    # SimpleRecord is a proxy for Amazon SimpleDB
+    SimpleRecord.establish_connection(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_ACCESS_KEY"])
+    SimpleRecord::Base.set_domain_prefix("FCG_#{FCG_ENV}_")
+      
     Dir[
       File.expand_path("../../lib/*.rb", __FILE__),
       File.expand_path("../../validators/*.rb", __FILE__),

@@ -24,7 +24,7 @@ class Venue
   validates_length_of :address, :within => 3..75
   validates_length_of :city, :within => 2..45,  :if => :not_in_us?
   validates_length_of :state, :within => 2..45, :if => :not_in_us?
-  validate_presence_of :zipcode, :if => :in_us?
+  validates_presence_of :zipcode, :if => :in_us?
   before_create :set_lat_and_lng, :set_default
   before_save :update_city_state_by_zipcode #:set_citycode
   
