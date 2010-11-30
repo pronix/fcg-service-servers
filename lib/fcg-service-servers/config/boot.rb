@@ -39,10 +39,14 @@ begin
       Mongoid.from_hash FCG_CONFIG.mongodb.to_hash
       config.logger = LOGGER if defined? LOGGER
     end
-  
+    
+    # Amazon Web Services
+    AWS_ACCESS_KEY = ENV["AWS_ACCESS_KEY"]
+    AWS_SECRET_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
+    
     # SimpleRecord is a proxy for Amazon SimpleDB
-    SimpleRecord.establish_connection(ENV["AWS_ACCESS_KEY"], ENV["AWS_SECRET_ACCESS_KEY"])
-    SimpleRecord::Base.set_domain_prefix("FCG_#{FCG_ENV}_")
+    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
       
     Dir[
       File.expand_path("../../lib/*.rb", __FILE__),
