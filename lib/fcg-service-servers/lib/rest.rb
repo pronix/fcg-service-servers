@@ -10,6 +10,12 @@ module FCG
         }.merge(options)
         klass = model.to_s.classify.constantize
         model_plural = model.to_s.pluralize
+        find_by_id = case klass.superclass.to_s
+        when "SimpleRecord::Base"
+          lambda{|id| klass.find :first, :id => id }
+        else
+          lambda{|id| klass.find id }
+        end
         str = <<-RUBY
           get "/#{model_plural}/search" do
             begin
@@ -39,7 +45,7 @@ module FCG
         
           get "/#{model_plural}/:id" do
             begin
-              #{model} = #{klass}.find(params[:id])
+              #{model} = find_by_id.call(params[:id])
               if #{model}
                 respond_with #{model}
               else
@@ -70,7 +76,7 @@ module FCG
 
           # update an existing #{model}
           put "/#{model_plural}/:id" do
-            #{model} = #{klass}.find(params[:id])
+            #{model} = find_by_id.call(params[:id])
             if #{model}
               begin
                 LOGGER.info "payload:\#{payload.inspect}"
@@ -91,7 +97,7 @@ module FCG
 
           # destroy an existing #{model}
           delete "/#{model_plural}/:id" do
-            #{model} = #{klass}.find(params[:id])
+            #{model} = find_by_id.call(params[:id])
             if #{model}
               #{model}.destroy
               respond_with #{model}
