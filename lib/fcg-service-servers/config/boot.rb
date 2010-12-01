@@ -6,6 +6,15 @@ begin
   Bundler.require(:default, FCG_ENV)
 
   configure do
+    # Amazon Web Services
+    raise "Set AWS_ACCESS_KEY and AWS_SECRET_KEY in your ~/.bashrc or ~/.bash_profile" if ENV["AWS_ACCESS_KEY"].nil? or ENV["AWS_SECRET_ACCESS_KEY"].nil?
+    AWS_ACCESS_KEY = ENV["AWS_ACCESS_KEY"]
+    AWS_SECRET_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
+    
+    # SimpleRecord is a proxy for Amazon SimpleDB
+    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
+  
     FCG_CONFIG = %w(app amqp redis mongodb image).inject(Hashie::Mash.new) do |result, file|
       raw_config = File.read(File.expand_path("../settings/#{file}.yml", __FILE__))
       result[file.to_sym]= Hashie::Mash.new(YAML.load(raw_config)[FCG_ENV.to_s])
@@ -39,14 +48,6 @@ begin
       Mongoid.from_hash FCG_CONFIG.mongodb.to_hash
       config.logger = LOGGER if defined? LOGGER
     end
-    
-    # Amazon Web Services
-    AWS_ACCESS_KEY = ENV["AWS_ACCESS_KEY"]
-    AWS_SECRET_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
-    
-    # SimpleRecord is a proxy for Amazon SimpleDB
-    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_KEY)
-    SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
       
     Dir[
       File.expand_path("../../lib/*.rb", __FILE__),
