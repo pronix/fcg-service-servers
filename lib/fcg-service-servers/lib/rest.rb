@@ -12,7 +12,7 @@ module FCG
         model_plural = model.to_s.pluralize
         find_by_id = case klass.superclass.to_s
         when "SimpleRecord::Base"
-          lambda{|id| klass.find :first, :id => id }
+          lambda{|id| klass.find_by_id id }
         else
           lambda{|id| klass.find id }
         end

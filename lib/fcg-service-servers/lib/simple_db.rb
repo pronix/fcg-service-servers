@@ -8,8 +8,20 @@ module FCG
     end
   
     module InstanceMethods
+      def to_hash
+        self.as_json.inject({}) do |result, (key, value)|
+          key, value = "id", value.to_s if key.to_s == "_id"
+          case value
+          when Date, DateTime, Time, BSON::ObjectId
+            value = value.to_s
+          end
+          result[key] = value
+          result
+        end
+      end
+    
       def to_msgpack(*args)
-        self.attributes.to_msgpack(*args)
+        self.to_hash.to_msgpack(*args)
       end
     end
   
