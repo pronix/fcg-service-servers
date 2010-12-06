@@ -8,6 +8,10 @@ module FCG
     end
   
     module InstanceMethods
+      def destroy
+        self.delete
+      end
+      
       def to_hash
         self.as_json.inject({}) do |result, (key, value)|
           key, value = "id", value.to_s if key.to_s == "_id"
@@ -33,5 +37,12 @@ module FCG
       # model = receiver.to_s.snakecase
       # SimpleRecord::Base.set_table_name model.to_sym
     end
+  end
+end
+
+# fixes add_on_blank error
+module SimpleRecord
+  class SimpleRecord_errors
+    alias :add_on_blank :add
   end
 end

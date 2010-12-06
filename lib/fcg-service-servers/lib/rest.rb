@@ -86,8 +86,8 @@ module FCG
                 else
                   error 400, respond_with(error_hash(#{model}, "failed validation")) # do nothing for now. we'll cover later
                 end
-              rescue => e
-                LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
+              rescue Exception => e
+                LOGGER.info "\#{e.backtrace}: \#{e.message} (\#{e.class})"
                 error 404, respond_with(e.message)
               end
             else

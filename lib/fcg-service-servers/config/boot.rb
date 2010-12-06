@@ -13,7 +13,7 @@ begin
     
     # SimpleRecord is a proxy for Amazon SimpleDB
     SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
-    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY)#, :connection_mode => :per_thread)
+    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, :connection_mode => :per_thread)
   
     FCG_CONFIG = %w(app amqp redis mongodb image).inject(Hashie::Mash.new) do |result, file|
       raw_config = File.read(File.expand_path("../settings/#{file}.yml", __FILE__))
