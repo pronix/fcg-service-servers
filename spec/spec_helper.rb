@@ -6,13 +6,7 @@ ENV['SINATRA_ENV'] = 'test'
 ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'fcg-service-servers')
-# require 'spec'
-# require 'spec/interop/test'
-# require 'spec/autorun'
 require 'rspec'
-# require 'rspec/interop/test'
-# require 'rspec/autorun'
-
 require 'test/unit'
 require 'rack/test'
 require 'mocha'

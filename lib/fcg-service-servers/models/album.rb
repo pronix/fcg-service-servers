@@ -16,6 +16,7 @@ class Album
   field :total_image_count,             :type => Integer
   field :user_id,                       :type => String
   field :date,                          :type => Date
+  field :photographers,                 :type => Array
   field :comments_allowed,              :type => Boolean
   
   validates_presence_of :title, :user_id, :date, :image_type, :record

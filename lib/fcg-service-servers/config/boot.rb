@@ -35,12 +35,11 @@ begin
     begin
       unless FCG_ENV == "test"
         ASYNC_CLIENT = Bunny.new(:host => FCG_CONFIG.amqp.host, :user => FCG_CONFIG.amqp.user, :pass => FCG_CONFIG.amqp.pass)
-        ASYNC_CLIENT.start
       end
     rescue Qrack::ConnectionTimeout
-      puts "ASYNC_CLIENT is timing out!"
+      LOGGER.info "ASYNC_CLIENT is timing out!"
     rescue Bunny::ServerDownError
-      puts "AMQP is down. Try again later, Sucka!"
+      LOGGER.info "AMQP is down. Try again later, Sucka!"
     end
   
     # Mongoid
@@ -60,5 +59,5 @@ begin
     end
   end
 rescue Gem::LoadError => e
-  puts "Gems are loaded already"
+  LOGGER.info "Gems are loaded already"
 end
