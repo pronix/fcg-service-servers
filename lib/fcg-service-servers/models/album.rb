@@ -6,7 +6,8 @@ class Album
   field :record,                        :type => String # event:#{id} or user:#{id}
   field :title,                         :type => String
   field :summary,                       :type => String
-  field :location,                      :type => String
+  field :location_name,                 :type => String
+  field :location_hash,                 :type => Hash
   field :owner_images,                  :type => Array,   :default => []
   field :owner_images_order,            :type => String,  :default => "" # ids comma delimited
   field :owner_image_count,             :type => Integer
