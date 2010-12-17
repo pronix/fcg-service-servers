@@ -1,6 +1,12 @@
 class Album
   include FCG::Model
-  # is_paranoid
+  
+  scope :active,   where(:active => true)
+  scope :inactive, where(:active => false)
+  scope :by_range, lambda {|date_range| where(:date.gt => date_range.first, :date.lte => date_range.last) }
+  scope :past,   lambda {|time| where(:date.lte => time) }
+  scope :recent, lambda { where(:date.gt => Time.now.utc).sort(:date) }
+  scope :by_citycode, lambda { |city| where(:"location_hash.citycode" => city) }
   
   field :image_type,                    :type => String, :default => "photos" # photos or flyers
   field :record,                        :type => String # event:#{id} or user:#{id}
@@ -19,6 +25,7 @@ class Album
   field :date,                          :type => Date
   field :photographers,                 :type => Array
   field :comments_allowed,              :type => Boolean
+  field :active,                        :type => Boolean
   
   validates_presence_of :title, :user_id, :date, :image_type, :record
   validates_length_of :title, :within => 3..100
