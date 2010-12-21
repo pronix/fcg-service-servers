@@ -5,11 +5,10 @@ module FCG::Service
     
     get "/ratings/record/:record" do
       begin
-        record_rating = RatingRecord.find_with_hashed_record(params[:record])
-        if record_rating
-          record_rating.to_msgpack
+        if record_rating = RatingRecord.find_with_hashed_record(params[:record])
+          respond_with(record_rating.to_hash)
         else
-          error 404, "record rating not found".to_msgpack
+          respond_with({:average => 0, :count => 0, :record => params[:record]})
         end
       rescue Exception => e
         error 404, "record rating not found (#{e})".to_msgpack
