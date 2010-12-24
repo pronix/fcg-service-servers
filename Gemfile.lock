@@ -23,6 +23,7 @@ GIT
 
 GEM
   remote: http://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     SystemTimer (1.2.1)
     activemodel (3.0.3)

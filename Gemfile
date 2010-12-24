@@ -1,5 +1,6 @@
 # gemspec
 source :gemcutter
+source :rubygems
 
 gem "fcg-core-ext", :git => "git@github.com:joemocha/fcg-core-ext.git" #{}">= 0.0.5"
 gem "fcg-service-ext", :git => "git@github.com:joemocha/fcg-service-ext.git" # ">= 0.0.11"
@@ -11,7 +12,7 @@ gem "bson_ext", ">= 1.0.9"
 gem "mongoid", ">= 2.0.0.beta.19"
 gem "vegas", ">= 0.1.7"
 gem "bunny"
-gem "fastercsv", ">= 1.5.3"
+gem "fastercsv", ">= 1.5.3" # , :git => "git@github.com:JEG2/faster_csv.git"
 gem "sanitize"
 gem "ice_cube", ">= 0.5.9"
 gem "rdiscount", ">= 1.6.5"
