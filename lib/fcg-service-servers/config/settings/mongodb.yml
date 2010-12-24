@@ -15,10 +15,6 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  host: flame.mongohq.com
-  port: 27062
-  user: fcg_test
-  password: fcg_test
   database: fcg_development
 
 test:
