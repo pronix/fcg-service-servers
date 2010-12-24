@@ -1,8 +1,8 @@
 # gemspec
 source :gemcutter
 
-gem "fcg-core-ext", ">= 0.0.5"
-gem "fcg-service-ext", ">= 0.0.11"
+gem "fcg-core-ext", :git => "git@github.com:joemocha/fcg-core-ext.git" #{}">= 0.0.5"
+gem "fcg-service-ext", :git => "git@github.com:joemocha/fcg-core-ext.git" # ">= 0.0.11"
 gem "rack-mount", ">= 0.6.13"
 gem "thor"
 gem "thin", "1.2.7"
