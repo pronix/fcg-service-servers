@@ -6,7 +6,7 @@ gem "fcg-core-ext"#, :git => "git@github.com:joemocha/fcg-core-ext.git" #{}">= 0
 gem "fcg-service-ext"#, :git => "git@github.com:joemocha/fcg-service-ext.git" # ">= 0.0.11"
 gem "rack-mount", ">= 0.6.13"
 gem "thor"
-gem "thin", "1.2.7"
+# gem "thin", "1.2.7"
 gem "sinatra", ">= 1.0"
 gem "bson_ext", ">= 1.0.9"
 gem "mongoid", ">= 2.0.0.beta.19"
@@ -20,6 +20,7 @@ gem "transitions"
 gem "msgpack"
 gem "geokit"
 gem "simple_record", ">= 1.5.4"
+gem "unicorn"
 
 # Redis
 gem "SystemTimer"
