@@ -1,0 +1,5 @@
+environments:
+  production:
+    migrate: false
+    copy_exclude:
+      - .git
