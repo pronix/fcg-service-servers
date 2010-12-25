@@ -1,0 +1,12 @@
+common_attr: &common_attr
+  
+development:
+  <<: *common_attr
+  access_key: <%= ENV["AWS_ACCESS_KEY"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  
+test:
+  <<: *common_attr
+
+production:
+  <<: *common_attr

@@ -6,20 +6,21 @@ begin
   Bundler.require(:default, FCG_ENV)
 
   configure do
-    # Amazon Web Services
-    raise "Set AWS_ACCESS_KEY and AWS_SECRET_ACCESS_KEY in your ~/.bashrc or ~/.bash_profile" if ENV["AWS_ACCESS_KEY"].nil? or ENV["AWS_SECRET_ACCESS_KEY"].nil?
-    AWS_ACCESS_KEY = ENV["AWS_ACCESS_KEY"]
-    AWS_SECRET_ACCESS_KEY = ENV["AWS_SECRET_ACCESS_KEY"]
-    
-    # SimpleRecord is a proxy for Amazon SimpleDB
-    SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
-    SimpleRecord.establish_connection( AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, :connection_mode => :per_thread)
   
-    FCG_CONFIG = %w(app amqp redis mongodb image).inject(Hashie::Mash.new) do |result, file|
-      raw_config = File.read(File.expand_path("../settings/#{file}.yml", __FILE__))
+    FCG_CONFIG = %w(app amqp aws redis mongodb image).inject(Hashie::Mash.new) do |result, file|
+      raw_config = ERB.new(File.read(File.expand_path("../settings/#{file}.yml", __FILE__))).result
       result[file.to_sym]= Hashie::Mash.new(YAML.load(raw_config)[FCG_ENV.to_s])
       result
     end unless defined? FCG_CONFIG
+    
+    # Amazon Web Services
+    if FCG_CONFIG.aws.nil? or FCG_CONFIG.aws.access_key.nil? or FCG_CONFIG.aws.secret_access_key.nil?
+      raise "Set access_key and secret_access_key in config/settings/aws.yml" 
+    end
+    
+    # SimpleRecord is a proxy for Amazon SimpleDB
+    SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
+    SimpleRecord.establish_connection( FCG_CONFIG.aws.access_key, FCG_CONFIG.aws.secret_access_key, :connection_mode => :per_thread)
   
     API_VERSION = FCG_CONFIG.app.version unless defined? API_VERSION
   
