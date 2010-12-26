@@ -12,3 +12,4 @@ test:
 
 production:
   <<: *common_attr
+  host: localhost

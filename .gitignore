@@ -20,4 +20,4 @@ pkg
 
 ## PROJECT::SPECIFIC
 logs
-## *csv*
+lib/fcg-service-servers/config/settings/(ampq|app|aws|mongodb|redis).yml
