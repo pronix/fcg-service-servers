@@ -1,6 +1,6 @@
 require "bundler"
 env_arg = ARGV.index("-e")
-FCG_ENV = (env_arg || ENV["SINATRA_ENV"] || "development").to_sym unless defined? FCG_ENV
+FCG_ENV = (env_arg || ENV["RACK_ENV"] || "development").to_sym unless defined? FCG_ENV
 begin
   Bundler.setup
   Bundler.require(:default, FCG_ENV)

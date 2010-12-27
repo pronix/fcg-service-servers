@@ -2,7 +2,7 @@ $TESTING = true
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib/fcg-service-servers'
-ENV['SINATRA_ENV'] = 'test'
+ENV['RACK_ENV'] = 'test'
 ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'fcg-service-servers')
