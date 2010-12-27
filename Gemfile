@@ -10,7 +10,7 @@ gem "thor"
 gem "sinatra", ">= 1.0"
 gem "bson_ext", ">= 1.0.9"
 gem "mongoid", ">= 2.0.0.beta.19"
-gem "vegas", ">= 0.1.7"
+# gem "vegas", ">= 0.1.7"
 gem "bunny"
 gem "fastercsv", ">= 1.5.3" # , :git => "git@github.com:JEG2/faster_csv.git"
 gem "sanitize"
@@ -27,6 +27,9 @@ gem "SystemTimer"
 gem "redis", ">= 2.0.10"
 gem "redis-namespace", ">= 0.10.0"
 gem "redisk"
+
+# rack console
+gem "racksh"
 
 group :test do
   gem "mocha", ">= 0.9.0"
