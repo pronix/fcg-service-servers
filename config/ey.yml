@@ -1,5 +1,5 @@
 environments:
-  fcgserviceservers:
+  production:
     migrate: false
     copy_exclude:
       - .git

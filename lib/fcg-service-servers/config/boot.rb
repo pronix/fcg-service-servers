@@ -45,8 +45,7 @@ begin
   
     # Mongoid
     Mongoid.configure do |config|
-      # Mongoid.from_hash FCG_CONFIG.mongodb.to_hash
-      Mongoid.databases = FCG_CONFIG.mongodb.databases
+      Mongoid.from_hash FCG_CONFIG.mongodb.to_hash
       config.logger = LOGGER if defined? LOGGER
     end
       
