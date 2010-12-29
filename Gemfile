@@ -21,6 +21,7 @@ gem "msgpack"
 gem "geokit"
 gem "simple_record", ">= 1.5.4"
 gem "unicorn"
+gem "fog"
 
 # Redis
 gem "SystemTimer"
