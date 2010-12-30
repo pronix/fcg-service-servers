@@ -18,6 +18,13 @@ begin
       raise "Set access_key and secret_access_key in config/settings/aws.yml" 
     end
     
+    AWS = Fog::Compute.new(
+    :provider                 => 'AWS',
+    :aws_secret_access_key    => FCG_CONFIG.aws.secret_access_key,
+    :aws_access_key_id => FCG_CONFIG.aws.access_key
+    )
+    
+    
     # SimpleRecord is a proxy for Amazon SimpleDB
     SimpleRecord::Base.set_domain_prefix("fcg_#{FCG_ENV}_")
     SimpleRecord.establish_connection( FCG_CONFIG.aws.access_key, FCG_CONFIG.aws.secret_access_key, :connection_mode => :per_thread)
