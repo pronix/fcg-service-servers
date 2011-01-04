@@ -4,6 +4,7 @@ source :rubygems
 
 gem "fcg-core-ext"#, :git => "git@github.com:joemocha/fcg-core-ext.git" #{}">= 0.0.5"
 gem "fcg-service-ext"#, :git => "git@github.com:joemocha/fcg-service-ext.git" # ">= 0.0.11"
+gem "fcg-summary-models", :git => "git@github.com:tranngocsam/fcg-summary-models.git"
 gem "rack-mount", ">= 0.6.13"
 gem "thor"
 # gem "thin", "1.2.7"
