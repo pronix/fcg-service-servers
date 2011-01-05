@@ -152,3 +152,82 @@ namespace :chef do
     end
   end
 end
+
+namespace :activities do
+  desc "Summarize data for reports"
+  task :summarize do
+    require "lib/fcg-service-servers"
+    require "lib/rake_helper"
+
+    activities = Activity.find(:all, :conditions => ["was_summarized = ?", "false"])
+    LOGGER.info activities.length.to_s + " activity found on #{1.minute.ago.gmtime.strftime('%Y-%m-%dT%H:%MZ')}"
+
+    unless activities.nil?
+      i = 0
+
+      activities.each do |activity|
+        i += 1
+
+        # Save object type of activity: event, city, event type,...
+        if save_summaries(activity, TypeSummary, ["object_type = ?", activity.object_type], ["object_type"])
+          LOGGER.info "Save type summary of #{i}th activity successfully"
+        else
+          LOGGER.info "Error save type summary of #{i}th activity:"
+          LOGGER.info activity
+        end
+
+        # Save object id summary.
+        if activity.object_id.nil?
+          conditions = ["object_id is null"]
+        else
+          conditions = ["object_id = ?", activity.object_id]
+        end
+
+        if save_summaries(activity, ObjectSummary, conditions, ["object_type", "object_id"])
+          LOGGER.info "Save object summary of #{i}th activity successfully"
+        else
+          LOGGER.info "Error save object summary of #{i}th activity:"
+          LOGGER.info activity
+        end
+
+        conditions = nil
+
+        # Save summary about city that the activity is in.
+        if save_summaries(activity, CitySummary, ["city = ?", activity.city], ["city"])
+          LOGGER.info "Save city summary of #{i}th activity successfully"
+        else
+          LOGGER.info "Error save city summary of #{i}th activity:"
+          LOGGER.info activity
+        end
+
+        # Save user's objects summary.
+        user_id = nil
+
+        if activity.object_id.nil?
+          conditions = ["user_id is null"]
+        else
+          case activity.object_type
+          when "event":
+            user_id = Event.find(activity.object_id).user_id
+          end
+
+          unless user_id.nil?
+            conditions = ["user_id = ?", user_id]
+          end
+        end
+
+        unless conditions.nil?
+          if save_summaries(activity, UserObjectSummary, conditions, ["user_id"], [user_id])
+            LOGGER.info "Save object summary of #{i}th activity successfully"
+          else
+            LOGGER.info "Error save object summary of #{i}th activity:"
+            LOGGER.info activity
+          end
+        end
+
+        activity.was_summarized = true
+        activity.save
+      end
+    end
+  end
+end
