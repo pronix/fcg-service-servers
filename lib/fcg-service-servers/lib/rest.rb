@@ -6,7 +6,8 @@ module FCG
         options = args.extract_options!
         opts = {
           :only => [:get, :post, :put, :delete],
-          :search => false
+          :search => false,
+          :count => false
         }.merge(options)
         klass = model.to_s.classify.constantize
         model_plural = model.to_s.pluralize
@@ -42,7 +43,28 @@ module FCG
               error 404, respond_with("#{model_plural} not found")
             end
           end if opts[:search]
-        
+
+          get "/#{model_plural}/count" do
+            begin
+              query_builder = Hashie::Clash.new
+              # add where
+              query_builder.conditions(params[:conditions]) if params[:conditions]
+              count = #{klass}.count(query_builder)
+
+              LOGGER.info query_builder.inspect
+
+              if count.size > 0
+                respond_with({:count => count})
+              else
+                respond_with([])
+                # error 404, respond_with("#{model_plural} not found")
+              end
+            rescue BSON::InvalidObjectId => e
+              LOGGER.error "\#{e.backtrace}: \#{e.message} (\#{e.class})"
+              error 500, respond_with("#{model_plural} not found")
+            end
+          end if opts[:count]
+
           get "/#{model_plural}/:id" do
             begin
               #{model} = find_by_id.call(params[:id])
