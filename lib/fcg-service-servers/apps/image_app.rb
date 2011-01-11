@@ -4,7 +4,6 @@ module FCG::Service
     
     get "/images/by_ids" do
       begin
-        LOGGER.info "params:#{params.inspect}"
         ids = params[:ids].split(",")
         results = Image.find(ids)
         if results.size > 0

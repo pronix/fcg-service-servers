@@ -21,3 +21,4 @@ pkg
 ## PROJECT::SPECIFIC
 logs
 lib/fcg-service-servers/config/settings/(ampq|app|aws|mongodb|redis).yml
+chef-repo/*
