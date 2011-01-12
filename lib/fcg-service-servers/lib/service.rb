@@ -32,14 +32,13 @@ module FCG
       
       def respond_with(result)
         LOGGER.info "\n\nresult: " + result.inspect
-        post_result = case params[:format]
-          when /js(on)?/
-            result.to_json
-          else
-            result.to_msgpack
-        end
-        LOGGER.info "\n\npost_result: " + post_result
-        post_result
+        # post_result = case params[:format]
+        #   when /js(on)?/
+        #     result.to_json
+        #   else
+        #     result.respond_to?(:map) ? result.to_hash.to_msgpack : result.to_hash.to_msgpack
+        # end
+        LOGGER.info "\n\npost_result: " + result.to_json
       end
       
       def error_hash(instance, message)
