@@ -10,7 +10,7 @@ pool :fcg do
     access_key ENV["AWS_ACCESS_KEY"]
     secret_access_key ENV["AWS_SECRET_ACCESS_KEY"]
     security_group do
-      %w(22 80 443).each {|port|  authorize :from_port => port, :to_port => port}
+      %w(22 80).each {|port|  authorize :from_port => port, :to_port => port}
     end
     # ebs_volumes do # https://github.com/joemocha/poolparty/blob/master/lib/cloud_providers/ec2/ec2.rb#L439
     #   volumes "vol-1cf65674"
@@ -74,7 +74,7 @@ pool :fcg do
           :groups => ["deploy", "ubuntu", "admin"]
         }
       })
-      %W{monit fcg_service}.each do |r| # build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems ssh_keys sudo nginx 
+      %W{ssh_keys fcg_service}.each do |r| # build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems  sudo nginx monit  
         recipe r
       end
     end

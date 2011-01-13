@@ -1,0 +1,1 @@
+# run "cd /data/fcg_service/current && bundle install"
