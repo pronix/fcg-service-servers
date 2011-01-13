@@ -31,7 +31,7 @@ module FCG
           result
         end
       end
-    
+
       def to_msgpack(*args)
         self.to_hash.to_msgpack(*args)
       end
@@ -39,9 +39,9 @@ module FCG
   
     def self.included(receiver)
       receiver.extend         ClassMethods
-      receiver.send :include, InstanceMethods
       receiver.send :include, Mongoid::Document
       receiver.send :include, Mongoid::Timestamps
+      receiver.send :include, InstanceMethods
       receiver.attr_protected :_id
       receiver.attr_protected :created_at
       receiver.attr_protected :updated_at
