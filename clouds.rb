@@ -9,7 +9,9 @@ pool :fcg do
     s3_url "fcgmedia"
     access_key ENV["AWS_ACCESS_KEY"]
     secret_access_key ENV["AWS_SECRET_ACCESS_KEY"]
-    
+    security_group do
+      %w(22 80 443).each {|port|  authorize :from_port => port, :to_port => port}
+    end
     # ebs_volumes do # https://github.com/joemocha/poolparty/blob/master/lib/cloud_providers/ec2/ec2.rb#L439
     #   volumes "vol-1cf65674"
     #   device "/dev/sda3"
@@ -31,6 +33,12 @@ pool :fcg do
         },
         :hostname => "service.fcgmedia.com",
         :server_aliases => 0.upto(5).map{|i| "service-#{i}.fcgmedia.com" },
+        :thin => {
+          :server_size => 5
+        },
+        :monit => {
+          :apps => [:thin]
+        },
         :memcached => {
           :memory => 128
         },
@@ -50,7 +58,7 @@ pool :fcg do
           :app => {
             :comment => "App User",
             :groups => ["app", "deploy"],
-            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51"
+            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51" # echo "PASSWORD" | makepasswd --clearfrom=- --crypt-md5 |awk '{ print $2 }'
           }
         },
         :groups => {
@@ -66,7 +74,7 @@ pool :fcg do
           :groups => ["deploy", "ubuntu", "admin"]
         }
       })
-      %W{build-essential ubuntu rubygems quick_start ntp mongodb2 gems ssh_keys sudo nginx unicorn fcg_service}.each do |r|
+      %W{monit fcg_service}.each do |r| # build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems ssh_keys sudo nginx 
         recipe r
       end
     end

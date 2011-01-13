@@ -68,11 +68,11 @@ GEM
     mime-types (1.16)
     mocha (0.9.10)
       rake
-    mongo (1.1.5)
-      bson (>= 1.1.5)
-    mongoid (2.0.0.rc.3)
+    mongo (1.0.9)
+      bson (>= 1.0.5)
+    mongoid (2.0.0.beta.19)
       activemodel (~> 3.0)
-      mongo (~> 1.1.5)
+      mongo (= 1.0.9)
       tzinfo (~> 0.3.22)
       will_paginate (~> 3.0.pre)
     msgpack (0.4.4)
@@ -147,7 +147,7 @@ DEPENDENCIES
   geokit
   ice_cube (>= 0.5.9)
   mocha (>= 0.9.0)
-  mongoid (>= 2.0.0.beta.19)
+  mongoid (= 2.0.0.beta.19)
   msgpack
   rack-mount (>= 0.6.13)
   rack-test (>= 0.5.6)

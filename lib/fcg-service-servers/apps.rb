@@ -17,4 +17,5 @@ FCG::Service::Server = Rack::Mount::RouteSet.new do |set|
     model = app.sub(/App/, '').snakecase.pluralize
     set.add_route FCG::Service.const_get(app), { :path_info => %r{^/#{model}(/?.*)$} }
   end
+  set.add_route FCG::Service::BaseApp, { :request_method => 'GET' }
 end

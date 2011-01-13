@@ -36,9 +36,9 @@ module FCG
           when /js(on)?/
             result.to_json
           else
-            result.to_msgpack
+            result.respond_to?(:map) ? result.to_hash.to_msgpack : result.to_hash.to_msgpack
         end
-        LOGGER.info "\n\npost_result: " + post_result
+        LOGGER.info "\n\npost_result: " + result.to_json
         post_result
       end
       
