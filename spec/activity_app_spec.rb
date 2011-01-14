@@ -1,36 +1,10 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-def activity_hash(new_hash={})
-  {
-    :actor => {
-      :display_name => "Paul Dix",
-      :url => "http://www.fcgid.com/person/paulDiddy", 
-      :photo => nil
-    },
-    :target => {
-      :title => "in the photo album (Mon, Jul 19: Salladin at Marquee (Solid))",
-      :thumbnail => "http://destroy_later_blah_blah_blah.s3.amazonaws.com/alltheparties.com//cd772554-d709-988a-2472-cdd9b5a7a96d/00-thumb.jpg",
-      :album_page_url => "/album/Event/4c442ae8ff808daa0f000002/photos",
-      :id => "event:4c442ae8ff808daa0f000002" 
-    },
-    :object => {
-      :title => "a photo",
-      :image_page_url => "/album/Event/4c442ae8ff808daa0f000002/photos/4c4e81c7ff808d20c9000005",
-      :id => "image:4c4e81c7ff808d20c9000005",
-      :description => "Standing on the stage Club Space WMC 2001",
-      :larger_image => "http://destroy_later_blah_blah_blah.s3.amazonaws.com/alltheparties.com//df39e4f8-6944-5d8f-d91f-843620c762f5/P3266699-medium.jpg"
-    },
-    :verb => "view",
-    :title => "Paul Dix viewed a photo in Rip's Photo Album",
-    :site => "alltheparties.com",
-    :visible => false
-  }.merge(new_hash)
-end
-
 describe "Activity App" do
   
   before(:each) do
-    Activity.delete_all
+    acts = JobState.find(:all)
+    acts.each{|a| a.delete }
   end
 
   describe "GET on /activities/:id" do
@@ -43,14 +17,14 @@ describe "Activity App" do
       get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      attributes["actor"]["display_name"].should == "Paul Dix"
+      attributes["page"].should == @activity.page
     end
 
     it "should return a activity with an verb" do
       get "/activities/#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
-      attributes["verb"].should == "view"
+      attributes["verb"].should == @activity.verb
     end
 
     it "should return site" do
@@ -75,23 +49,22 @@ describe "Activity App" do
   
   describe "POST on /activities" do
     it "should create a activity" do
-      activity = activity_hash({
-        :actor => {
-          :display_name => "Trotter Cashion",
-          :url => "http://www.fcgid.com/person/tcash",
-          :photo => nil
-        },
-        :verb => "mark_as_favorite",
-        :title => "Paul Dix marked as favorite a photo in Rip's Photo Album",
-        :site => "ATP"})
+      activity = {
+        :user_id => "4c43475fff808d982a00001a",
+        :verb => "click",
+        :object_type => "city",
+        :title => "Test title",
+        :page => "/events",
+        :city => "nyc",
+        :site => "ATP"
+      }
         
       post "/activities", activity.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       get "/activities/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
-      attributes["actor"]["display_name"].should == "Trotter Cashion"
-      attributes["actor"]["url"].should == "http://www.fcgid.com/person/tcash"
+      attributes["object_type"].should == activity[:object_type]
     end
   end
 

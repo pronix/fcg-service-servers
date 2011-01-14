@@ -28,6 +28,26 @@ describe "Album App" do
     end
   end
   
+  describe "GET on /albums/citycode/:citycode" do
+    before(:each) do
+      @album = Fabricate(:album)
+      @id = @album.id.to_s
+    end
+    
+    it "should return an array of albums" do
+      get "/albums/citycode/#{@album.location_hash[:citycode]}"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes.class.should == Array
+      attributes[0]["location_hash"]["citycode"].should == @album.location_hash[:citycode]
+    end
+    
+    it "should return a 404 for a album that doesn't exist" do
+      get "/albums/foo"
+      last_response.status.should == 404
+    end
+  end
+
   describe "POST on /albums" do
     it "should create a album" do
       two_weeks_ago = (Date.today - 14).to_s

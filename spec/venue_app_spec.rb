@@ -29,6 +29,29 @@ describe "Venue App" do
       last_response.status.should == 404
     end
   end
+
+  describe "GET on /venues/autocomplete" do
+    before(:each) do
+      @venue = Fabricate(:bar)
+      @id = @venue.id.to_s
+    end
+
+    it "should return an array of matched venue" do
+      get "/venues/autocomplete", :term => @venue.name[0,2]
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes.class.should == Array
+      attributes[0]["name"].should == @venue.name
+    end
+
+    it "should return an empty array" do
+      get "/venues/autocomplete", :term => "abc"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes.class.should == Array
+      attributes.length.should == 0
+    end
+  end
   
   describe "POST on /venues" do
     it "should create a venue" do
