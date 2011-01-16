@@ -1,4 +1,5 @@
 require "poolparty"
+
 pool :fcg do
   cloud :service do
     using :ec2
@@ -22,7 +23,7 @@ pool :fcg do
       repo File.dirname(__FILE__)+"/chef-repo"
       attributes({
         :instance_role => "solo",
-        :name => "fcg_service",
+        :name => "fcg-service",
         :owner_name => "app", # for mongodb
         :server_name => "service.fcgmedia.com",
         :ruby_version => "ruby-1.8.7-p330",
@@ -42,11 +43,12 @@ pool :fcg do
         :memcached => {
           :memory => 128
         },
-        :active_applications => [:fcg_service],
+        :active_applications => [:"fcg-service"],
         :active_groups => ["deploy", "app"],
-        :active_users => ["deploy", "app"],
+        :users => ["deploy", "app"],
+        :active_users => ["deploy"],
         :ssh_keys => {
-          :app    => "#{ENV['SSH_RSA_KEY']} app@service.fcgmedia.com",
+          # :app    => "#{ENV['SSH_RSA_KEY']} app@service.fcgmedia.com",
           :deploy => "#{ENV['SSH_RSA_KEY']} deploy@service.fcgmedia.com"
         },
         :users => {
@@ -74,7 +76,7 @@ pool :fcg do
           :groups => ["deploy", "ubuntu", "admin"]
         }
       })
-      %W{ssh_keys fcg_service}.each do |r| # build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems  sudo nginx monit  
+      %W{build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems sudo nginx monit ssh_keys}.each do |r|
         recipe r
       end
     end
