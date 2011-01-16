@@ -28,7 +28,7 @@ describe "Image App" do
     end
   end
 
-  describe "GET on /images/by_ids/:ids" do
+  describe "GET on /images/by_ids" do
     before(:each) do
       @image = Fabricate(:image, :album_id => @album.id)
       @id = @image.id.to_s
@@ -47,7 +47,7 @@ describe "Image App" do
       attributes = MessagePack.unpack(last_response.body)
       id2 = attributes["id"]
 
-      get "/images/by_ids/#{@id},#{id2}"
+      get "/images/by_ids", :ids => "#{@id},#{id2}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes.class == Array
@@ -69,7 +69,7 @@ describe "Image App" do
       attributes = MessagePack.unpack(last_response.body)
       id2 = attributes["id"]
 
-      get "/images/by_ids/#{@id},#{@id}"
+      get "/images/by_ids", :ids => "#{@id},#{@id}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes.class == Array
@@ -78,7 +78,7 @@ describe "Image App" do
     end
 
     it "should return one image by one valid id, one non-existed id" do
-      get "/images/by_ids/#{@id},#{@id.gsub("0", "1")}"
+      get "/images/by_ids", :ids => "#{@id},#{@id.gsub("0", "1")}"
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       attributes.class == Array
@@ -87,7 +87,7 @@ describe "Image App" do
     end
 
     it "should return a 404 for invalid ids" do
-      get "/images/by_ids/foo,foo1"
+      get "/images/by_ids", :ids => "foo,foo1"
       last_response.status.should == 404
     end
   end

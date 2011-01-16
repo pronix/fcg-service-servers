@@ -2,7 +2,7 @@ module FCG::Service
   class ImageApp < FCG::Service::Base
     include FCG::Rest
     
-    get "/images/by_ids/:ids" do
+    get "/images/by_ids" do
       begin
         ids = params[:ids].split(",")
         results = Image.find(ids)
