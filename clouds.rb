@@ -33,9 +33,9 @@ pool :fcg do
           :secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"]
         },
         :hostname => "service.fcgmedia.com",
-        :server_aliases => 0.upto(5).map{|i| "service-#{i}.fcgmedia.com" },
+        :server_aliases => 0.upto(3).map{|i| "service-#{i}.fcgmedia.com" },
         :thin => {
-          :server_size => 5
+          :server_size => 3
         },
         :monit => {
           :apps => [:thin]
@@ -48,19 +48,19 @@ pool :fcg do
         :users => ["deploy", "app"],
         :active_users => ["deploy"],
         :ssh_keys => {
-          # :app    => "#{ENV['SSH_RSA_KEY']} app@service.fcgmedia.com",
+          :app    => "#{ENV['SSH_RSA_KEY']} app@service.fcgmedia.com",
           :deploy => "#{ENV['SSH_RSA_KEY']} deploy@service.fcgmedia.com"
         },
         :users => {
           :deploy => {
             :comment => "Deploy User",
             :groups => ["deploy"],
-            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51"
+            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51" # echo "PASSWORD" | makepasswd --clearfrom=- --crypt-md5 |awk '{ print $2 }'
           },
           :app => {
             :comment => "App User",
             :groups => ["app", "deploy"],
-            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51" # echo "PASSWORD" | makepasswd --clearfrom=- --crypt-md5 |awk '{ print $2 }'
+            :password => "$1$VO6mVOAd$I2ceD83x5uaQZk3OshbZ51" 
           }
         },
         :groups => {
@@ -76,7 +76,7 @@ pool :fcg do
           :groups => ["deploy", "ubuntu", "admin"]
         }
       })
-      %W{build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems sudo nginx monit ssh_keys}.each do |r|
+      %W{build-essential ubuntu rubygems ruby-shadow quick_start ntp mongodb gems sudo nginx monit ssh_keys fcg_service}.each do |r|
         recipe r
       end
     end

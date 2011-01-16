@@ -21,6 +21,7 @@ gem "geokit"
 gem "simple_record", ">= 1.5.4"
 gem "thin"
 gem "fog"
+gem "rake"
 
 # Redis
 gem "SystemTimer"

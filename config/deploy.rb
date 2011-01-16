@@ -7,29 +7,25 @@ AWS = Fog::Compute.new(
   :aws_access_key_id        => ENV["AWS_ACCESS_KEY"]
 )
 
-set :user,      "deploy"
-set :group,     "deploy"
-set :application, "fcg-service"
-set :keep_releases, 3
-set :checkout,      "export"
-set :deploy_to, "/data/#{application}"
-set :shared_children, %w(system log pids config config/settings tmp repository public)
+set :application,               "fcg-service"
+set :user,                      "deploy"
+set :group,                     "deploy"
+set :keep_releases,             3
+set :checkout,                  "export"
+set :deploy_to,                 "/data/#{application}"
+set :shared_children,           %w(system log pids config config/settings tmp repository public)
+set :repository,                "git@github.com:joemocha/fcg-service-servers.git"
+set :scm, :git                  
+set :copy_exclude,              [".git", ".gitignore", "log/*", "tmp/*"]
+set :deploy_via,                :export
+set :copy_cache,                true
+set :chmod755,                  %w(config lib public vendor tmp)
+set :thin_server_size,          3
+set :rack_env,                  "production"
 
-set :repository,  "git@github.com:joemocha/fcg-service-servers.git"
-set :scm, :git
-set :copy_exclude, [".git", ".gitignore", "log/*", "tmp/*"]
-set :deploy_via, :export # :copy
-set :copy_cache, true
-set :chmod755, %w(config lib public vendor tmp)
-# set :use_sudo, false
-
-set :thin_server_size, 4
-set :thin_port, 8000
-set :rack_env, "production"
-
-ssh_options[:forward_agent] =  true
-ssh_options[:auth_methods] = "publickey"
-ssh_options[:keys] =  "~/.ssh/akuja-keypair"
+ssh_options[:forward_agent] =   true
+ssh_options[:auth_methods] =    "publickey"
+ssh_options[:keys] =            "~/.ssh/akuja-keypair"
 
 
 ip_addresses = begin
@@ -42,15 +38,15 @@ role :db,  ip_addresses, :primary => true
 
 namespace :deploy do
   task :restart, :roles => [:app] do
-    run "/etc/init.d/thin restart"
+    run "cd #{deploy_to}/current && bundle exec /etc/init.d/thin restart"
   end
   
   task :start, :roles => [:app] do
-    run "/etc/init.d/thin start"
+    run "cd #{deploy_to}/current && bundle exec /etc/init.d/thin start"
   end
   
   task :stop, :roles => [:app] do
-    run "/etc/init.d/thin stop"
+    run "cd #{deploy_to}/current && bundle exec /etc/init.d/thin stop"
   end
   
   task :new_symlinks, :role => [:app] do
@@ -68,8 +64,13 @@ namespace :deploy do
   task :change_ownership do
     sudo "chown -R #{user}:#{group} #{deploy_to}"
   end
+  
+  task :touch_initial_files do
+    run "touch #{deploy_to}/shared/log/production.log &&\
+    touch #{deploy_to}/shared/public/index.html"
+  end
 end
-after "deploy:setup", "deploy:change_ownership", "thin"
+after "deploy:setup", "deploy:change_ownership", "deploy:touch_initial_files", "thin"
 after "deploy:symlink", "deploy:new_symlinks"
 
 namespace :thin do
@@ -83,7 +84,7 @@ namespace :thin do
   
   task :create_config do
     sudo "thin config -C /etc/thin/#{application}.yml -c #{deploy_to}/current \
-    --servers #{thin_server_size} -p #{thin_port} \
+    --servers #{thin_server_size} --socket /tmp/thin.#{application}.sock \
     -e #{rack_env} -u #{user} -g #{group} -A rack -R config.ru"
   end
   
