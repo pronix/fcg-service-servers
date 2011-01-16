@@ -1,22 +1,36 @@
 module Seed
   def self.create_geodata
     zipcodes = File.read(File.expand_path("../us_zipcodes.csv", __FILE__)) # us_zipcodes
+    Mongoid.master.collections.select do |collection|
+      collection.drop if collection.name == "geos"
+    end
+    
       FasterCSV.parse(zipcodes, :headers => true) do |row|
         begin
           zipcode = row[0]
           row_packed = row.to_hash.inject({}){|h,(k,v)| h[k] = v.strip; h }.to_json
           # Default City Type
           if row[3] == "D"
-            GEO_REDIS["us-zipcode:#{zipcode}"] = row_packed
-            GEO_REDIS.sadd "msa:#{row[9]}", zipcode
-            GEO_REDIS.sadd "us-state:#{row[7]}".downcase, zipcode
+            packed = row_packed
+            msa = row[9]
+            us_state = row[7].downcase
+            us_areacode = []
+
             row[10].split("/").each do |areacode|
-              GEO_REDIS.sadd "us-areacode:#{areacode}", zipcode
+              us_areacode << areacode
             end
+
+            geo = Geo.new(:country => "us",
+                          :zipcode => zipcode,
+                          :packed => packed,
+                          :msa => msa,
+                          :us_state => us_state,
+                          :us_areacode => us_areacode.join(","))
+            geo.save
+            puts "#{zipcode} done..."
           end
-          puts "#{zipcode} done..."
         rescue Errno::EAGAIN => e
-          puts "\nRetrying #{zipcode} in 1/4 sec.... (#{e})\n#{GEO_REDIS.inspect}\n\n"
+          puts "Error add geodata #{e.inspect}, retry in 1/4 second"
           sleep 0.1
           # GEO_REDIS.reconnect
           retry
@@ -27,6 +41,10 @@ module Seed
   end
 
   def self.create_sites
+    Mongoid.master.collections.select do |collection|
+      collection.drop if collection.name == "sites"
+    end
+
     {  
       "alltheparties.com" => {
         :name => "AllTheParties", :extra => {
@@ -49,8 +67,8 @@ module Seed
         }
       }
     }.each do |key, val|
-      SITE_REDIS["#{key}"] = val.to_json
-      SITE_REDIS.sadd "all", key
+      site = Site.new(:url => key, :packed => val.to_json)
+      site.save
       puts "#{key} is done."
     end
 
@@ -166,30 +184,23 @@ module Seed
     }
 
     site_url = "alltheparties.com"
+    altheparties_site = Site.find(:first, :conditions => {:url => site_url})
+    site_cities = {}
 
     cities = {:atl=>"Atlanta", :phl=>"Phillie", :dal=>"Dallas", :nyc=>"New York City", :hou=>"Houston", :chi=>"Chicago", :mia=>"Miami", :lax=>"Los Angeles", :las=>"Las Vegas", :dca=>"Washington, DC", :nwo=>"New Orleans", :aus=>"Austin"}
     cities.each do |key, val|
-      values = { :short_name => key.to_s, :full_name => val, :active => 1 }
-      SITE_REDIS["#{site_url}:city:#{key}"] = values.to_json
-      begin
-        zips[key].each do |zip|
-          SITE_REDIS.sadd "#{site_url}:city:#{key}:zipcodes", zip
-        end
-        puts "#{key} is done"
-      rescue Errno::EAGAIN
-        puts "trying again 1 second #{Time.now}"
-        sleep 1
-        retry
-      rescue NoMethodError
-        puts "NoMethodError for #{key}"
+      values = { :short_name => key.to_s, :full_name => val, :active => 1, :zipcodes => [] }
+      zips[key].each do |zip|
+        values[:zipcodes] << zip
       end
+
+      site_cities[key] = values
     end
 
-    site = JSON.parse(SITE_REDIS["#{site_url}"])
-    site["extra"] = site["extra"].merge({ 
-      "active_cities_sorted" => "nyc,hou,atl,lax,mia,dca,dal,chi,nwo,aus,las,phl"
-    })
+    site_cities[:active_cities_sorted] = "nyc,hou,atl,lax,mia,dca,dal,chi,nwo,aus,las,phl"
 
-    SITE_REDIS["#{site_url}"] = site.to_json
+    altheparties_site.cities = site_cities
+    altheparties_site.save
+    puts "Done add zipcodes to #{site_url}"
   end
 end

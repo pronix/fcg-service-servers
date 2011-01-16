@@ -1,17 +1,15 @@
-class Geo
+class Site
   include FCG::Model
 
-  field :country, :type => String
-  field :zipcode, :type => String
+  field :url, :type => String
   field :packed, :type => String
-  field :msa, :type => String
-  field :us_state, :type => String
-  field :us_areacode, :type => String
+  field :cities, :type => Hash
+  field :active_cities_sorted, :type => String
   
   class << self
     def find_by_country_and_zipcode(country, zipcode)
-      geo = Geo.find(:first, :conditions => {:country => country, :zipcode => zipcode})
-      @res = JSON.parse(geo.packed) rescue nil
+      key = "#{country}-zipcode:#{zipcode}".downcase
+      @res = JSON.parse(GEO_REDIS[key]) rescue nil
     end
 
     def geocode_address(address)
