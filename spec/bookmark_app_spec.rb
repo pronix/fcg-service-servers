@@ -29,15 +29,37 @@ describe "Bookmark App" do
     it "should create a bookmark" do
       bookmark = {
         :user_id         => "4c5f475fff808d982a00001a",
-        :site            => "flyerdeep.com",
+        :title           => "/profile/jeremiah",
         :path            => "/profile/jeremiah",
-        :record    => "user:4c43475fff808d982a00001a"
+        :bookmark_type   => "misc"
       }
       post "/bookmarks", bookmark.to_msgpack
       last_response.should be_ok
       attributes = MessagePack.unpack(last_response.body)
       get "/bookmarks/#{attributes["id"]}"
       attributes = MessagePack.unpack(last_response.body)
+    end
+
+    it "should update a bookmark, not save one path twice" do
+      bookmark = {
+        :user_id         => "4c5f475fff808d982a00001a",
+        :title           => "/profile/jeremiah",
+        :path            => "/profile/jeremiah",
+        :bookmark_type   => "misc"
+      }
+      post "/bookmarks", bookmark.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      id1 = attributes["id"]
+      attributes["title"].should == bookmark[:title]
+
+      bookmark[:title] = "new title"
+      post "/bookmarks", bookmark.to_msgpack
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      id2 = attributes["id"]
+      id2.should == id1
+      attributes["title"].should == bookmark[:title]
     end
   end
 

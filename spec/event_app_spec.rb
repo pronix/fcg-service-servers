@@ -26,6 +26,29 @@ describe "Event App" do
       last_response.status.should == 404
     end
   end
+
+  describe "GET on /events/citycode/:citycode" do
+    before(:each) do
+      @event = Fabricate(:tomorrow_event)
+      @id = @event.id.to_s
+    end
+
+    it "should return an array of matched event" do
+      get "/events/citycode/#{@event.venue[:citycode]}"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes.class.should == Array
+      attributes[0]["venue"]["citycode"].should == @event.venue["citycode"]
+    end
+
+    it "should return an empty array for a citycode that doesn't have any events" do
+      get "/events/citycode/hou"
+      last_response.should be_ok
+      attributes = MessagePack.unpack(last_response.body)
+      attributes.class.should == Array
+      attributes.length.should == 0
+    end
+  end
   
   describe "POST on /events" do
     it "should create a event" do
