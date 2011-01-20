@@ -8,6 +8,7 @@ AWS = Fog::Compute.new(
 )
 
 set :application,               "fcg-service"
+set :security_group,            "fcg-service"
 set :user,                      "deploy"
 set :group,                     "deploy"
 set :keep_releases,             3
@@ -29,7 +30,7 @@ ssh_options[:keys] =            "~/.ssh/akuja-keypair"
 
 
 ip_addresses = begin
-  AWS.servers.all.find_all{|s| s.groups.include?(application) }.map{|s| s.ip_address }.join(",")
+  AWS.servers.all.find_all{|s| s.groups.include?(security_group) }.map{|s| s.ip_address }.join(",")
 end
 
 role :web, ip_addresses
@@ -69,7 +70,12 @@ namespace :deploy do
     run "touch #{deploy_to}/shared/log/production.log &&\
     touch #{deploy_to}/shared/public/index.html"
   end
+  
+  task :seeds do
+    run 
+  end
 end
+
 after "deploy:setup", "deploy:change_ownership", "deploy:touch_initial_files", "thin"
 after "deploy:symlink", "deploy:new_symlinks"
 
@@ -84,7 +90,7 @@ namespace :thin do
   
   task :create_config do
     sudo "thin config -C /etc/thin/#{application}.yml -c #{deploy_to}/current \
-    --servers #{thin_server_size} --socket /tmp/thin.#{application}.sock \
+    --servers #{thin_server_size} --socket /tmp/thin.#{application}.sock -O \
     -e #{rack_env} -u #{user} -g #{group} -A rack -R config.ru"
   end
   

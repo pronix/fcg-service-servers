@@ -1,0 +1,3 @@
+Fabricator :site do
+  
+end

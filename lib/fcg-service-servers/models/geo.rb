@@ -10,8 +10,8 @@ class Geo
   
   class << self
     def find_by_country_and_zipcode(country, zipcode)
-      geo = Geo.find(:first, :conditions => {:country => country, :zipcode => zipcode})
-      @res = JSON.parse(geo.packed) rescue nil
+      geo = find(:first, :conditions => {:country => country, :zipcode => zipcode})
+      res = JSON.parse(geo.packed) rescue nil
     end
 
     def geocode_address(address)

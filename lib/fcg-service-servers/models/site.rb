@@ -9,7 +9,7 @@ class Site
   class << self
     def find_by_country_and_zipcode(country, zipcode)
       key = "#{country}-zipcode:#{zipcode}".downcase
-      @res = JSON.parse(GEO_REDIS[key]) rescue nil
+      res = JSON.parse(GEO_REDIS[key]) rescue nil
     end
 
     def geocode_address(address)
