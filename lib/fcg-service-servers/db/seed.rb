@@ -67,7 +67,8 @@ module Seed
         }
       }
     }.each do |key, val|
-      site = Site.new(:url => key, :packed => val.to_json)
+      val = val.merge(:url => key)
+      site = Site.new(val)
       site.save
       puts "#{key} is done."
     end

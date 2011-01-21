@@ -2,7 +2,8 @@ class Site
   include FCG::Model
 
   field :url, :type => String
-  field :packed, :type => String
+  field :name, :type => String
+  field :extra, :type => Hash
   field :cities, :type => Hash
   field :active_cities_sorted, :type => String
   
